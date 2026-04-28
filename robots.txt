@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin.php
+Disallow: /login.php
+Disallow: /paginas.php
+Disallow: /configuracion.php
+Disallow: /categorias.php
+Disallow: /publicidad.php
+Disallow: /actividad.php
+Disallow: /respaldos.php
+Disallow: /papelera.php
+Disallow: /optimizador.php
+
+Sitemap: http://localhost/piura_noticias_php/sitemap.php

@@ -1,0 +1,102 @@
+# Forzar codificación UTF-8 para arreglar el problema de las tildes
+AddDefaultCharset UTF-8
+
+# Página de error 404 personalizada (MEJ-03-03)
+ErrorDocument 404 /piura_noticias_php/404.php
+
+# Activar compresión GZIP/DEFLATE (MEJ-03-04)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml image/svg+xml
+</IfModule>
+
+# Forzar desactivación de exposición de carpetas
+Options -Indexes
+
+# Prevenir ataques de Iframe (Clickjacking)
+Header set X-Frame-Options "SAMEORIGIN"
+
+# Forzar al navegador a respetar los tipos MIME (Anti-Sniffing)
+Header set X-Content-Type-Options "nosniff"
+
+# Protección básica contra XSS en ciertos navegadores (legacy)
+Header set X-XSS-Protection "1; mode=block"
+
+# MEJ-07 FIX: Content Security Policy
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdn.tiny.cloud; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src https://www.youtube.com https://www.google.com; connect-src 'self' https://cdn.tiny.cloud https://get.geojs.io https://api.open-meteo.com;"
+
+# Referrer Policy
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Permissions Policy
+Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+# MED-08 FIX: HSTS — Forzar HTTPS en navegadores (preload-ready)
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+
+# Ocultar la firma real del servidor en errores si AllowOverride lo permite
+ServerSignature Off
+
+# Protección de archivos de entorno y git si los hubiera
+<FilesMatch "^\.|\.env|\.log$|\.cnf$|composer\.json|composer\.lock|package\.json|package-lock\.json|phinx\.php|build_assets\.php|phpunit\.xml">
+    Require all denied
+</FilesMatch>
+
+# Proteger este mismo archivo
+<Files ".htaccess">
+    Require all denied
+</Files>
+
+# MED-03 FIX: Bloquear archivos de desarrollo/migración/test para producción
+<FilesMatch "^(migrate|migration_|read_db|read_news|test_|seed_|fix_|patch_|inject_|refactor|replace|add_|append_|beautify_|check_|crear_|hide_|apply_|remove_|upgrade_|inyectar_|zero_code_|setup_|update_district|db_registro|generar_word|delete_multimedia|restore|get_pagina|take)">
+    Require all denied
+</FilesMatch>
+
+# Bloquear scripts Python y archivos SQL
+<FilesMatch "\.(py|sql)$">
+    Require all denied
+</FilesMatch>
+
+# Bloquear acceso directo a conexion.php
+<Files "conexion.php">
+    Require all denied
+</Files>
+
+# Bloquear acceso al documento de auditoría
+<Files "AUDITORIA_INTEGRAL_HTVPERU.html">
+    Require all denied
+</Files>
+
+# MED-NEW-09 FIX: Bloquear acceso a archivos de caché y schema
+<FilesMatch "^(home_cache\.json|database_full\.sql)$">
+    Require all denied
+</FilesMatch>
+
+# CRIT-R03 FIX: Bloquear acceso a la carpeta de cuarentena de desarrollo
+# FASE 1: Bloquear acceso web a vendor/ (Composer), app/ (MVC) y core/
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^vendor/ - [F,L]
+    RewriteRule ^app/ - [F,L]
+    RewriteRule ^core/ - [F,L]
+    RewriteRule ^database/ - [F,L]
+    RewriteRule ^storage/ - [F,L]
+    RewriteRule ^tests/ - [F,L]
+    RewriteRule ^_dev_quarantine/ - [F,L]
+    
+    # ==========================================
+    # FRONT CONTROLLER REDIRECT (MVC REFACTOR)
+    # ==========================================
+    # Evitar bucles redirigiendo peticiones ya apuntando a public/
+    RewriteCond %{REQUEST_URI} !^/piura_noticias_php/public/
+    
+    # Excluir recursos estáticos de ser pasados por PHP por velocidad
+    RewriteCond %{REQUEST_URI} !^/piura_noticias_php/(css|js|img|uploads|dist) [NC]
+    
+    # Opcional: Si el archivo existe físicamente y quieres que no lo rutee 
+    # (Lo ignoramos porque queremos que public/index.php cargue los fallbacks como admin, article)
+    # RewriteCond %{REQUEST_FILENAME} !-f
+    
+    # Enviar todo el resto a public/index.php
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
+
+</IfModule>

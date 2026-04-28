@@ -1,0 +1,13 @@
+# Deshabilita el motor PHP en todos los subdirectorios
+php_flag engine off
+
+# Restringe la ejecución y lectura forzosamente
+<FilesMatch "\.(php|php4|php5|php7|php8|phtml|pl|py|jsp|asp|sh|cgi|html|htm|js)$">
+    Require all denied
+</FilesMatch>
+
+# Permite asegurar que solo los tipos previstos se devuelvan al navegador
+ForceType application/octet-stream
+<FilesMatch "\.(jpg|jpeg|gif|png|webp|mp4)$">
+    ForceType none
+</FilesMatch>

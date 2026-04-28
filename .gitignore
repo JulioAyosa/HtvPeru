@@ -1,0 +1,39 @@
+# =============================================
+# PIURA NOTICIAS - GITIGNORE
+# =============================================
+
+# === SEGURIDAD: Nunca subir credenciales ===
+conexion.php
+
+# === ARCHIVOS DE SISTEMA ===
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.log
+
+# === DEPENDENCIAS (se reconstruyen con `composer install`) ===
+/vendor/
+
+# === ARCHIVOS DE DESARROLLO / SCRATCH ===
+/_dev_quarantine/
+/storage/logs/
+
+# === ARCHIVOS GENERADOS POR EL SISTEMA ===
+/dist/
+home_cache.json
+
+# === BACKUPS (pesan demasiado para GitHub) ===
+/backups_automaticos/
+/backups/
+*.zip
+
+# === BASE DE DATOS ===
+*.sql
+database_full.sql
+
+# === IDE / EDITOR ===
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
