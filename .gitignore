@@ -4,6 +4,10 @@
 
 # === SEGURIDAD: Nunca subir credenciales ===
 conexion.php
+.env
+
+# === ARCHIVOS DE DESARROLLO ===
+/capturas/
 
 # === ARCHIVOS DE SISTEMA ===
 .DS_Store
