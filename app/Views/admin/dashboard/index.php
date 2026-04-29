@@ -256,13 +256,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <!-- Modal Formulario Extendido -->
 <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; box-sizing: border-box;">
-    <div style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); width: 100%; max-width: 1000px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); box-sizing: border-box;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem; border-bottom:2px solid var(--border-color); padding-bottom:1rem;">
-            <h2 id="modal-title" style="margin:0;"><i class="ri-quill-pen-line" style="color:var(--primary-color);"></i> <?php echo $edit_data ? 'Editar Noticia #'.$edit_data['id'] : 'Añadir entrada (Editor Interactivo)'; ?></h2>
-            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; background:#f1f5f9; border-radius:50%; padding:0.25rem;" onclick="closeEditorModal()"></i>
+    <div style="background: white; border-radius: var(--radius-lg); width: 100%; max-width: 1000px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2); box-sizing: border-box; overflow: hidden;" class="modal-wrapper">
+        
+        <!-- Header Sticky -->
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding: 1.5rem 2.5rem; background: white; z-index: 10;" class="modal-sticky-header">
+            <h2 id="modal-title" style="margin:0; font-size: 1.5rem;"><i class="ri-quill-pen-line" style="color:var(--primary-color);"></i> <?php echo $edit_data ? 'Editar Noticia #'.$edit_data['id'] : 'Añadir entrada (Editor Interactivo)'; ?></h2>
+            <i class="ri-close-line" style="cursor:pointer; font-size:1.8rem; background:#f1f5f9; color: #475569; border-radius:50%; padding:0.4rem; transition: background 0.2s;" onclick="closeEditorModal()" onmouseover="this.style.background='#e2e8f0'; this.style.color='#ef4444';" onmouseout="this.style.background='#f1f5f9'; this.style.color='#475569';"></i>
         </div>
         
-        <form method="POST" action="/piura_noticias_php/admin/dashboard/store" enctype="multipart/form-data">
+        <!-- Contenido Scrollable -->
+        <div style="padding: 2.5rem; overflow-y: auto; flex-grow: 1;" class="modal-scroll-body">
+            <form method="POST" action="/piura_noticias_php/admin/dashboard/store" enctype="multipart/form-data">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="action_type" value="<?php echo $edit_data ? 'update' : 'create'; ?>">
             <?php if ($edit_data): ?>
@@ -412,7 +416,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 <button type="submit" id="btn-submit-main" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;"><i class="ri-send-plane-fill"></i> PUBLICAR NOTICIA</button>
             </div>
         </form>
-    </div>
+        </div> <!-- Close Contenido Scrollable -->
+    </div> <!-- Close Modal Wrapper -->
 </div>
 
 <script src="/piura_noticias_php/js/ckeditor/ckeditor.js"></script>
