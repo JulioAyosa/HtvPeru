@@ -102,11 +102,40 @@
                     <span style="color: #9ca3af; font-size: 0.75rem;"><?php echo strtoupper($user_role_display); ?></span><br>
                     <div style="margin-top:0.25rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
                         <a href="/piura_noticias_php/admin/perfil" style="color: #60a5fa; font-size: 0.75rem; text-decoration:none;"><i class="ri-edit-circle-line"></i> Mi Perfil</a>
+                        <a href="#" onclick="toggleAdminTheme(); return false;" style="color: #fbbf24; font-size: 0.75rem; text-decoration:none;" title="Cambiar Tema"><i id="admin-theme-icon" class="ri-moon-line"></i> Tema</a>
                         <a href="/piura_noticias_php/admin?logout=true" style="color: #ef4444; font-size: 0.75rem; text-decoration:none;"><i class="ri-logout-box-r-line"></i> Salir</a>
                     </div>
                 </div>
             </div>
         </aside>
+        
+        <script>
+            // Lógica de Admin Theme
+            (function() {
+                var t = localStorage.getItem('admin_theme') || 'light';
+                if (t === 'dark') {
+                    document.documentElement.setAttribute('data-admin-theme', 'dark');
+                    setTimeout(() => {
+                        var icon = document.getElementById('admin-theme-icon');
+                        if(icon) { icon.classList.remove('ri-moon-line'); icon.classList.add('ri-sun-line'); }
+                    }, 100);
+                }
+            })();
+            
+            function toggleAdminTheme() {
+                var current = document.documentElement.getAttribute('data-admin-theme');
+                var icon = document.getElementById('admin-theme-icon');
+                if (current === 'dark') {
+                    document.documentElement.removeAttribute('data-admin-theme');
+                    localStorage.setItem('admin_theme', 'light');
+                    if(icon) { icon.classList.remove('ri-sun-line'); icon.classList.add('ri-moon-line'); }
+                } else {
+                    document.documentElement.setAttribute('data-admin-theme', 'dark');
+                    localStorage.setItem('admin_theme', 'dark');
+                    if(icon) { icon.classList.remove('ri-moon-line'); icon.classList.add('ri-sun-line'); }
+                }
+            }
+        </script>
         <script>
             // Heartbeat asíncrono para mantener sesión viva en el dashboard
             setInterval(() => {

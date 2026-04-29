@@ -93,8 +93,20 @@ class AdminDashboardController {
             'pap' => (int)($stats_row['pap'] ?? 0),
             'usu' => (int)$pdo->query("SELECT COUNT(*) FROM usuarios WHERE deleted_at IS NULL")->fetchColumn()
         ];
+        
+        // Datos para Gráficos: Entradas por categoría (Activas)
+        $chart_stmt = $pdo->query("SELECT categoria, COUNT(*) as total FROM noticias WHERE deleted_at IS NULL GROUP BY categoria ORDER BY total DESC LIMIT 10");
+        $chart_data_cat = $chart_stmt->fetchAll(\PDO::FETCH_ASSOC);
+        
+        // Datos para Gráficos: Vistas de los últimos 7 días
+        $chart_views_stmt = $pdo->query("SELECT DATE(fecha_publicacion) as fecha, SUM(vistas) as total_vistas FROM noticias WHERE fecha_publicacion >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND deleted_at IS NULL GROUP BY DATE(fecha_publicacion) ORDER BY fecha ASC");
+        $chart_data_views = $chart_views_stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        $page_title = 'Gestión de Entradas';
+        // Top 5 Noticias más leídas
+        $top_noticias_stmt = $pdo->query("SELECT id, titulo, vistas, fecha_publicacion FROM noticias WHERE deleted_at IS NULL ORDER BY vistas DESC LIMIT 5");
+        $top_noticias = $top_noticias_stmt->fetchAll();
+
+        $page_title = 'Gestión de Entradas y Estadísticas';
         
         ob_start();
         require __DIR__ . '/../Views/admin/dashboard/index.php';

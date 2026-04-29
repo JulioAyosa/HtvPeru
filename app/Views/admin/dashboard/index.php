@@ -50,6 +50,79 @@
     </div>
 </div>
 
+<!-- =========================================
+     PHASE 4: DASHBOARD ANALYTICS (Charts & Top)
+     ========================================= -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+    <!-- Gráfico de Visitas -->
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);" class="card">
+        <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem;"><i class="ri-line-chart-line" style="color: var(--primary-color);"></i> Visitas últimos 7 días</h3>
+        <canvas id="viewsChart" style="width: 100%; height: 250px;"></canvas>
+    </div>
+
+    <!-- Top Noticias -->
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);" class="card">
+        <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem;"><i class="ri-trophy-line" style="color: #f59e0b;"></i> Top 5 Noticias</h3>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            <?php if(isset($top_noticias) && count($top_noticias) > 0): ?>
+                <?php foreach($top_noticias as $i => $tn): ?>
+                <li style="padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="background: <?php echo $i===0?'#f59e0b':($i===1?'#94a3b8':($i===2?'#b45309':'#e2e8f0')); ?>; color: <?php echo $i<=2?'white':'#475569'; ?>; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; flex-shrink: 0;"><?php echo $i+1; ?></span>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 600; font-size: 0.85rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><a href="/piura_noticias_php/admin?action=edit&id=<?php echo $tn['id']; ?>" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($tn['titulo']); ?></a></div>
+                        <div style="font-size: 0.75rem; color: #94a3b8;"><i class="ri-eye-line"></i> <?php echo number_format($tn['vistas']); ?> visitas</div>
+                    </div>
+                </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li style="padding: 1rem 0; text-align: center; color: #94a3b8; font-size: 0.85rem;">No hay datos disponibles.</li>
+            <?php endif; ?>
+        </ul>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    <?php
+    $dates = [];
+    $views = [];
+    if(isset($chart_data_views)) {
+        foreach($chart_data_views as $row) {
+            $dates[] = date('d/m', strtotime($row['fecha']));
+            $views[] = (int)$row['total_vistas'];
+        }
+    }
+    ?>
+    const ctx = document.getElementById('viewsChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($dates); ?>,
+                datasets: [{
+                    label: 'Visitas',
+                    data: <?php echo json_encode($views); ?>,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+});
+</script>
+
 <!-- Controles y Buscador -->
 <form id="bulkForm" method="POST" action="/piura_noticias_php/admin/dashboard/bulk">
     <?php echo csrf_field(); ?>

@@ -26,6 +26,8 @@
     <meta property="og:url" content="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars(!empty($global_configs['favicon_url']) ? $global_configs['favicon_url'] : 'img/logo.webp'); ?>">
+    <link rel="manifest" href="/piura_noticias_php/manifest.json">
+    <meta name="theme-color" content="<?php echo htmlspecialchars($global_configs['color_primario'] ?? '#2563eb'); ?>">
     
     <?php if(!empty($global_configs['script_header'])) echo render_safe_script($global_configs['script_header']); ?>
 

@@ -58,3 +58,16 @@
         <p>&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($global_configs['footer_text'] ?? 'HTVPERU. Todos los derechos reservados.'); ?></p>
     </div>
 </footer>
+
+<!-- PWA Service Worker Registration -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/piura_noticias_php/sw.js').then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+</script>
