@@ -266,6 +266,16 @@
                         left: 0;
                         border-radius: 0 8px 8px 0;
                     }
+
+                    /* FIX MOBILE PARA MEGA HERO GRID */
+                    @media (max-width: 768px) {
+                        .heroSwiper { height: auto !important; min-height: 350px !important; margin-bottom: 1rem !important; }
+                        .mega-hero-grid { grid-template-columns: 1fr !important; height: auto !important; display: flex !important; flex-direction: column !important; gap: 0.5rem !important; }
+                        .mega-hero-grid > a.news-card:first-child { height: 250px !important; }
+                        .mega-hero-grid > div { display: none !important; } /* Ocultar stack secundario en movil */
+                        .heroSwiper .custom-nav-btn { width: 35px !important; height: 50px !important; }
+                        .heroSwiper .custom-nav-btn i { font-size: 1.8rem !important; }
+                    }
                 </style>
                 <div class="swiper heroSwiper" style="width: 100%; height: 530px; margin-bottom: 2rem; position: relative;">
                     <div class="swiper-wrapper" style="padding: 10px 5px; box-sizing: border-box;">
