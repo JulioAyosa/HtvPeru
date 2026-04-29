@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // app/Views/admin/papelera/index.php
 // Variables: $msg, $noticias, $usuarios, $comentarios, $encuestas, $categorias, $publicidad, $paginas, $media_files, $purge_days
 
@@ -103,8 +103,8 @@ foreach ($tabData as $t):
                 <td><?=date('d/m/Y H:i', strtotime($row['deleted_at']))?></td>
                 <td style="color:#ef4444; font-weight:600;"><i class="ri-time-line"></i> <?=timeLeft(strtotime($row['deleted_at']), $purge_days)?></td>
                 <td style="text-align:right; min-width: 220px;">
-                    <a href="/piura_noticias_php/admin/papelera/action?action_type=restore&type=<?=$t['type']?>&id=<?=$row['id']?>&csrf_token=<?=csrf_token()?>" class="btn-primary" style="background:#10b981; margin-right:4px;"><i class="ri-refresh-line"></i> Restaurar</a>
-                    <a href="/piura_noticias_php/admin/papelera/action?action_type=delete&type=<?=$t['type']?>&id=<?=$row['id']?>&csrf_token=<?=csrf_token()?>" class="btn-danger" onclick="return confirm('¿Seguro que deseas eliminar definitivamente esto?')"><i class="ri-delete-bin-fill"></i> Borrar</a>
+                    <a href="<?= base_url('/') ?>admin/papelera/action?action_type=restore&type=<?=$t['type']?>&id=<?=$row['id']?>&csrf_token=<?=csrf_token()?>" class="btn-primary" style="background:#10b981; margin-right:4px;"><i class="ri-refresh-line"></i> Restaurar</a>
+                    <a href="<?= base_url('/') ?>admin/papelera/action?action_type=delete&type=<?=$t['type']?>&id=<?=$row['id']?>&csrf_token=<?=csrf_token()?>" class="btn-danger" onclick="return confirm('¿Seguro que deseas eliminar definitivamente esto?')"><i class="ri-delete-bin-fill"></i> Borrar</a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -122,14 +122,14 @@ foreach ($tabData as $t):
         <?php foreach ($media_files as $f): ?>
         <div class="media-card filterable">
             <div class="media-preview">
-                <img src="<?='/piura_noticias_php/' . $f['path']?>" alt="<?=htmlspecialchars($f['name'])?>" onerror="this.outerHTML='<i class=\'ri-file-line\' style=\'font-size:3rem; color:#d1d5db;\'></i>'">
+                <img src="<?='<?= base_url('/') ?>' . $f['path']?>" alt="<?=htmlspecialchars($f['name'])?>" onerror="this.outerHTML='<i class=\'ri-file-line\' style=\'font-size:3rem; color:#d1d5db;\'></i>'">
             </div>
             <div class="media-info">
                 <div style="font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; margin-bottom:8px;" class="filter-text" title="<?=htmlspecialchars($f['name'])?>"><?=htmlspecialchars($f['name'])?></div>
                 <div style="color:#ef4444; font-weight:600; font-size:0.75rem; margin-bottom:12px;"><i class="ri-time-line"></i> <?=timeLeft($f['time'], $purge_days)?></div>
                 <div style="display:flex; gap:4px;">
-                    <a href="/piura_noticias_php/admin/papelera/action?action_type=restore&type=media&id=<?=urlencode($f['name'])?>&csrf_token=<?=csrf_token()?>" class="btn-primary" style="background:#10b981; padding:4px; width:100%; justify-content:center;" title="Restaurar"><i class="ri-refresh-line"></i></a>
-                    <a href="/piura_noticias_php/admin/papelera/action?action_type=delete&type=media&id=<?=urlencode($f['name'])?>&csrf_token=<?=csrf_token()?>" class="btn-danger" style="padding:4px; width:100%; justify-content:center;" title="Borrar Físicamente" onclick="return confirm('¿Eliminar definitivamente este medio?')"><i class="ri-delete-bin-fill"></i></a>
+                    <a href="<?= base_url('/') ?>admin/papelera/action?action_type=restore&type=media&id=<?=urlencode($f['name'])?>&csrf_token=<?=csrf_token()?>" class="btn-primary" style="background:#10b981; padding:4px; width:100%; justify-content:center;" title="Restaurar"><i class="ri-refresh-line"></i></a>
+                    <a href="<?= base_url('/') ?>admin/papelera/action?action_type=delete&type=media&id=<?=urlencode($f['name'])?>&csrf_token=<?=csrf_token()?>" class="btn-danger" style="padding:4px; width:100%; justify-content:center;" title="Borrar Físicamente" onclick="return confirm('¿Eliminar definitivamente este medio?')"><i class="ri-delete-bin-fill"></i></a>
                 </div>
             </div>
         </div>

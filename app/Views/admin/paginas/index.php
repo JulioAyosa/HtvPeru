@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // app/Views/admin/paginas/index.php
 // Variables asumidas: $msg, $paginas
 ?>
@@ -37,7 +37,7 @@
             <td><?php echo $p['fecha_modificacion']; ?></td>
             <td style="text-align:right;">
                 <button onclick='editPagina(<?php echo $p['id']; ?>)' style="background:#e0f2fe; color:#0369a1; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;" title="Editar"><i class="ri-edit-2-line"></i></button>
-                <a href="/piura_noticias_php/admin/paginas/action?action=delete&delete=<?php echo $p['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar definitivamente?')" style="background:#fee2e2; color:#b91c1c; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; text-decoration:none;"><i class="ri-delete-bin-line"></i></a>
+                <a href="<?= base_url('/') ?>admin/paginas/action?action=delete&delete=<?php echo $p['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar definitivamente?')" style="background:#fee2e2; color:#b91c1c; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; text-decoration:none;"><i class="ri-delete-bin-line"></i></a>
             </td>
         </tr>
         <?php endforeach; ?>
@@ -55,7 +55,7 @@
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; background:#f1f5f9; border-radius:50%; padding:0.25rem;" onclick="document.getElementById('modal').style.display='none'"></i>
         </div>
         
-        <form method="POST" action="/piura_noticias_php/admin/paginas/store">
+        <form method="POST" action="<?= base_url('/') ?>admin/paginas/store">
             <input type="hidden" name="action" id="form-action" value="create">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="id" id="form-id" value="">

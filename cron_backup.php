@@ -61,6 +61,16 @@ try {
         $pdo->prepare("DELETE FROM noticias WHERE id = ?")->execute([$p['id']]);
     }
     echo "Papelera purgada: " . count($to_purge) . " noticias eliminadas\n";
+    
+    // 3. PRE-PRODUCCION: Purgar tablas de rate_limits y login_attempts (>1 día)
+    try {
+        $pdo->exec("DELETE FROM rate_limits WHERE created_at < NOW() - INTERVAL 1 DAY");
+        echo "rate_limits purgada.\n";
+    } catch (\Exception $e) { /* tabla puede no existir */ }
+    try {
+        $pdo->exec("DELETE FROM login_attempts WHERE attempted_at < NOW() - INTERVAL 1 DAY");
+        echo "login_attempts purgada.\n";
+    } catch (\Exception $e) { /* tabla puede no existir */ }
 } catch (\PDOException $e) {
     echo "Error en tareas automáticas: " . $e->getMessage() . "\n";
 }
@@ -106,7 +116,8 @@ if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     $mysqldump_bin = 'c:\\xampp\\mysql\\bin\\mysqldump.exe';
 } else {
-    $mysqldump_bin = '/usr/bin/mysqldump';
+    // PRE-PRODUCCION: Detectar ruta automáticamente en Linux
+    $mysqldump_bin = trim(shell_exec('which mysqldump 2>/dev/null') ?: '/usr/bin/mysqldump');
 }
 $command = "{$mysqldump_bin} --defaults-extra-file=" . escapeshellarg($mysql_cnf) . " {$db_name} > " . escapeshellarg($sql_file);
 system($command);

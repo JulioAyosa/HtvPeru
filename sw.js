@@ -1,7 +1,6 @@
-const CACHE_NAME = 'piura-noticias-v2';
+const CACHE_NAME = 'piura-noticias-v3';
 const ASSETS_TO_CACHE = [
   '/',
-  '/index.php',
   '/css/style.css',
   '/img/logo.webp',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap',
@@ -42,7 +41,7 @@ self.addEventListener('fetch', (event) => {
     fetch(event.request).then((networkResponse) => {
       return caches.open(CACHE_NAME).then((cache) => {
         // Obviamos cacheados a peticiones admin o ajax
-        if (!event.request.url.includes('admin') && !event.request.url.includes('ajax')) {
+        if (!event.request.url.includes('admin') && !event.request.url.includes('ajax') && !event.request.url.includes('api/')) {
           cache.put(event.request, networkResponse.clone());
         }
         return networkResponse;
@@ -53,7 +52,7 @@ self.addEventListener('fetch', (event) => {
           return cachedResponse;
         }
         // Fallback genérico visual si no hay internet ni caché
-        return caches.match('/index.php');
+        return caches.match('/');
       });
     })
   );

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -86,9 +86,9 @@
                     html += `
                     <div class="timeline-item">
                         <button class="btn-remove-bk" data-index="${index}" title="Remover de guardados"><i class="ri-close-line"></i></button>
-                        <a href="/piura_noticias_php/article.php?slug=${encodeURIComponent(b.slug)}" style="text-decoration:none;">
+                        <a href="<?= base_url('/') ?>article.php?slug=${encodeURIComponent(b.slug)}" style="text-decoration:none;">
                             <div class="timeline-img-wrap">
-                                <img src="${b.img ? b.img : '/piura_noticias_php/img/placeholder.webp'}" alt="img">
+                                <img src="${b.img ? b.img : '<?= base_url('/') ?>img/placeholder.webp'}" alt="img">
                             </div>
                             <h2 class="timeline-title" style="margin-top:1rem;">${b.title}</h2>
                         </a>

@@ -157,9 +157,9 @@ $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
 // Limpiar query strings para el route path
 $route_path = parse_url($request_uri, PHP_URL_PATH);
 
-// Quitar el directorio base si existe (ej. /piura_noticias_php) tolerando mayúsculas
-$base_path = '/piura_noticias_php'; 
-if (stripos($route_path, $base_path) === 0) {
+// PRE-PRODUCCION: Usar APP_BASE dinámico en vez de hardcodear /piura_noticias_php
+$base_path = defined('APP_BASE') ? APP_BASE : '/piura_noticias_php'; 
+if (!empty($base_path) && stripos($route_path, $base_path) === 0) {
     $route_path = substr($route_path, strlen($base_path));
 }
 if ($route_path === '' || $route_path === '/') {

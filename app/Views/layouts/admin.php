@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // app/Views/layouts/admin.php
 // Plantilla Maestra del Panel de Administración
 $user_name = $_SESSION['user_name'] ?? 'Administrador';
@@ -56,13 +56,13 @@ if (!isset($notifications)) {
                     <div id="notif-dropdown" style="display:none; position:absolute; bottom:75px; right:0; width:300px; background:white; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.2); border:1px solid #e2e8f0; z-index:100; padding:0; overflow:hidden;">
                         <div style="padding: 1rem; font-weight:bold; border-bottom:1px solid #e2e8f0; font-size:0.95rem; background: #f8fafc; color:#0f172a;"><i class="ri-notification-badge-fill" style="color:var(--primary-color);"></i> Notificaciones</div>
                         <?php if ($notifications['comments'] > 0): ?>
-                        <a href="/piura_noticias_php/admin/comentarios" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem; border-bottom:1px solid #f1f5f9;"><i class="ri-discuss-line" style="color:#3b82f6; font-size: 1.2rem;"></i> <span><strong><?= $notifications['comments'] ?></strong> comentarios pendientes</span></a>
+                        <a href="<?= base_url('/') ?>admin/comentarios" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem; border-bottom:1px solid #f1f5f9;"><i class="ri-discuss-line" style="color:#3b82f6; font-size: 1.2rem;"></i> <span><strong><?= $notifications['comments'] ?></strong> comentarios pendientes</span></a>
                         <?php endif; ?>
                         <?php if ($notifications['scheduled'] > 0): ?>
-                        <a href="/piura_noticias_php/admin" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem; border-bottom:1px solid #f1f5f9;"><i class="ri-timer-line" style="color:#8b5cf6; font-size: 1.2rem;"></i> <span><strong><?= $notifications['scheduled'] ?></strong> noticias programadas</span></a>
+                        <a href="<?= base_url('/') ?>admin" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem; border-bottom:1px solid #f1f5f9;"><i class="ri-timer-line" style="color:#8b5cf6; font-size: 1.2rem;"></i> <span><strong><?= $notifications['scheduled'] ?></strong> noticias programadas</span></a>
                         <?php endif; ?>
                         <?php if ($notifications['users'] > 0): ?>
-                        <a href="/piura_noticias_php/admin/usuarios-publicos" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem;"><i class="ri-user-add-line" style="color:#10b981; font-size: 1.2rem;"></i> <span><strong><?= $notifications['users'] ?></strong> usuarios nuevos hoy</span></a>
+                        <a href="<?= base_url('/') ?>admin/usuarios-publicos" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem;"><i class="ri-user-add-line" style="color:#10b981; font-size: 1.2rem;"></i> <span><strong><?= $notifications['users'] ?></strong> usuarios nuevos hoy</span></a>
                         <?php endif; ?>
                         <?php if ($notifications['total'] == 0): ?>
                         <div style="padding: 1.5rem; text-align:center; color:#94a3b8; font-size:0.9rem;"><i class="ri-check-double-line" style="font-size:2rem; display:block; margin-bottom:0.5rem; color:#cbd5e1;"></i>No tienes notificaciones.</div>

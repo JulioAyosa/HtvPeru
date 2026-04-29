@@ -1,6 +1,12 @@
 <?php
 require_once 'conexion.php';
 
+// PRE-PRODUCCION: Rate limiting para endpoint legacy
+if (function_exists('check_rate_limit') && !check_rate_limit($pdo, 'load_more_ultimas', 30, 1)) {
+    http_response_code(429);
+    die('Demasiadas solicitudes. Intenta de nuevo en un momento.');
+}
+
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 15;
 $offset = ($page - 1) * $limit;

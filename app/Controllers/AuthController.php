@@ -7,7 +7,8 @@ class AuthController {
     public function index() {
         // Redirigir si ya está logueado
         if (isset($_SESSION['user_id'])) {
-            header("Location: /piura_noticias_php/admin");
+            $base = defined('APP_BASE') ? APP_BASE : '';
+            header("Location: {$base}/admin");
             exit;
         }
 
@@ -78,7 +79,8 @@ class AuthController {
                                 $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user['id'], 'Login', 'Inicio de sesión desde IP: ' . $client_ip]);
                             } catch(\Exception $e) {}
 
-                            header("Location: /piura_noticias_php/admin");
+                            $base = defined('APP_BASE') ? APP_BASE : '';
+                            header("Location: {$base}/admin");
                             exit;
                         }
                     } else {

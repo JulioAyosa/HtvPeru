@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // app/Views/admin/roles/index.php
 // Variables asumidas: $msg, $roles, $permisos_agrupados, $rol_permisos
 ?>
@@ -60,7 +60,7 @@
             <h2 id="modal-title" style="margin:0;"><i class="ri-shield-keyhole-line"></i> Nuevo Rol</h2>
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('modal-rol').style.display='none'"></i>
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/roles/action" id="role-form">
+        <form method="POST" action="<?= base_url('/') ?>admin/roles/action" id="role-form">
             <input type="hidden" name="action" id="form-action" value="create_role">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="rol_id" id="form-id" value="">
@@ -107,7 +107,7 @@
         <h2 style="margin-bottom: 0.5rem; color: #1e293b;">¿Eliminar este Rol?</h2>
         <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Estás a punto de eliminar el rol <strong id="delete-rol-name"></strong>. Esta acción no se puede deshacer.</p>
         
-        <form method="POST" action="/piura_noticias_php/admin/roles/action">
+        <form method="POST" action="<?= base_url('/') ?>admin/roles/action">
             <input type="hidden" name="action" value="delete_role">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="rol_id" id="form-delete-id" value="">

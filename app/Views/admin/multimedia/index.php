@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // app/Views/admin/multimedia/index.php
 // Variables: $files, $msg, $user_role, $user_name
 
@@ -64,7 +64,7 @@ function formatBytes($bytes, $precision = 2) {
     </div>
 </div>
 
-<form action="/piura_noticias_php/admin/multimedia/action" method="POST" enctype="multipart/form-data" class="upload-zone" onclick="document.getElementById('file_upload').click()">
+<form action="<?= base_url('/') ?>admin/multimedia/action" method="POST" enctype="multipart/form-data" class="upload-zone" onclick="document.getElementById('file_upload').click()">
     <i class="ri-upload-cloud-2-line" style="font-size: 3rem; color: var(--text-muted);"></i>
     <h3 style="margin: 1rem 0 0.5rem;">Subir Archivos al Servidor</h3>
     <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Formatos soportados: JPG, PNG, WEBP, MP4, etc. Puedes seleccionar varios archivos a la vez.</p>
@@ -97,7 +97,7 @@ function formatBytes($bytes, $precision = 2) {
     </div>
 </div>
 
-<form method="POST" action="/piura_noticias_php/admin/multimedia/action" id="bulkForm">
+<form method="POST" action="<?= base_url('/') ?>admin/multimedia/action" id="bulkForm">
     <input type="hidden" name="bulk_delete" value="yes">
     <?php echo csrf_field(); ?>
     <div class="media-grid" id="mediaGrid">
@@ -108,7 +108,7 @@ function formatBytes($bytes, $precision = 2) {
         <?php foreach ($files as $f): 
             $is_video = in_array($f['ext'], ['mp4','webm','ogg']);
             $type_tag = $is_video ? 'video' : 'image';
-            $full_url = 'http://'.$_SERVER['HTTP_HOST'].'/piura_noticias_php/'.$f['path'];
+            $full_url = 'http://'.$_SERVER['HTTP_HOST'].'<?= base_url('/') ?>'.$f['path'];
             
             $meses = ['January' => 'enero', 'February' => 'febrero', 'March' => 'marzo', 'April' => 'abril', 'May' => 'mayo', 'June' => 'junio', 'July' => 'julio', 'August' => 'agosto', 'September' => 'septiembre', 'October' => 'octubre', 'November' => 'noviembre', 'December' => 'diciembre'];
             $file_date = date('j \d\e F \d\e Y', $f['time']);
@@ -131,7 +131,7 @@ function formatBytes($bytes, $precision = 2) {
 
             <div class="media-actions">
                 <button type="button" onclick="openViewModal('<?php echo addslashes(htmlspecialchars($f['name'])); ?>', '<?php echo $full_url; ?>', <?php echo $is_video?'true':'false'; ?>, '<?php echo addslashes(htmlspecialchars($f['rel_path'])); ?>', '<?php echo addslashes($file_date); ?>', '<?php echo addslashes($file_size); ?>', '<?php echo addslashes($dimensions); ?>', '<?php echo addslashes($f['ext']); ?>')" title="Ver Detalles"><i class="ri-eye-line"></i></button>
-                <a href="<?php echo '/piura_noticias_php/' . $f['path']; ?>" download="<?php echo htmlspecialchars($f['name']); ?>" title="Descargar al Equipo"><i class="ri-download-2-line"></i></a>
+                <a href="<?php echo '<?= base_url('/') ?>' . $f['path']; ?>" download="<?php echo htmlspecialchars($f['name']); ?>" title="Descargar al Equipo"><i class="ri-download-2-line"></i></a>
                 <button type="button" onclick="copyToClipboard('<?php echo $full_url; ?>')" title="Copiar Enlace Público"><i class="ri-links-line"></i></button>
                 <?php if($user_role === 'admin'): ?>
                 <a href="#" onclick="showDeleteModal('<?php echo addslashes(htmlspecialchars($f['name'])); ?>', '<?php echo addslashes(htmlspecialchars($f['rel_path'])); ?>', <?php echo $is_video?'true':'false'; ?>, '<?php echo $full_url; ?>'); return false;" title="Mover a Papelera"><i class="ri-delete-bin-line"></i></a>
@@ -140,10 +140,10 @@ function formatBytes($bytes, $precision = 2) {
             
             <div class="media-preview">
                 <?php if ($is_video): ?>
-                    <video src="<?php echo '/piura_noticias_php/' . $f['path']; ?>#t=0.5" muted preload="metadata" style="width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+                    <video src="<?php echo '<?= base_url('/') ?>' . $f['path']; ?>#t=0.5" muted preload="metadata" style="width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
                     <div style="position:absolute; top:0.5rem; right:0.5rem; background:#111827; color:white; padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:600; display:flex; align-items:center; gap:4px; box-shadow:0 2px 4px rgba(0,0,0,0.5);"><i class="ri-movie-2-fill" style="color:#60a5fa;"></i> VIDEO</div>
                 <?php else: ?>
-                    <img src="<?php echo '/piura_noticias_php/' . $f['path']; ?>" alt="<?php echo htmlspecialchars($f['name']); ?>" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="<?php echo '<?= base_url('/') ?>' . $f['path']; ?>" alt="<?php echo htmlspecialchars($f['name']); ?>" style="width:100%; height:100%; object-fit:cover;">
                     <div style="position:absolute; top:0.5rem; right:0.5rem; background:white; color:#111827; padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:600; display:flex; align-items:center; gap:4px; box-shadow:0 2px 4px rgba(0,0,0,0.2);"><i class="ri-image-fill" style="color:#f59e0b;"></i> IMAGEN</div>
                 <?php endif; ?>
             </div>
@@ -381,7 +381,7 @@ function formatBytes($bytes, $precision = 2) {
         inner += `<strong style="color:#111827; font-size:0.9rem;">${name}</strong>`;
         previewBox.innerHTML = inner;
         
-        document.getElementById('modalConfirmBtn').href = '/piura_noticias_php/admin/multimedia/action?action_type=delete&file=' + encodeURIComponent(rel_path) + '&csrf_token=<?php echo csrf_token(); ?>';
+        document.getElementById('modalConfirmBtn').href = '<?= base_url('/') ?>admin/multimedia/action?action_type=delete&file=' + encodeURIComponent(rel_path) + '&csrf_token=<?php echo csrf_token(); ?>';
         
         dModal.style.display = 'flex';
         setTimeout(() => dModal.classList.add('active'), 10);

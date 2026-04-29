@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // app/Views/admin/reportes/index.php
 // Variables: $f_fecha_ini, $f_fecha_fin, $f_autor, $f_categoria, $noticias, $total_vistas, $total_noticias, $promedio_vistas, $lbl_cats, $val_cats, $lbl_top, $val_top, $autores, $categorias_disponibles
 ?>
@@ -56,11 +56,11 @@
             <h1>Informe Gerencial Consolidado</h1>
             <p style="margin: 0; color: #64748b;">Período generado: <?php echo date('d/m/Y', strtotime($f_fecha_ini)) . ' - ' . date('d/m/Y', strtotime($f_fecha_fin)); ?></p>
         </div>
-        <img src="/piura_noticias_php/img/logo.webp" alt="HTVPERU Logo" style="filter: grayscale(100%); opacity: 0.8;">
+        <img src="<?= base_url('/') ?>img/logo.webp" alt="HTVPERU Logo" style="filter: grayscale(100%); opacity: 0.8;">
     </div>
 
     <div class="filters no-print">
-        <form method="GET" action="/piura_noticias_php/admin/reportes" style="display: contents;">
+        <form method="GET" action="<?= base_url('/') ?>admin/reportes" style="display: contents;">
             <div class="filter-group">
                 <label>Desde</label>
                 <input type="date" name="fecha_ini" value="<?php echo htmlspecialchars($f_fecha_ini); ?>">
@@ -88,7 +88,7 @@
                 </select>
             </div>
             <button type="submit" class="btn-rep"><i class="ri-filter-3-line"></i> Aplicar Filtro</button>
-            <a href="/piura_noticias_php/admin/reportes" class="btn-rep out" title="Limpiar"><i class="ri-refresh-line"></i></a>
+            <a href="<?= base_url('/') ?>admin/reportes" class="btn-rep out" title="Limpiar"><i class="ri-refresh-line"></i></a>
         </form>
         
         <div style="flex-grow: 1; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
@@ -99,7 +99,7 @@
             $csv_url = '?' . http_build_query($qs);
             ?>
             <a href="<?php echo htmlspecialchars($csv_url); ?>" class="btn-rep sec"><i class="ri-file-excel-2-line"></i> Bajar CSV Plano</a>
-            <a href="/piura_noticias_php/admin" class="btn-rep out" style="margin-left:1rem;"><i class="ri-arrow-go-back-line"></i> Al Panel</a>
+            <a href="<?= base_url('/') ?>admin" class="btn-rep out" style="margin-left:1rem;"><i class="ri-arrow-go-back-line"></i> Al Panel</a>
         </div>
     </div>
 

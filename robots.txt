@@ -1,13 +1,18 @@
 User-agent: *
-Disallow: /admin.php
+Disallow: /admin
+Disallow: /admin/
 Disallow: /login.php
-Disallow: /paginas.php
-Disallow: /configuracion.php
-Disallow: /categorias.php
-Disallow: /publicidad.php
-Disallow: /actividad.php
-Disallow: /respaldos.php
-Disallow: /papelera.php
-Disallow: /optimizador.php
+Disallow: /login
+Disallow: /api/
+Disallow: /backups/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /cron_backup.php
 
-Sitemap: http://localhost/piura_noticias_php/sitemap.php
+# Assets permitidos
+Allow: /css/
+Allow: /js/
+Allow: /img/
+Allow: /uploads/
+
+Sitemap: https://htvperu.com.pe/sitemap.xml

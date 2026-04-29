@@ -1,5 +1,15 @@
 <?php
 
+// PRE-PRODUCCION: Helper para generar URLs con base path dinámico
+// Uso en vistas: <?= base_url('/admin/dashboard') ?>
+// En desarrollo:  /piura_noticias_php/admin/dashboard
+// En producción:  /admin/dashboard
+function base_url(string $path = ''): string {
+    $base = defined('APP_BASE') ? APP_BASE : '';
+    return $base . '/' . ltrim($path, '/');
+}
+
+
 // MEJ-06: Helper para invalidar cache del homepage
 function invalidate_home_cache() {
     $cache_file = __DIR__ . '/../../home_cache.json';

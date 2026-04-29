@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -77,7 +77,7 @@
                     $date_display = $date->format('d/m/Y');
                     $time_ago = time_elapsed_string($n['fecha_publicacion']);
                 ?>
-                <a href="/piura_noticias_php/article.php?slug=<?php echo urlencode($n['slug']); ?>" class="timeline-item">
+                <a href="<?= base_url('/') ?>article.php?slug=<?php echo urlencode($n['slug']); ?>" class="timeline-item">
                     <div class="timeline-time">
                         <span class="hour"><?php echo $time_display; ?></span>
                         <span><?php echo $date_display; ?></span>

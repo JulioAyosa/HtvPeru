@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // app/Views/admin/respaldos/index.php
 // Variables: $msg, $err, $categorias_export
 ?>
@@ -50,7 +50,7 @@
         </div>
         <p style="color:#7f1d1d; font-size:0.9rem; margin-top:0; margin-bottom:1rem;">Genera una copia de seguridad integral que incluye el código fuente exacto y la base de datos estructural. <strong>Protege tu portal ante desastres.</strong></p>
         
-        <form method="POST" action="/piura_noticias_php/admin/respaldos/action" id="form-backup-zip">
+        <form method="POST" action="<?= base_url('/') ?>admin/respaldos/action" id="form-backup-zip">
             <input type="hidden" name="action" value="full_zip">
             <?php echo csrf_field(); ?>
             
@@ -95,7 +95,7 @@
                 chkMedia.addEventListener('change', updateSize);
                 chkUploads.addEventListener('change', updateSize);
                 
-                fetch('/piura_noticias_php/api/admin/backup_size')
+                fetch('<?= base_url('/') ?>api/admin/backup_size')
                     .then(res => res.json())
                     .then(data => {
                         sizes.core = data.core_size || 0;
@@ -116,7 +116,7 @@
         <div class="module-title">
             <i class="ri-download-cloud-2-line" style="color:var(--primary-color); font-size:1.5rem;"></i> Exportar Noticias
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/respaldos/action">
+        <form method="POST" action="<?= base_url('/') ?>admin/respaldos/action">
             <input type="hidden" name="action" value="export">
             <?php echo csrf_field(); ?>
             
@@ -163,7 +163,7 @@
         <div class="module-title">
             <i class="ri-upload-cloud-2-line" style="color:#10b981; font-size:1.5rem;"></i> Restaurar / Importar
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/respaldos/action" enctype="multipart/form-data">
+        <form method="POST" action="<?= base_url('/') ?>admin/respaldos/action" enctype="multipart/form-data">
             <input type="hidden" name="action" value="import">
             <?php echo csrf_field(); ?>
 
@@ -237,8 +237,8 @@
                                         <td style='padding: 12px 16px;'><span style='background: #dbeafe; color: #1e40af; padding: 4px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;'>{$etiqueta}</span></td>
                                         <td style='padding: 12px 16px; color: #64748b;'>{$tamano}</td>
                                         <td style='padding: 12px 16px;'>
-                                            <a href='/piura_noticias_php/admin/respaldos/action?delete_auto_backup={$nombre}' style='display: inline-flex; align-items: center; background: #ef4444; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; transition: background 0.2s; margin-right: 5px;' onclick=\"return confirm('¿Mover esta copia a la papelera por 15 días?')\" onmouseover=\"this.style.backgroundColor='#dc2626'\" onmouseout=\"this.style.backgroundColor='#ef4444'\"><i class='ri-delete-bin-line' style='margin-right: 6px; font-size: 1.1rem;'></i> Eliminar</a>
-                                            <a href='/piura_noticias_php/admin/respaldos/action?download_auto_backup={$nombre}' style='display: inline-flex; align-items: center; background: #10b981; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; transition: background 0.2s;' onmouseover='this.style.backgroundColor=\"#059669\"' onmouseout='this.style.backgroundColor=\"#10b981\"'>
+                                            <a href='<?= base_url('/') ?>admin/respaldos/action?delete_auto_backup={$nombre}' style='display: inline-flex; align-items: center; background: #ef4444; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; transition: background 0.2s; margin-right: 5px;' onclick=\"return confirm('¿Mover esta copia a la papelera por 15 días?')\" onmouseover=\"this.style.backgroundColor='#dc2626'\" onmouseout=\"this.style.backgroundColor='#ef4444'\"><i class='ri-delete-bin-line' style='margin-right: 6px; font-size: 1.1rem;'></i> Eliminar</a>
+                                            <a href='<?= base_url('/') ?>admin/respaldos/action?download_auto_backup={$nombre}' style='display: inline-flex; align-items: center; background: #10b981; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; transition: background 0.2s;' onmouseover='this.style.backgroundColor=\"#059669\"' onmouseout='this.style.backgroundColor=\"#10b981\"'>
                                                <i class='ri-download-cloud-2-line' style='margin-right: 6px; font-size: 1.1rem;'></i> Descargar ZIP
                                             </a>
                                         </td>

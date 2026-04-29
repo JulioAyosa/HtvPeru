@@ -26,6 +26,7 @@ desktop.ini
 # === ARCHIVOS GENERADOS POR EL SISTEMA ===
 /dist/
 home_cache.json
+global_cache.json
 
 # === BACKUPS (pesan demasiado para GitHub) ===
 /backups_automaticos/

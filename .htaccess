@@ -2,11 +2,26 @@
 AddDefaultCharset UTF-8
 
 # Página de error 404 personalizada (MEJ-03-03)
+# NOTA: En producción (raíz), cambiar a /404.php
 ErrorDocument 404 /piura_noticias_php/404.php
 
 # Activar compresión GZIP/DEFLATE (MEJ-03-04)
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml image/svg+xml
+</IfModule>
+
+# Cache-Control para assets estáticos (PRE-PRODUCCION)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-font-woff2 "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
 
 # Forzar desactivación de exposición de carpetas
@@ -86,15 +101,15 @@ ServerSignature Off
     # ==========================================
     # FRONT CONTROLLER REDIRECT (MVC REFACTOR)
     # ==========================================
+    # PRE-PRODUCCION: La variable BASE_PATH controla el prefijo.
+    # En DESARROLLO (XAMPP): /piura_noticias_php
+    # En PRODUCCION (raíz):  quitar o dejar vacío estas líneas
+    
     # Evitar bucles redirigiendo peticiones ya apuntando a public/
     RewriteCond %{REQUEST_URI} !^/piura_noticias_php/public/
     
     # Excluir recursos estáticos de ser pasados por PHP por velocidad
     RewriteCond %{REQUEST_URI} !^/piura_noticias_php/(css|js|img|uploads|dist) [NC]
-    
-    # Opcional: Si el archivo existe físicamente y quieres que no lo rutee 
-    # (Lo ignoramos porque queremos que public/index.php cargue los fallbacks como admin, article)
-    # RewriteCond %{REQUEST_FILENAME} !-f
     
     # Enviar todo el resto a public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
