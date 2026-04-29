@@ -46,26 +46,26 @@ if (!isset($notifications)) {
 
         <main class="admin-main">
             <!-- Header dinámico del admin -->
-            <div class="admin-top-bar" style="display:flex; justify-content:flex-end; padding: 1rem 0; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color);">
-                <div style="position:relative; cursor:pointer;" onclick="document.getElementById('notif-dropdown').classList.toggle('show')">
-                    <i class="ri-notification-3-line" style="font-size: 1.5rem; color: #475569;"></i>
+            <div class="admin-top-bar">
+                <div style="position:fixed; bottom:2rem; right:2rem; z-index:9999; cursor:pointer; background: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color); transition: transform 0.2s;" onclick="document.getElementById('notif-dropdown').classList.toggle('show')" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                    <i class="ri-notification-3-line" style="font-size: 1.8rem; color: #475569;"></i>
                     <?php if ($notifications['total'] > 0): ?>
-                    <span style="position:absolute; top:-5px; right:-5px; background:var(--danger); color:white; font-size:0.7rem; font-weight:bold; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center;"><?= $notifications['total'] ?></span>
+                    <span style="position:absolute; top:-2px; right:-2px; background:var(--danger); color:white; font-size:0.8rem; font-weight:bold; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.5);"><?= $notifications['total'] ?></span>
                     <?php endif; ?>
                     
-                    <div id="notif-dropdown" style="display:none; position:absolute; right:0; top:35px; width:280px; background:white; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,0.1); border:1px solid #e2e8f0; z-index:100; padding:0.5rem 0;">
-                        <div style="padding: 0.5rem 1rem; font-weight:bold; border-bottom:1px solid #e2e8f0; font-size:0.9rem;">Notificaciones</div>
+                    <div id="notif-dropdown" style="display:none; position:absolute; bottom:75px; right:0; width:300px; background:white; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.2); border:1px solid #e2e8f0; z-index:100; padding:0; overflow:hidden;">
+                        <div style="padding: 1rem; font-weight:bold; border-bottom:1px solid #e2e8f0; font-size:0.95rem; background: #f8fafc; color:#0f172a;"><i class="ri-notification-badge-fill" style="color:var(--primary-color);"></i> Notificaciones</div>
                         <?php if ($notifications['comments'] > 0): ?>
-                        <a href="/piura_noticias_php/admin/comentarios" style="display:flex; align-items:center; gap:0.5rem; padding: 0.75rem 1rem; text-decoration:none; color:#334155; font-size:0.85rem; border-bottom:1px solid #f1f5f9;"><i class="ri-discuss-line" style="color:#3b82f6;"></i> <?= $notifications['comments'] ?> comentarios pendientes</a>
+                        <a href="/piura_noticias_php/admin/comentarios" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem; border-bottom:1px solid #f1f5f9;"><i class="ri-discuss-line" style="color:#3b82f6; font-size: 1.2rem;"></i> <span><strong><?= $notifications['comments'] ?></strong> comentarios pendientes</span></a>
                         <?php endif; ?>
                         <?php if ($notifications['scheduled'] > 0): ?>
-                        <a href="/piura_noticias_php/admin" style="display:flex; align-items:center; gap:0.5rem; padding: 0.75rem 1rem; text-decoration:none; color:#334155; font-size:0.85rem; border-bottom:1px solid #f1f5f9;"><i class="ri-timer-line" style="color:#8b5cf6;"></i> <?= $notifications['scheduled'] ?> noticias programadas</a>
+                        <a href="/piura_noticias_php/admin" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem; border-bottom:1px solid #f1f5f9;"><i class="ri-timer-line" style="color:#8b5cf6; font-size: 1.2rem;"></i> <span><strong><?= $notifications['scheduled'] ?></strong> noticias programadas</span></a>
                         <?php endif; ?>
                         <?php if ($notifications['users'] > 0): ?>
-                        <a href="/piura_noticias_php/admin/usuarios-publicos" style="display:flex; align-items:center; gap:0.5rem; padding: 0.75rem 1rem; text-decoration:none; color:#334155; font-size:0.85rem;"><i class="ri-user-add-line" style="color:#10b981;"></i> <?= $notifications['users'] ?> usuarios nuevos hoy</a>
+                        <a href="/piura_noticias_php/admin/usuarios-publicos" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; text-decoration:none; color:#334155; font-size:0.9rem;"><i class="ri-user-add-line" style="color:#10b981; font-size: 1.2rem;"></i> <span><strong><?= $notifications['users'] ?></strong> usuarios nuevos hoy</span></a>
                         <?php endif; ?>
                         <?php if ($notifications['total'] == 0): ?>
-                        <div style="padding: 1rem; text-align:center; color:#94a3b8; font-size:0.85rem;">No tienes notificaciones pendientes.</div>
+                        <div style="padding: 1.5rem; text-align:center; color:#94a3b8; font-size:0.9rem;"><i class="ri-check-double-line" style="font-size:2rem; display:block; margin-bottom:0.5rem; color:#cbd5e1;"></i>No tienes notificaciones.</div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -74,6 +74,12 @@ if (!isset($notifications)) {
             <style>
                 #notif-dropdown.show { display: block !important; }
                 #notif-dropdown a:hover { background: #f8fafc; }
+                html[data-admin-theme="dark"] .admin-top-bar > div { background: #1e293b !important; border-color: #334155 !important; }
+                html[data-admin-theme="dark"] .admin-top-bar i.ri-notification-3-line { color: #cbd5e1 !important; }
+                html[data-admin-theme="dark"] #notif-dropdown { background: #0f172a !important; border-color: #334155 !important; }
+                html[data-admin-theme="dark"] #notif-dropdown > div:first-child { background: #1e293b !important; color: #f1f5f9 !important; border-bottom-color: #334155 !important; }
+                html[data-admin-theme="dark"] #notif-dropdown a { color: #cbd5e1 !important; border-bottom-color: #334155 !important; }
+                html[data-admin-theme="dark"] #notif-dropdown a:hover { background: #1e293b !important; }
             </style>
 
             <!-- Contenido Inyectado -->

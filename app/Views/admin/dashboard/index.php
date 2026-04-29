@@ -57,7 +57,9 @@
     <!-- Gráfico de Visitas -->
     <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);" class="card">
         <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem;"><i class="ri-line-chart-line" style="color: var(--primary-color);"></i> Visitas últimos 7 días</h3>
-        <canvas id="viewsChart" style="width: 100%; height: 250px;"></canvas>
+        <div style="position: relative; height: 250px; width: 100%;">
+            <canvas id="viewsChart"></canvas>
+        </div>
     </div>
 
     <!-- Top Noticias -->
