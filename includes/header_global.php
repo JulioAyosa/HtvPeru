@@ -198,6 +198,13 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                             <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
+                    
+                    <!-- Botón de Login exclusivo para Móvil -->
+                    <li style="display:flex;" class="mobile-only-nav-item">
+                        <a href="login.php" style="color:white; padding: 1rem 1.5rem; background: rgba(255,255,255,0.1); display:flex; align-items:center; gap:5px; font-weight:800; border-top: 1px solid rgba(255,255,255,0.2);">
+                            <i class="ri-user-settings-line"></i> Ingresar / Panel Admin
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>

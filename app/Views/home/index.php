@@ -481,23 +481,36 @@
                         <style>@keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }</style>
                     </div>
                     
+                    <style>
+                        /* Estética Compacta para Móvil en Noticias Generales */
+                        @media (max-width: 768px) {
+                            #general-news-grid { display: flex !important; flex-direction: column !important; gap: 1rem !important; }
+                            .gen-news-card { flex-direction: row !important; height: 130px !important; }
+                            .gen-news-img-wrap { width: 130px !important; height: 100% !important; flex-shrink: 0 !important; }
+                            .gen-news-content { padding: 0.75rem !important; justify-content: center !important; }
+                            .gen-news-title { font-size: 0.95rem !important; line-height: 1.2 !important; margin-bottom: 0.5rem !important; }
+                            .gen-news-cat { font-size: 0.55rem !important; padding: 2px 6px !important; top: 6px !important; left: 6px !important; }
+                            .gen-news-footer { padding-top: 0.5rem !important; margin-top: 0 !important; }
+                        }
+                    </style>
+                    
                     <div id="general-news-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
                         <?php if(count($recientes) > 0): ?>
                             <?php for($i=0; $i<count($recientes); $i++): $r = $recientes[$i]; ?>
-                                <a href="article.php?slug=<?php echo urlencode($r['slug'] ?? ''); ?>" style="display: flex; flex-direction: column; text-decoration: none; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 20px -5px rgba(0,0,0,0.15)'; this.querySelector('.img-scale').style.transform='scale(1.05)'; this.querySelector('.read-more').style.color='var(--primary-color)'; this.querySelector('.read-more').style.transform='translateX(5px)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.05)'; this.querySelector('.img-scale').style.transform='scale(1)'; this.querySelector('.read-more').style.color='#64748b'; this.querySelector('.read-more').style.transform='translateX(0)';">
+                                <a href="article.php?slug=<?php echo urlencode($r['slug'] ?? ''); ?>" class="gen-news-card" style="display: flex; flex-direction: column; text-decoration: none; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 20px -5px rgba(0,0,0,0.15)'; this.querySelector('.img-scale').style.transform='scale(1.05)'; this.querySelector('.read-more').style.color='var(--primary-color)'; this.querySelector('.read-more').style.transform='translateX(5px)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.05)'; this.querySelector('.img-scale').style.transform='scale(1)'; this.querySelector('.read-more').style.color='#64748b'; this.querySelector('.read-more').style.transform='translateX(0)';">
                                     
                                     <!-- Contenedor de Imagen -->
-                                    <div style="width: 100%; height: 200px; position: relative; overflow: hidden; background: #f8fafc;">
+                                    <div class="gen-news-img-wrap" style="width: 100%; height: 200px; position: relative; overflow: hidden; background: #f8fafc;">
                                         <div class="img-scale" style="width: 100%; height: 100%; transition: transform 0.6s ease;">
                                             <?php echo renderMedia($r['imagen_url'], 'card-img', $r['video_poster_url'] ?? '', false, 'width: 100%; height: 100%; object-fit: cover;' ); ?>
                                         </div>
-                                        <div style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; padding: 4px 12px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border-radius: 4px; z-index: 2; letter-spacing: 0.5px;">
+                                        <div class="gen-news-cat" style="position: absolute; top: 12px; left: 12px; background: var(--primary-color); color: white; padding: 4px 12px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border-radius: 4px; z-index: 2; letter-spacing: 0.5px;">
                                             <?php echo htmlspecialchars($r['categoria']); ?>
                                         </div>
                                     </div>
-                                    <div style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
-                                        <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; font-family: var(--font-sans); color: var(--text-main); line-height: 1.4; font-weight: 700;"><?php echo htmlspecialchars($r['titulo']); ?></h3>
-                                        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 1rem;">
+                                    <div class="gen-news-content" style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
+                                        <h3 class="gen-news-title" style="margin: 0 0 1rem 0; font-size: 1.2rem; font-family: var(--font-sans); color: var(--text-main); line-height: 1.4; font-weight: 700;"><?php echo htmlspecialchars($r['titulo']); ?></h3>
+                                        <div class="gen-news-footer" style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 1rem;">
                                             <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600; display:flex; align-items:center; gap:5px;"><i class="ri-calendar-event-line"></i> <?php echo date('d/m/Y', strtotime($r['fecha_publicacion'])); ?></span>
                                             <span class="read-more" style="font-size: 0.85rem; color: #64748b; font-weight: 800; text-transform: uppercase; display:flex; align-items:center; gap:4px; transition: all 0.3s ease;">Leer <i class="ri-arrow-right-line"></i></span>
                                         </div>
