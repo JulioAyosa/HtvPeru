@@ -56,7 +56,8 @@
                     <?php endif; ?>
 
                     <?php if (has_permission('manage_users')): ?>
-                    <li><a href="/piura_noticias_php/admin/usuarios" <?php echo (strpos($_SERVER['REQUEST_URI'],'/admin/usuarios')!==false)?'class="active"':''; ?>><i class="ri-group-line"></i> Usuarios</a></li>
+                    <li><a href="/piura_noticias_php/admin/usuarios" <?php echo (strpos($_SERVER['REQUEST_URI'],'/admin/usuarios')!==false && strpos($_SERVER['REQUEST_URI'],'/admin/usuarios-publicos')===false)?'class="active"':''; ?>><i class="ri-user-settings-line"></i> Staff / Admins</a></li>
+                    <li><a href="/piura_noticias_php/admin/usuarios-publicos" <?php echo (strpos($_SERVER['REQUEST_URI'],'/admin/usuarios-publicos')!==false)?'class="active"':''; ?>><i class="ri-team-line"></i> Usuarios Lectores</a></li>
                     <?php endif; ?>
 
                     <?php if (has_permission('manage_roles')): ?>

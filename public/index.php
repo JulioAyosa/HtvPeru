@@ -78,6 +78,9 @@ $router->add('GET', '/admin/usuarios', 'AdminUserController@index', ['AuthMiddle
 $router->add('GET', '/admin/usuarios/action', 'AdminUserController@action', ['AuthMiddleware', 'AdminMiddleware']);
 $router->add('POST', '/admin/usuarios/action', 'AdminUserController@action', ['AuthMiddleware', 'AdminMiddleware', 'CsrfMiddleware']);
 
+$router->add('GET', '/admin/usuarios-publicos', 'AdminPublicUsersController@index', ['AuthMiddleware', 'AdminMiddleware']);
+$router->add('GET', '/admin/usuarios-publicos/toggle', 'AdminPublicUsersController@toggleStatus', ['AuthMiddleware', 'AdminMiddleware']);
+
 $router->add('GET', '/admin/roles', 'AdminRoleController@index', ['AuthMiddleware', 'AdminMiddleware']);
 $router->add('POST', '/admin/roles/action', 'AdminRoleController@action', ['AuthMiddleware', 'AdminMiddleware', 'CsrfMiddleware']);
 

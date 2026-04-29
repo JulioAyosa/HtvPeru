@@ -50,9 +50,31 @@ class AdminDashboardController {
             }
         }
 
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+
         $query = "SELECT n.id, n.titulo, n.categoria, n.fecha_publicacion, n.es_destacada, n.estado_publicacion, n.fecha_programada, n.vistas, u.nombre_completo AS autor 
-                  FROM noticias n JOIN usuarios u ON n.autor_id = u.id WHERE n.deleted_at IS NULL ORDER BY n.fecha_publicacion DESC";
+                  FROM noticias n JOIN usuarios u ON n.autor_id = u.id WHERE n.deleted_at IS NULL ORDER BY n.fecha_publicacion DESC LIMIT $limit OFFSET $offset";
         $noticias = $pdo->query($query)->fetchAll();
+
+        $total_noticias = $pdo->query("SELECT COUNT(*) FROM noticias WHERE deleted_at IS NULL")->fetchColumn();
+        $total_pages = ceil($total_noticias / $limit);
+
+        // Notificaciones
+        $pending_comments = $pdo->query("SELECT COUNT(*) FROM comentarios WHERE estado = 'pendiente'")->fetchColumn();
+        $scheduled_news = $pdo->query("SELECT COUNT(*) FROM noticias WHERE estado_publicacion = 'programado' AND fecha_programada >= NOW() AND deleted_at IS NULL")->fetchColumn();
+        $new_users = 0;
+        try {
+            $new_users = $pdo->query("SELECT COUNT(*) FROM usuarios_publicos WHERE DATE(fecha_registro) = CURDATE()")->fetchColumn();
+        } catch(\Exception $e) {}
+        
+        $notifications = [
+            'comments' => $pending_comments,
+            'scheduled' => $scheduled_news,
+            'users' => $new_users,
+            'total' => $pending_comments + $scheduled_news + $new_users
+        ];
 
         $stats_row = $pdo->query("
             SELECT 

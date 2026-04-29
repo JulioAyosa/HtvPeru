@@ -154,7 +154,30 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    
+    <!-- Paginación -->
+    <?php if (isset($total_pages) && $total_pages > 1): ?>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: white; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Mostrando pág <?php echo $page; ?> de <?php echo $total_pages; ?> (<?php echo $total_noticias; ?> noticias)
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <?php if ($page > 1): ?>
+                <a href="?page=<?php echo $page - 1; ?>" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="ri-arrow-left-s-line"></i> Anterior</a>
+            <?php else: ?>
+                <button disabled class="btn btn-secondary" style="padding: 0.5rem 1rem; opacity: 0.5; cursor: not-allowed;"><i class="ri-arrow-left-s-line"></i> Anterior</button>
+            <?php endif; ?>
+            
+            <?php if ($page < $total_pages): ?>
+                <a href="?page=<?php echo $page + 1; ?>" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Siguiente <i class="ri-arrow-right-s-line"></i></a>
+            <?php else: ?>
+                <button disabled class="btn btn-secondary" style="padding: 0.5rem 1rem; opacity: 0.5; cursor: not-allowed;">Siguiente <i class="ri-arrow-right-s-line"></i></button>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
 </form>
+
 
 <!-- Modal Formulario Extendido -->
 <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; box-sizing: border-box;">
