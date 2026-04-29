@@ -6,7 +6,8 @@
 // En producción:  /admin/dashboard
 function base_url(string $path = ''): string {
     $base = defined('APP_BASE') ? APP_BASE : '';
-    return $base . '/' . ltrim($path, '/');
+    $path = '/' . ltrim($path, '/');
+    return rtrim($base, '/') . $path;
 }
 
 
