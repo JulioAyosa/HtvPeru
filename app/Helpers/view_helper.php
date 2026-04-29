@@ -1,7 +1,7 @@
 <?php
 
 // PRE-PRODUCCION: Helper para generar URLs con base path dinámico
-// Uso en vistas: <?= base_url('/admin/dashboard') ?>
+// Uso en vistas: base_url('/admin/dashboard')
 // En desarrollo:  /piura_noticias_php/admin/dashboard
 // En producción:  /admin/dashboard
 function base_url(string $path = ''): string {
