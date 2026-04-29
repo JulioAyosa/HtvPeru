@@ -2,7 +2,7 @@
   "name": "HTVPERU - Una Mirada al Mundo",
   "short_name": "HTVPERU",
   "description": "Tu portal de noticias regionales y globales al instante.",
-  "start_url": "/piura_noticias_php/index.php",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",

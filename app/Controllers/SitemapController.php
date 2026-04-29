@@ -11,7 +11,8 @@ class SitemapController {
         require_once __DIR__ . '/../../conexion.php';
         $pdo = \Config\Database::getInstance();
         
-        $base_url = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+        $base_url = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
         $base_url = str_replace('/public', '', $base_url);
         if(substr($base_url, -1) !== '/') { $base_url .= '/'; }
 
@@ -85,7 +86,7 @@ class SitemapController {
             $path = str_replace('/public', '', $path);
             
             if (php_sapi_name() === 'cli') {
-                $base_url = "https://tuportaldenoticias.pe/"; 
+                $base_url = defined('APP_URL') && !empty(APP_URL) ? APP_URL . '/' : "https://htvperu.com.pe/"; 
             } else {
                 $base_url = $protocol . "://" . $host . $path . "/";
             }

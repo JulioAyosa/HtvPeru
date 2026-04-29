@@ -24,6 +24,13 @@ ErrorDocument 404 /piura_noticias_php/404.php
     ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
 
+# Prevenir indexación de respuestas JSON de la API (PRE-PRODUCCION)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(json)$">
+        Header set X-Robots-Tag "noindex, nofollow"
+    </FilesMatch>
+</IfModule>
+
 # Forzar desactivación de exposición de carpetas
 Options -Indexes
 

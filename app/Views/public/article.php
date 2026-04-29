@@ -40,7 +40,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
     <meta name="description" content="<?php echo htmlspecialchars($meta_desc ?: mb_substr(strip_tags($articulo['contenido']), 0, 160)); ?>">
     
     <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars($global_configs['favicon_url'] ?? 'img/logo.webp'); ?>">
-    <link rel="manifest" href="/piura_noticias_php/manifest.json">
+    <link rel="manifest" href="<?= base_url('/manifest.json') ?>">
     <meta name="theme-color" content="<?php echo htmlspecialchars($global_configs['color_primario'] ?? '#2563eb'); ?>">
     
     <!-- CUSTOM HEAD SCRIPTS -->
@@ -66,6 +66,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
     <meta name="twitter:title" content="<?php echo htmlspecialchars($articulo['seo_titulo'] ?: $articulo['titulo']); ?>" />
     <meta name="twitter:description" content="<?php echo htmlspecialchars($articulo['seo_descripcion'] ?: mb_substr(strip_tags($articulo['contenido']), 0, 160)); ?>" />
     <meta name="twitter:image" content="<?php echo $base_url . ltrim($articulo['imagen_url'], '/'); ?>" />
+    <link rel="canonical" href="<?php echo $current_url; ?>" />
 
     <!-- Schema.org JSON-LD para Google News -->
     <script type="application/ld+json">
@@ -77,7 +78,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
         "<?php echo $base_url . ltrim($articulo['imagen_url'], '/'); ?>"
        ],
       "datePublished": "<?php echo date('c', strtotime($articulo['fecha_publicacion'])); ?>",
-      "dateModified": "<?php echo date('c', strtotime($articulo['fecha_publicacion'])); ?>",
+      "dateModified": "<?php echo date('c', strtotime($articulo['fecha_actualizacion'] ?? $articulo['fecha_publicacion'])); ?>",
       "author": [{
           "@type": "Person",
           "name": "<?php echo htmlspecialchars($articulo['autor']); ?>"

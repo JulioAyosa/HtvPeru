@@ -19,14 +19,15 @@
     <title><?php echo htmlspecialchars($global_configs['site_title'] ?? 'HTVPERU - Una Mirada al Mundo'); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($global_configs['site_slogan'] ?? ''); ?>">
     
+    <?php $og_protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://'; ?>
     <meta property="og:title" content="<?php echo htmlspecialchars($global_configs['site_title'] ?? 'HTVPERU'); ?>" />
     <meta property="og:description" content="<?php echo htmlspecialchars($global_configs['seo_og_desc'] ?? $global_configs['site_slogan'] ?? ''); ?>" />
-    <meta property="og:image" content="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/' . (!empty($global_configs['seo_og_image']) ? $global_configs['seo_og_image'] : (!empty($global_configs['logo_url']) ? $global_configs['logo_url'] : 'img/logo.webp')); ?>" />
+    <meta property="og:image" content="<?php echo $og_protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/' . (!empty($global_configs['seo_og_image']) ? $global_configs['seo_og_image'] : (!empty($global_configs['logo_url']) ? $global_configs['logo_url'] : 'img/logo.webp')); ?>" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
+    <meta property="og:url" content="<?php echo $og_protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars(!empty($global_configs['favicon_url']) ? $global_configs['favicon_url'] : 'img/logo.webp'); ?>">
-    <link rel="manifest" href="/piura_noticias_php/manifest.json">
+    <link rel="manifest" href="<?= base_url('/manifest.json') ?>">
     <meta name="theme-color" content="<?php echo htmlspecialchars($global_configs['color_primario'] ?? '#2563eb'); ?>">
     
     <?php if(!empty($global_configs['script_header'])) echo render_safe_script($global_configs['script_header']); ?>
@@ -41,6 +42,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet"></noscript>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"></noscript>
     <?= \App\Services\AssetManager::css('css/style.css') ?>
     <style>
         :root {
