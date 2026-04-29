@@ -1,4 +1,4 @@
-const CACHE_NAME = 'piura-noticias-v1';
+const CACHE_NAME = 'piura-noticias-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.php',
