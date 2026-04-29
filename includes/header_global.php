@@ -139,6 +139,11 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                 <ul class="nav-list mega-nav-list"
                     style="margin: 0; padding: 0; display:flex; font-weight:800; font-size:0.85rem; text-transform:uppercase; white-space:nowrap; justify-content:center; align-items:stretch;">
                     <li style="display:flex;"><a href="index.php" style="color:white; padding: 1rem 1.5rem; display:flex; align-items:center;">Inicio</a></li>
+                    
+                    <?php if(($global_configs['tv_envivo_estado'] ?? 'inactivo') === 'activo' && !empty($global_configs['tv_envivo_url'])): ?>
+                    <li style="display:flex;" class="mobile-only-nav-item"><a href="#" onclick="document.getElementById('pip-player-modal').style.display='flex'; return false;" style="color:white; padding: 1rem 1.5rem; background: #ef4444; display:flex; align-items:center; gap:5px; font-weight:800;"><i class="ri-tv-line"></i> TV EN VIVO</a></li>
+                    <?php endif; ?>
+
                     <li style="display:flex;"><a href="ultimas-noticias.php"
                             style="color:white; padding: 1rem 1.5rem; background: #dc2626; display:flex; align-items:center; gap:5px;">Lo Último <i class="ri-flashlight-fill"></i></a></li>
 
