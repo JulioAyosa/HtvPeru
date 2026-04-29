@@ -198,6 +198,26 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
                     <button onclick="document.querySelector('.article-body').style.fontSize='1.3rem'" style="background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-main); border-radius:4px; padding:2px 8px; cursor:pointer;" title="Texto Grande">A+</button>
                 </div>
             </div>
+            
+            <!-- Botones de Compartir (Fase 3) -->
+            <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                <?php
+                $share_url = urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+                $share_title = urlencode($articulo['titulo']);
+                ?>
+                <a href="https://wa.me/?text=<?php echo $share_title; ?>%20-%20<?php echo $share_url; ?>" target="_blank" style="background:#25D366; color:white; padding:0.5rem 1rem; border-radius:50px; font-weight:600; font-size:0.9rem; text-decoration:none; display:flex; align-items:center; gap:0.5rem; transition:transform 0.2s;">
+                    <i class="ri-whatsapp-line" style="font-size:1.1rem;"></i> WhatsApp
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url; ?>" target="_blank" style="background:#1877F2; color:white; padding:0.5rem 1rem; border-radius:50px; font-weight:600; font-size:0.9rem; text-decoration:none; display:flex; align-items:center; gap:0.5rem; transition:transform 0.2s;">
+                    <i class="ri-facebook-fill" style="font-size:1.1rem;"></i> Facebook
+                </a>
+                <a href="https://twitter.com/intent/tweet?url=<?php echo $share_url; ?>&text=<?php echo $share_title; ?>" target="_blank" style="background:#000000; color:white; padding:0.5rem 1rem; border-radius:50px; font-weight:600; font-size:0.9rem; text-decoration:none; display:flex; align-items:center; gap:0.5rem; transition:transform 0.2s;">
+                    <i class="ri-twitter-x-line" style="font-size:1.1rem;"></i> Twitter
+                </a>
+                <button onclick="navigator.clipboard.writeText('<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>'); this.innerHTML='<i class=\'ri-check-line\'></i> Copiado!'; setTimeout(() => this.innerHTML='<i class=\'ri-links-line\'></i> Copiar', 2000);" style="background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-main); padding:0.5rem 1rem; border-radius:50px; font-weight:600; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:background 0.2s;">
+                    <i class="ri-links-line" style="font-size:1.1rem;"></i> Copiar
+                </button>
+            </div>
         </div>
         
         <!-- Renderizando la imagen principal o Video con Poster Dinámico -->

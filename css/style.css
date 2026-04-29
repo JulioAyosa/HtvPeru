@@ -933,3 +933,33 @@ h1, h2, h3, h4, h5, h6, .card-title, .article-title, p { overflow-wrap: break-wo
 .header.mega-open .logo {
     transition: none !important;
 }
+
+/* =========================================
+   PHASE 3: MOBILE RESPONSIVENESS FIXES
+   ========================================= */
+@media (max-width: 768px) {
+    /* Hero Carousel */
+    .heroSwiper { height: 300px !important; }
+    .mega-hero-grid { grid-template-columns: 1fr !important; height: auto !important; display: flex !important; flex-direction: column !important; }
+    .mega-hero-grid > .news-card:first-child { height: 250px !important; }
+    .mega-hero-grid > div { display: none !important; /* Hide sub-news in slider on mobile */ }
+    
+    /* Layout */
+    .layout-wrapper { flex-direction: column !important; }
+    .content-area, .sidebar-area { width: 100% !important; flex: none !important; }
+    
+    /* Regional Tabs and Grid */
+    #regional-grid { grid-template-columns: 1fr !important; }
+    .regional-card { height: 220px !important; }
+    .regional-tabs-wrapper { margin-top: 1rem; width: 100%; justify-content: space-between !important; }
+    
+    /* Stories */
+    .stories-container > a > div { width: 60px !important; height: 60px !important; }
+    
+    /* More News Grid */
+    .layout-wrapper + div > div { grid-template-columns: 1fr !important; }
+    
+    /* Ads */
+    .ad-banner { height: auto !important; min-height: 100px; padding: 1rem; }
+}
+
