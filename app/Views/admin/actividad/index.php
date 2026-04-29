@@ -61,7 +61,10 @@ if (!function_exists('formatDetalles')) {
             <tr>
                 <td><?php echo $a['id']; ?></td>
                 <td style="white-space:nowrap;"><?php echo date('d/m/Y H:i', strtotime($a['fecha_registro'])); ?></td>
-                <td><strong><?php echo htmlspecialchars($a['usuario']); ?></strong></td>
+                <td>
+                    <strong><?php echo htmlspecialchars($a['usuario']); ?></strong><br>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;"><?php echo htmlspecialchars($a['rol_usuario'] ?? 'N/A'); ?></span>
+                </td>
                 <td><span class="badge <?php echo $clase; ?>" style="padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;"><?php echo htmlspecialchars($a['accion']); ?></span></td>
                 <td><?php echo formatDetalles($a['detalles'] ?? ''); ?></td>
             </tr>

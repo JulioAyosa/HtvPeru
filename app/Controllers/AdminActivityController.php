@@ -35,7 +35,7 @@ class AdminActivityController {
         $total_pages = max(1, ceil($total_rows / $per_page));
         if ($page > $total_pages) $page = $total_pages;
 
-        $stmt_act = $pdo->prepare("SELECT r.id, r.accion, r.detalles, r.fecha_registro, u.nombre_completo AS usuario 
+        $stmt_act = $pdo->prepare("SELECT r.id, r.accion, r.detalles, r.fecha_registro, u.nombre_completo AS usuario, u.rol AS rol_usuario 
                   FROM registro_actividad r 
                   JOIN usuarios u ON r.user_id = u.id 
                   ORDER BY r.fecha_registro DESC LIMIT :lim OFFSET :off");
