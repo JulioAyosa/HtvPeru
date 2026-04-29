@@ -228,6 +228,17 @@ class PublicPageController {
         }
         $_SESSION['last_search_time'] = time();
 
+        $words = explode(' ', $q);
+        $boolean_q = '';
+        foreach($words as $w) {
+            $w = trim($w);
+            if(strlen($w) > 1) {
+                $boolean_q .= '+' . $w . '* ';
+            }
+        }
+        $boolean_q = trim($boolean_q);
+        if(empty($boolean_q)) { $boolean_q = $q; }
+
         $newsRepo = new \App\Repositories\NewsRepository($pdo);
         $total_rows = $newsRepo->countSearchFulltext($boolean_q);
         $total_pages = ceil($total_rows / $limit);
