@@ -143,9 +143,7 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                     <span id="bookmark-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:0.65rem; width:18px; height:18px; border-radius:50%; align-items:flex-end; justify-content:center; font-weight:800;">0</span>
                 </a>
                 
-                <a href="login.php" class="hover-circle" title="Ingresar / Panel"
-                    style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border-color); display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; text-decoration:none; transition:all 0.3s ease; flex-shrink:0;"><i
-                        class="ri-user-line" style="font-size:1.2rem;"></i></a>
+                <!-- Login oculto: acceso solo via URL directa /login.php -->
             </div>
         </div>
 
@@ -199,12 +197,7 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                         </li>
                     <?php endforeach; ?>
                     
-                    <!-- Botón de Login exclusivo para Móvil -->
-                    <li style="display:flex;" class="mobile-only-nav-item">
-                        <a href="login.php" style="color:white; padding: 1rem 1.5rem; background: rgba(255,255,255,0.1); display:flex; align-items:center; gap:5px; font-weight:800; border-top: 1px solid rgba(255,255,255,0.2);">
-                            <i class="ri-user-settings-line"></i> Ingresar / Panel Admin
-                        </a>
-                    </li>
+                    <!-- Login oculto: acceso solo via URL directa /login.php -->
                 </ul>
             </div>
         </nav>
