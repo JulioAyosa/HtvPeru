@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // app/Views/admin/categorias/index.php
 // Variables asumidas: $msg, $categorias, $configs
 ?>
@@ -14,7 +14,7 @@
 <?php endif; ?>
 
 <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: 2rem; border-left: 4px solid #10b981; display:flex; gap:1rem; align-items:flex-end;">
-    <form method="POST" action="<?= base_url('/') ?>admin/categorias/action" style="display:flex; gap:1rem; width:100%; align-items:flex-end;">
+    <form method="POST" action="/piura_noticias_php/admin/categorias/action" style="display:flex; gap:1rem; width:100%; align-items:flex-end;">
         <input type="hidden" name="action" value="create">
         <?php echo csrf_field(); ?>
         <div style="flex:1;">
@@ -25,7 +25,7 @@
     </form>
 </div>
 
-<form method="POST" action="<?= base_url('/') ?>admin/categorias/action">
+<form method="POST" action="/piura_noticias_php/admin/categorias/action">
     <input type="hidden" name="action" value="bulk_update">
     <?php echo csrf_field(); ?>
     <div style="background:var(--bg-main); padding: 1rem; border: 1px solid var(--border-color); border-radius: 6px 6px 0 0; display:flex; justify-content:space-between; align-items:center;">
@@ -65,7 +65,7 @@
                     </select>
                 </td>
                 <td style="text-align:right;">
-                    <a href="<?= base_url('/') ?>admin/categorias/action?action=delete&delete=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Seguro? Si hay noticias con esta categoría seguirán existiendo, pero la categoría no se sugerirá ni aparecerá.')" style="color:#b91c1c; padding:8px;"><i class="ri-delete-bin-line"></i></a>
+                    <a href="/piura_noticias_php/admin/categorias/action?action=delete&delete=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Seguro? Si hay noticias con esta categoría seguirán existiendo, pero la categoría no se sugerirá ni aparecerá.')" style="color:#b91c1c; padding:8px;"><i class="ri-delete-bin-line"></i></a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -107,7 +107,7 @@
             </div>
             
             <div class="cat-bg-actions">
-                <form method="POST" action="<?= base_url('/') ?>admin/categorias/action" enctype="multipart/form-data" style="display:flex; gap:0.5rem; width:100%; align-items:center;" id="form_bg_<?php echo $c['id']; ?>">
+                <form method="POST" action="/piura_noticias_php/admin/categorias/action" enctype="multipart/form-data" style="display:flex; gap:0.5rem; width:100%; align-items:center;" id="form_bg_<?php echo $c['id']; ?>">
                     <input type="hidden" name="action" value="upload_bg">
                     <input type="hidden" name="cat_bg_id" value="<?php echo $c['id']; ?>">
                     <input type="file" name="cat_bg_image" id="bg_input_<?php echo $c['id']; ?>" accept="image/*" style="display:none;" onchange="document.getElementById('form_bg_<?php echo $c['id']; ?>').submit()">

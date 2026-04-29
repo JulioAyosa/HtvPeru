@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // app/Views/admin/configuracion/index.php
 // Variables: $msg, $configs, $categorias_select
 ?>
@@ -35,7 +35,7 @@
     <div class="alert"><i class="ri-check-line"></i> <?php echo htmlspecialchars($msg); ?></div>
 <?php endif; ?>
 
-<form method="POST" action="<?= base_url('/') ?>admin/configuracion/action" enctype="multipart/form-data">
+<form method="POST" action="/piura_noticias_php/admin/configuracion/action" enctype="multipart/form-data">
     <input type="hidden" name="action" value="save_config">
     <?php echo csrf_field(); ?>
     
@@ -58,14 +58,14 @@
                 <div>
                     <label>Logo Principal</label>
                     <div class="img-preview">
-                        <img src="<?php echo htmlspecialchars('<?= base_url('/') ?>' . ($configs['logo_url'] ?? 'img/logo.webp')); ?>" alt="Logo">
+                        <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . ($configs['logo_url'] ?? 'img/logo.webp')); ?>" alt="Logo">
                     </div>
                     <input type="file" name="logo_upload" accept="image/*">
                 </div>
                 <div>
                     <label>Favicon (Ícono pestaña)</label>
                     <div class="img-preview" style="background:white;">
-                        <img src="<?php echo htmlspecialchars('<?= base_url('/') ?>' . ($configs['favicon_url'] ?? 'img/logo.webp')); ?>" alt="Favicon" style="height:32px;">
+                        <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . ($configs['favicon_url'] ?? 'img/logo.webp')); ?>" alt="Favicon" style="height:32px;">
                     </div>
                     <input type="file" name="favicon_upload" accept=".png,.ico,.svg">
                 </div>
@@ -76,7 +76,7 @@
                     <label>Marca de Agua (.PNG Transparente)</label>
                     <div class="img-preview" style="background:var(--bg-main);">
                         <?php if(!empty($configs['watermark_url'])): ?>
-                        <img src="<?php echo htmlspecialchars('<?= base_url('/') ?>' . $configs['watermark_url']); ?>" alt="Watermark" style="max-height: 40px;">
+                        <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['watermark_url']); ?>" alt="Watermark" style="max-height: 40px;">
                         <?php else: ?>
                         <span style="font-size:0.75rem; color:var(--text-muted);">Sin marca de agua</span>
                         <?php endif; ?>
@@ -87,7 +87,7 @@
                     <label>Fondo Expandido para la Portada (Header)</label>
                     <div class="img-preview" style="background:var(--bg-main);">
                         <?php if(!empty($configs['header_bg_url'])): ?>
-                        <img src="<?php echo htmlspecialchars('<?= base_url('/') ?>' . $configs['header_bg_url']); ?>" alt="Header BG" style="max-height: 40px; border-radius: 4px;">
+                        <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['header_bg_url']); ?>" alt="Header BG" style="max-height: 40px; border-radius: 4px;">
                         <?php else: ?>
                         <span style="font-size:0.75rem; color:var(--text-muted);">Cabecera sólida (Sin fondo)</span>
                         <?php endif; ?>
@@ -309,7 +309,7 @@
                 <label>Miniatura Predeterminada (WhatsApp / Facebook)</label>
                 <div class="img-preview" style="background:var(--bg-main);">
                     <?php if(!empty($configs['seo_og_image'])): ?>
-                    <img src="<?php echo htmlspecialchars('<?= base_url('/') ?>' . $configs['seo_og_image']); ?>" alt="og:image" style="max-height: 80px;">
+                    <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['seo_og_image']); ?>" alt="og:image" style="max-height: 80px;">
                     <?php else: ?>
                     <span style="font-size:0.75rem; color:var(--text-muted);">Sin imagen general</span>
                     <?php endif; ?>
@@ -345,7 +345,7 @@
                 <div style="background:#f1f5f9; padding: 1rem; border-radius:4px; margin-bottom: 0.5rem; text-align:center;">
                     <?php if(!empty($configs['privacy_policy_url'])): ?>
                         <i class="ri-file-pdf-2-fill" style="font-size:2rem; color: #dc2626; display:block;"></i>
-                        <a href="<?php echo htmlspecialchars('<?= base_url('/') ?>' . $configs['privacy_policy_url']); ?>" target="_blank" style="font-size:0.8rem; font-weight:bold; color:var(--primary-color);">Ver Documento Actual</a>
+                        <a href="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['privacy_policy_url']); ?>" target="_blank" style="font-size:0.8rem; font-weight:bold; color:var(--primary-color);">Ver Documento Actual</a>
                     <?php else: ?>
                         <i class="ri-file-close-line" style="font-size:2rem; color: #9ca3af; display:block;"></i>
                         <span style="font-size:0.8rem; color: #64748b;">No hay políticas subidas</span>

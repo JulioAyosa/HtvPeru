@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // app/Views/admin/comentarios/index.php
 // Variables: $msg, $comentarios, $page, $total_pages, $user_role
 ?>
@@ -55,7 +55,7 @@
                     </p>
                 </td>
                 <td>
-                    <a href="<?= base_url('/') ?>article.php?slug=<?php echo urlencode($c['noticia_slug'] ?? ''); ?>" target="_blank" style="font-size:0.85rem; color:var(--primary-color);">
+                    <a href="/piura_noticias_php/article.php?slug=<?php echo urlencode($c['noticia_slug'] ?? ''); ?>" target="_blank" style="font-size:0.85rem; color:var(--primary-color);">
                         <?php echo htmlspecialchars($c['noticia_titulo'] ?? 'Noticia Eliminada', ENT_QUOTES | ENT_HTML5, 'UTF-8'); ?>
                     </a>
                 </td>
@@ -70,15 +70,15 @@
                 </td>
                 <td>
                     <?php if($c['estado'] !== 'Aprobado'): ?>
-                        <a href="<?= base_url('/') ?>admin/comentarios/action?action=aprobar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn-primary" style="padding:4px 8px; font-size:0.8rem; background:#10b981; margin-right:4px;" title="Aprobar"><i class="ri-check-line"></i></a>
+                        <a href="/piura_noticias_php/admin/comentarios/action?action=aprobar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn-primary" style="padding:4px 8px; font-size:0.8rem; background:#10b981; margin-right:4px;" title="Aprobar"><i class="ri-check-line"></i></a>
                     <?php endif; ?>
                     
                     <?php if($c['estado'] !== 'Rechazado'): ?>
-                        <a href="<?= base_url('/') ?>admin/comentarios/action?action=rechazar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn-primary" style="padding:4px 8px; font-size:0.8rem; background:#f59e0b; margin-right:4px;" title="Rechazar"><i class="ri-close-line"></i></a>
+                        <a href="/piura_noticias_php/admin/comentarios/action?action=rechazar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn-primary" style="padding:4px 8px; font-size:0.8rem; background:#f59e0b; margin-right:4px;" title="Rechazar"><i class="ri-close-line"></i></a>
                     <?php endif; ?>
                     
                     <?php if($user_role === 'admin'): ?>
-                        <a href="<?= base_url('/') ?>admin/comentarios/action?action=eliminar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn-primary" style="padding:4px 8px; font-size:0.8rem; background:#ef4444;" title="Eliminar" onclick="return confirm('¿Seguro de borrar este comentario?');"><i class="ri-delete-bin-line"></i></a>
+                        <a href="/piura_noticias_php/admin/comentarios/action?action=eliminar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn-primary" style="padding:4px 8px; font-size:0.8rem; background:#ef4444;" title="Eliminar" onclick="return confirm('¿Seguro de borrar este comentario?');"><i class="ri-delete-bin-line"></i></a>
                     <?php endif; ?>
                 </td>
             </tr>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -25,7 +25,7 @@
 <body>
     <div class="login-card">
         <div class="login-logo" style="display:flex; align-items:center; justify-content:center; gap:0.75rem;">
-            <img src="<?= base_url('/') ?>img/logo.webp" alt="Logo" style="height:48px; width:auto;">
+            <img src="/piura_noticias_php/img/logo.webp" alt="Logo" style="height:48px; width:auto;">
             <div style="display: flex; flex-direction: column; align-items: flex-start;">
                 <div style="line-height: 1;">HTV<span>PERU</span></div>
                 <span style="font-size: 0.70rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px;">Una Mirada al Mundo</span>
@@ -39,17 +39,17 @@
         <?php endif; ?>
 
         <?php if (isset($_GET['recover']) || (isset($action) && $action === 'recover')): ?>
-        <form method="POST" action="<?= base_url('/') ?>login.php">
+        <form method="POST" action="/piura_noticias_php/login.php">
             <input type="hidden" name="action" value="recover">
             <div class="form-group">
                 <label for="email">Ingresa tu Correo Registrado</label>
                 <input type="email" name="email" id="email" class="form-control" required placeholder="tu-email@dominio.com">
             </div>
             <button type="submit" class="btn-submit" style="background:#4b5563;">Enviar Enlace de Recuperación</button>
-            <a href="<?= base_url('/') ?>login.php" style="display:block; margin-top:1.5rem; font-size:0.875rem; color:var(--text-muted); text-decoration:none;"><i class="ri-arrow-left-line"></i> Volver a Iniciar Sesión</a>
+            <a href="/piura_noticias_php/login.php" style="display:block; margin-top:1.5rem; font-size:0.875rem; color:var(--text-muted); text-decoration:none;"><i class="ri-arrow-left-line"></i> Volver a Iniciar Sesión</a>
         </form>
         <?php else: ?>
-        <form method="POST" action="<?= base_url('/') ?>login.php">
+        <form method="POST" action="/piura_noticias_php/login.php">
             <input type="hidden" name="action" value="login">
             <div class="form-group">
                 <label for="email">Usuario (Email)</label>
@@ -58,13 +58,13 @@
             <div class="form-group">
                 <label for="password">Contraseña</label>
                 <input type="password" name="password" id="password" class="form-control" required placeholder="••••••••">
-                <a href="<?= base_url('/') ?>login.php?recover=1" style="display:block; text-align:right; font-size:0.75rem; margin-top:0.5rem; color:var(--text-muted); text-decoration:none;">¿Olvidaste tu contraseña?</a>
+                <a href="/piura_noticias_php/login.php?recover=1" style="display:block; text-align:right; font-size:0.75rem; margin-top:0.5rem; color:var(--text-muted); text-decoration:none;">¿Olvidaste tu contraseña?</a>
             </div>
             <button type="submit" class="btn-submit">Ingresar Seguramente</button>
         </form>
         <?php endif; ?>
         
-        <a href="<?= base_url('/') ?>index.php" style="display: block; margin-top: 1.5rem; font-size: 0.875rem; color: var(--primary-color);">Volver al sitio público</a>
+        <a href="/piura_noticias_php/index.php" style="display: block; margin-top: 1.5rem; font-size: 0.875rem; color: var(--primary-color);">Volver al sitio público</a>
     </div>
 </body>
 </html>

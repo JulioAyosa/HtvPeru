@@ -1,4 +1,4 @@
-﻿<?php if ($msg): ?>
+<?php if ($msg): ?>
     <div class="alert alert-success"><?php echo htmlspecialchars($msg); ?></div>
 <?php endif; ?>
 
@@ -11,11 +11,11 @@
 
 <!-- Buscador -->
 <div style="background: white; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem;">
-    <form method="GET" action="<?= base_url('/') ?>admin/usuarios-publicos" style="display: flex; gap: 1rem; max-width: 500px;">
+    <form method="GET" action="/piura_noticias_php/admin/usuarios-publicos" style="display: flex; gap: 1rem; max-width: 500px;">
         <input type="text" name="search" placeholder="Buscar por nombre o correo..." value="<?php echo htmlspecialchars($search); ?>" style="flex: 1; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-family: var(--font-sans);">
         <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;"><i class="ri-search-line"></i> Buscar</button>
         <?php if ($search): ?>
-            <a href="<?= base_url('/') ?>admin/usuarios-publicos" class="btn btn-secondary" style="padding: 0.75rem 1rem;"><i class="ri-close-line"></i> Limpiar</a>
+            <a href="/piura_noticias_php/admin/usuarios-publicos" class="btn btn-secondary" style="padding: 0.75rem 1rem;"><i class="ri-close-line"></i> Limpiar</a>
         <?php endif; ?>
     </form>
 </div>
@@ -38,7 +38,7 @@
                 <?php foreach ($usuarios as $u): ?>
                     <tr style="border-bottom: 1px solid #f1f5f9;">
                         <td style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
-                            <img src="<?php echo htmlspecialchars($u['avatar_url'] ?: '<?= base_url('/') ?>img/default_avatar.png'); ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                            <img src="<?php echo htmlspecialchars($u['avatar_url'] ?: '/piura_noticias_php/img/default_avatar.png'); ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                             <div>
                                 <strong style="display: block; color: #1e293b;"><?php echo htmlspecialchars($u['nombre']); ?></strong>
                                 <span style="font-size: 0.8rem; color: #64748b;"><?php echo htmlspecialchars($u['email']); ?></span>
@@ -150,7 +150,7 @@ function confirmToggle(id, accion, nombre) {
         icon.style.color = '#10b981';
     }
     
-    btn.href = `<?= base_url('/') ?>admin/usuarios-publicos/toggle?id=${id}`;
+    btn.href = `/piura_noticias_php/admin/usuarios-publicos/toggle?id=${id}`;
     modal.style.display = 'flex';
 }
 

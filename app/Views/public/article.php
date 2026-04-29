@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!function_exists('time_elapsed_string')) {
     function time_elapsed_string($datetime, $full = false) {
         $now = new DateTime;
@@ -40,7 +40,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
     <meta name="description" content="<?php echo htmlspecialchars($meta_desc ?: mb_substr(strip_tags($articulo['contenido']), 0, 160)); ?>">
     
     <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars($global_configs['favicon_url'] ?? 'img/logo.webp'); ?>">
-    <link rel="manifest" href="<?= base_url('/') ?>manifest.json">
+    <link rel="manifest" href="/piura_noticias_php/manifest.json">
     <meta name="theme-color" content="<?php echo htmlspecialchars($global_configs['color_primario'] ?? '#2563eb'); ?>">
     
     <!-- CUSTOM HEAD SCRIPTS -->

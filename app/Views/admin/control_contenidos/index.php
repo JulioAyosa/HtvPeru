@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // app/Views/admin/control_contenidos/index.php
 // Variables asumidas: $user_role, $user_id, $user_name, $is_admin, $msg, $f_fecha_ini, $f_fecha_fin, $f_autor, $f_plataforma, $registros, $autores
 ?>
@@ -15,7 +15,7 @@
 
 <!-- Filtros Superiores -->
 <div class="filters">
-    <form method="GET" style="display: contents;" action="<?= base_url('/') ?>admin/contenidos">
+    <form method="GET" style="display: contents;" action="/piura_noticias_php/admin/contenidos">
         <div class="filter-group">
             <label>Desde Fecha</label>
             <input type="date" name="fecha_ini" value="<?php echo htmlspecialchars($f_fecha_ini); ?>">
@@ -47,7 +47,7 @@
             </select>
         </div>
         <button type="submit" class="btn-rep"><i class="ri-filter-3-line"></i> Filtrar</button>
-        <a href="<?= base_url('/') ?>admin/contenidos" class="btn-rep out" title="Limpiar"><i class="ri-refresh-line"></i></a>
+        <a href="/piura_noticias_php/admin/contenidos" class="btn-rep out" title="Limpiar"><i class="ri-refresh-line"></i></a>
     </form>
     
     <div style="flex-grow: 1; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
@@ -82,7 +82,7 @@
             <!-- Fila de Inserción Rápida -->
             <?php if ($user_role !== 'gerente'): ?>
             <tr style="background-color: #f8fafc; border-bottom: 2px solid var(--primary-color);">
-                <form method="POST" action="<?= base_url('/') ?>admin/contenidos/store">
+                <form method="POST" action="/piura_noticias_php/admin/contenidos/store">
                     <input type="hidden" name="action" value="add">
                     <?php echo csrf_field(); ?>
                     <td><input type="date" name="fecha" class="input-excel" value="<?php echo date('Y-m-d'); ?>" required></td>
@@ -157,7 +157,7 @@
                 <td><span style="font-size:0.8rem; color:#475569; font-weight:600;"><?php echo htmlspecialchars($r['rebote']); ?></span></td>
                 
                 <td style="text-align: center;">
-                    <a href="<?= base_url('/') ?>admin/contenidos/action?toggle_id=<?php echo $r['id']; ?>&val=<?php echo $r['completado'] ? 0 : 1; ?>&csrf_token=<?php echo csrf_token(); ?>" style="color: <?php echo $r['completado'] ? '#10b981' : '#94a3b8'; ?>; font-size:1.6rem; line-height:1; display:inline-block; transition: transform 0.2s, color 0.2s;" title="Marcar como <?php echo $r['completado'] ? 'Pendiente' : 'Completado'; ?>" onmouseover="this.style.transform='scale(1.1)'; this.style.color='<?php echo $r['completado'] ? '#059669' : '#64748b';?>';" onmouseout="this.style.transform='none'; this.style.color='<?php echo $r['completado'] ? '#10b981' : '#94a3b8';?>';">
+                    <a href="/piura_noticias_php/admin/contenidos/action?toggle_id=<?php echo $r['id']; ?>&val=<?php echo $r['completado'] ? 0 : 1; ?>&csrf_token=<?php echo csrf_token(); ?>" style="color: <?php echo $r['completado'] ? '#10b981' : '#94a3b8'; ?>; font-size:1.6rem; line-height:1; display:inline-block; transition: transform 0.2s, color 0.2s;" title="Marcar como <?php echo $r['completado'] ? 'Pendiente' : 'Completado'; ?>" onmouseover="this.style.transform='scale(1.1)'; this.style.color='<?php echo $r['completado'] ? '#059669' : '#64748b';?>';" onmouseout="this.style.transform='none'; this.style.color='<?php echo $r['completado'] ? '#10b981' : '#94a3b8';?>';">
                         <?php if($r['completado']): ?>
                             <i class="ri-checkbox-circle-fill"></i>
                         <?php else: ?>
@@ -167,7 +167,7 @@
                 </td>
                 <td style="text-align: center;">
                     <?php if ($is_admin): ?>
-                    <a href="<?= base_url('/') ?>admin/contenidos/action?delete_id=<?php echo $r['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Eliminar este registro permanentemente?');" style="background:#fee2e2; color:#ef4444; border:none; padding:4px 6px; border-radius:4px; width:26px; height:26px; font-size:0.95rem; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; transition: transform 0.2s, background 0.2s;" onmouseover="this.style.transform='translateY(-1px)'; this.style.background='#fecaca';" onmouseout="this.style.transform='none'; this.style.background='#fee2e2';" title="Eliminar"><i class="ri-delete-bin-line"></i></a>
+                    <a href="/piura_noticias_php/admin/contenidos/action?delete_id=<?php echo $r['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Eliminar este registro permanentemente?');" style="background:#fee2e2; color:#ef4444; border:none; padding:4px 6px; border-radius:4px; width:26px; height:26px; font-size:0.95rem; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; transition: transform 0.2s, background 0.2s;" onmouseover="this.style.transform='translateY(-1px)'; this.style.background='#fecaca';" onmouseout="this.style.transform='none'; this.style.background='#fee2e2';" title="Eliminar"><i class="ri-delete-bin-line"></i></a>
                     <?php else: ?>
                     <span style="color:#cbd5e1; font-size:0.75rem;">-</span>
                     <?php endif; ?>
