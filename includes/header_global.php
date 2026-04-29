@@ -40,6 +40,24 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
 .header.shrink .logo { transform: scale(<?php echo $logo_scale * 0.85; ?>) !important; }
 .search-bar-modern { width: <?php echo $search_width; ?>px !important; transition: width 0.3s ease; }
 .header-actions { gap: <?php echo $actions_gap; ?>rem !important; transition: gap 0.3s ease; }
+
+/* HARD MOBILE OVERRIDES (BULLETPROOF) */
+@media (max-width: 768px) {
+    .header-inner { height: auto !important; padding: 1rem 0 !important; flex-wrap: wrap; justify-content: space-between; }
+    .logo img { height: 40px !important; }
+    .logo-title { font-size: 1.5rem !important; white-space: nowrap; }
+    .slogan-text { display: none !important; }
+    .search-bar-modern { display: none !important; }
+    #weather-widget { display: none !important; }
+    .btn-live { display: none !important; }
+    .header-actions { gap: 0.5rem !important; }
+    .mobile-menu-btn { display: block !important; width: 100%; text-align: center !important; }
+    .nav-list { display: none !important; flex-direction: column !important; width: 100%; background: #0f172a; position: absolute; left: 0; top: 100%; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+    .nav-list.active { display: flex !important; }
+    .nav-list li { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .nav-list a { display: flex !important; width: 100%; justify-content: space-between; }
+    .mobile-only-nav-item { display: flex !important; }
+}
 </style>
 <?php if(!empty($global_configs['header_bg_url'])): ?>
 <style>
