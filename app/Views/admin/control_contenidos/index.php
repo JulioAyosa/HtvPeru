@@ -43,7 +43,8 @@
                 <option value="Facebook" <?php if($f_plataforma=='Facebook') echo 'selected';?>>Facebook</option>
                 <option value="Youtube" <?php if($f_plataforma=='Youtube') echo 'selected';?>>Youtube</option>
                 <option value="Instagram" <?php if($f_plataforma=='Instagram') echo 'selected';?>>Instagram</option>
-                <option value="Twitter" <?php if($f_plataforma=='Twitter') echo 'selected';?>>Twitter</option>
+                <option value="TikTok" <?php if($f_plataforma=='TikTok') echo 'selected';?>>TikTok</option>
+                <option value="Twitter" <?php if($f_plataforma=='Twitter') echo 'selected';?>>Twitter / X</option>
             </select>
         </div>
         <button type="submit" class="btn-rep"><i class="ri-filter-3-line"></i> Filtrar</button>
@@ -144,6 +145,8 @@
             <option value="Facebook">Facebook</option>
             <option value="Youtube">Youtube</option>
             <option value="Instagram">Instagram</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Twitter">Twitter / X</option>
         </select></div>
         <div>
             <label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Listo</label>
@@ -153,6 +156,20 @@
             </div>
         </div>
     </form>
+</div>
+<?php endif; ?>
+
+<!-- Controles del Acordeón -->
+<?php if(!empty($agrupados)): ?>
+<div style="display:flex; gap:0.5rem; margin-top:1rem; margin-bottom:-0.5rem;">
+    <button onclick="toggleAllAcc(true)" style="background:#e2e8f0; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.85rem; font-weight:600; color:#475569; display:inline-flex; align-items:center; gap:5px; transition: background 0.2s;"
+        onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='#e2e8f0'">
+        <i class="ri-expand-diagonal-line"></i> Expandir Todo
+    </button>
+    <button onclick="toggleAllAcc(false)" style="background:#e2e8f0; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.85rem; font-weight:600; color:#475569; display:inline-flex; align-items:center; gap:5px; transition: background 0.2s;"
+        onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='#e2e8f0'">
+        <i class="ri-collapse-diagonal-line"></i> Colapsar Todo
+    </button>
 </div>
 <?php endif; ?>
 
@@ -230,10 +247,17 @@
                                 $count_pubs = count($pubs);
                                 $is_empty = $count_pubs === 0;
                             ?>
+                            <?php 
+                                $is_today = ($fecha === date('Y-m-d'));
+                                $today_border = $is_today ? 'border-left: 4px solid #10b981;' : '';
+                            ?>
                             <div class="acc-date">
-                                <div class="acc-date-header" onclick="toggleAcc(this, 'date')" style="padding-left: 3.5rem;">
+                                <div class="acc-date-header" onclick="toggleAcc(this, 'date')" style="padding-left: 3.5rem; <?php echo $today_border; ?>">
                                     <span style="color: <?php echo $is_empty ? '#94a3b8' : 'var(--text-main)'; ?>;">
                                         <i class="ri-calendar-event-line" style="margin-right: 6px;"></i> <?php echo date('d/m/Y', strtotime($fecha)); ?>
+                                        <?php if($is_today): ?>
+                                            <span style="font-size:0.7rem; background:#10b981; color:#fff; padding:1px 6px; border-radius:3px; margin-left:6px; font-weight:bold;">HOY</span>
+                                        <?php endif; ?>
                                     </span>
                                     <div style="display: flex; align-items: center; gap: 0.6rem;">
                                         <?php if($is_empty): ?>
@@ -293,7 +317,21 @@
                                                     </td>
                                                     <td>
                                                         <span style="font-size:0.75rem; background:#e2e8f0; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['seccion']); ?></span>
-                                                        <span style="font-size:0.75rem; background:#e0e7ff; color:#4338ca; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['plataforma']); ?></span>
+                                                        <?php 
+                                                            $plat = $r['plataforma'] ?? '';
+                                                            $plat_map = [
+                                                                'Web' => ['ri-globe-line', '#0ea5e9', '#e0f2fe'],
+                                                                'Facebook' => ['ri-facebook-fill', '#1877F2', '#dbeafe'],
+                                                                'Youtube' => ['ri-youtube-fill', '#FF0000', '#fee2e2'],
+                                                                'Instagram' => ['ri-instagram-fill', '#E4405F', '#fce7f3'],
+                                                                'TikTok' => ['ri-tiktok-fill', '#000000', '#f1f5f9'],
+                                                                'Twitter' => ['ri-twitter-x-fill', '#000000', '#f1f5f9'],
+                                                            ];
+                                                            $pi = $plat_map[$plat] ?? ['ri-link', '#64748b', '#f1f5f9'];
+                                                        ?>
+                                                        <span style="font-size:0.75rem; background:<?php echo $pi[2]; ?>; color:<?php echo $pi[1]; ?>; padding:2px 6px; border-radius:3px; display:inline-flex; align-items:center; gap:3px;">
+                                                            <i class="<?php echo $pi[0]; ?>"></i> <?php echo htmlspecialchars($plat); ?>
+                                                        </span>
                                                     </td>
                                                     <td style="text-align:center; font-weight:600; color:#be185d; font-size:0.85rem;">
                                                         <i class="ri-eye-line" style="margin-right:2px;"></i> <?php echo number_format(intval($r['vistas'] ?? 0)); ?>
@@ -337,5 +375,18 @@ function toggleAcc(element, type) {
     if (bodyElement) {
         bodyElement.classList.toggle('active');
     }
+}
+
+function toggleAllAcc(expand) {
+    const headers = document.querySelectorAll('.acc-user-header, .acc-month-header, .acc-week-header, .acc-date-header');
+    const bodies = document.querySelectorAll('.acc-user-body, .acc-month-body, .acc-week-body, .acc-date-body');
+    headers.forEach(h => {
+        if (expand) h.classList.add('active');
+        else h.classList.remove('active');
+    });
+    bodies.forEach(b => {
+        if (expand) b.classList.add('active');
+        else b.classList.remove('active');
+    });
 }
 </script>
