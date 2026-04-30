@@ -13,6 +13,28 @@
     <div class="alert alert-success"><i class="ri-check-line"></i> <?php echo htmlspecialchars($msg); ?></div>
 <?php endif; ?>
 
+<!-- Dashboard Stats -->
+<?php if(!empty($agrupados)): ?>
+<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.75rem; margin-bottom:1rem;">
+    <div style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border:1px solid #bfdbfe; border-radius:10px; padding:1rem 1.2rem; display:flex; align-items:center; gap:0.8rem;">
+        <div style="background:#3b82f6; color:#fff; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="ri-calendar-check-line"></i></div>
+        <div><div style="font-size:1.4rem; font-weight:800; color:#1e40af;"><?php echo $stats_hoy; ?></div><div style="font-size:0.75rem; color:#64748b; font-weight:600;">Publicaciones Hoy</div></div>
+    </div>
+    <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border:1px solid #bbf7d0; border-radius:10px; padding:1rem 1.2rem; display:flex; align-items:center; gap:0.8rem;">
+        <div style="background:#10b981; color:#fff; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="ri-bar-chart-box-line"></i></div>
+        <div><div style="font-size:1.4rem; font-weight:800; color:#059669;"><?php echo number_format($stats_total); ?></div><div style="font-size:0.75rem; color:#64748b; font-weight:600;">Total Período</div></div>
+    </div>
+    <div style="background: linear-gradient(135deg, #fdf2f8, #fce7f3); border:1px solid #fbcfe8; border-radius:10px; padding:1rem 1.2rem; display:flex; align-items:center; gap:0.8rem;">
+        <div style="background:#ec4899; color:#fff; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="ri-eye-line"></i></div>
+        <div><div style="font-size:1.4rem; font-weight:800; color:#be185d;"><?php echo number_format($stats_vistas); ?></div><div style="font-size:0.75rem; color:#64748b; font-weight:600;">Vistas Totales</div></div>
+    </div>
+    <div style="background: linear-gradient(135deg, #fffbeb, #fef3c7); border:1px solid #fde68a; border-radius:10px; padding:1rem 1.2rem; display:flex; align-items:center; gap:0.8rem;">
+        <div style="background:#f59e0b; color:#fff; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;"><i class="ri-trophy-line"></i></div>
+        <div><div style="font-size:1rem; font-weight:800; color:#d97706;"><?php echo htmlspecialchars($stats_top_autor); ?></div><div style="font-size:0.75rem; color:#64748b; font-weight:600;">Más Activo (<?php echo $stats_top_count; ?> pub.)</div></div>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- Filtros Superiores -->
 <div class="filters">
     <form method="GET" style="display: contents;" action="/piura_noticias_php/admin/contenidos">
@@ -184,12 +206,15 @@
 
     <?php foreach($agrupados as $autor => $meses): 
         // Calculate total for author
-        $total_autor = 0; $vistas_autor = 0;
+        $total_autor = 0; $vistas_autor = 0; $comp_autor = 0; $pend_autor = 0;
         foreach($meses as $semanas) { 
             foreach($semanas as $fechas) {
                 foreach($fechas as $pubs) { 
                     $total_autor += count($pubs); 
-                    foreach($pubs as $p) { $vistas_autor += intval($p['vistas'] ?? 0); }
+                    foreach($pubs as $p) { 
+                        $vistas_autor += intval($p['vistas'] ?? 0);
+                        if($p['completado']) $comp_autor++; else $pend_autor++;
+                    }
                 }
             }
         }
@@ -200,17 +225,22 @@
             <div style="display: flex; align-items: center; gap: 0.6rem;">
                 <span style="font-size:0.8rem; background: #e2e8f0; padding: 2px 8px; border-radius: 50px; color: #475569;"><?php echo $total_autor; ?> pub.</span>
                 <span style="font-size:0.8rem; background: #fce7f3; padding: 2px 8px; border-radius: 50px; color: #be185d;"><i class="ri-eye-line"></i> <?php echo number_format($vistas_autor); ?></span>
+                <?php if($comp_autor > 0): ?><span style="font-size:0.75rem; background:#dcfce7; color:#059669; padding:2px 6px; border-radius:50px;" title="Completados">✅ <?php echo $comp_autor; ?></span><?php endif; ?>
+                <?php if($pend_autor > 0): ?><span style="font-size:0.75rem; background:#fef3c7; color:#d97706; padding:2px 6px; border-radius:50px;" title="Pendientes">⏳ <?php echo $pend_autor; ?></span><?php endif; ?>
                 <i class="ri-arrow-down-s-line"></i>
             </div>
         </div>
         <div class="acc-user-body">
             
             <?php foreach($meses as $mes_nombre => $semanas): 
-                $total_mes = 0; $vistas_mes = 0;
+                $total_mes = 0; $vistas_mes = 0; $comp_mes = 0; $pend_mes = 0;
                 foreach($semanas as $f) {
                     foreach($f as $p) { 
                         $total_mes += count($p); 
-                        foreach($p as $pp) { $vistas_mes += intval($pp['vistas'] ?? 0); }
+                        foreach($p as $pp) { 
+                            $vistas_mes += intval($pp['vistas'] ?? 0);
+                            if($pp['completado']) $comp_mes++; else $pend_mes++;
+                        }
                     }
                 }
             ?>
@@ -220,16 +250,21 @@
                     <div style="display: flex; align-items: center; gap: 0.6rem;">
                         <span style="font-size:0.75rem; background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $total_mes; ?> pub.</span>
                         <span style="font-size:0.75rem; background: #fce7f3; color: #be185d; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><i class="ri-eye-line"></i> <?php echo number_format($vistas_mes); ?></span>
+                        <?php if($comp_mes > 0): ?><span style="font-size:0.7rem; background:#dcfce7; color:#059669; padding:1px 5px; border-radius:3px;">✅<?php echo $comp_mes; ?></span><?php endif; ?>
+                        <?php if($pend_mes > 0): ?><span style="font-size:0.7rem; background:#fef3c7; color:#d97706; padding:1px 5px; border-radius:3px;">⏳<?php echo $pend_mes; ?></span><?php endif; ?>
                         <i class="ri-arrow-down-s-line"></i>
                     </div>
                 </div>
                 <div class="acc-month-body">
 
                     <?php foreach($semanas as $semana_nombre => $fechas): 
-                        $total_semana = 0; $vistas_semana = 0;
+                        $total_semana = 0; $vistas_semana = 0; $comp_sem = 0; $pend_sem = 0;
                         foreach($fechas as $p) { 
                             $total_semana += count($p); 
-                            foreach($p as $pp) { $vistas_semana += intval($pp['vistas'] ?? 0); }
+                            foreach($p as $pp) { 
+                                $vistas_semana += intval($pp['vistas'] ?? 0);
+                                if($pp['completado']) $comp_sem++; else $pend_sem++;
+                            }
                         }
                     ?>
                     <div class="acc-week">
@@ -238,6 +273,8 @@
                             <div style="display: flex; align-items: center; gap: 0.6rem;">
                                 <span style="font-size:0.75rem; background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $total_semana; ?> pub.</span>
                                 <span style="font-size:0.75rem; background: #fce7f3; color: #be185d; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><i class="ri-eye-line"></i> <?php echo number_format($vistas_semana); ?></span>
+                                <?php if($comp_sem > 0): ?><span style="font-size:0.7rem; background:#dcfce7; color:#059669; padding:1px 5px; border-radius:3px;">✅<?php echo $comp_sem; ?></span><?php endif; ?>
+                                <?php if($pend_sem > 0): ?><span style="font-size:0.7rem; background:#fef3c7; color:#d97706; padding:1px 5px; border-radius:3px;">⏳<?php echo $pend_sem; ?></span><?php endif; ?>
                                 <i class="ri-arrow-down-s-line"></i>
                             </div>
                         </div>

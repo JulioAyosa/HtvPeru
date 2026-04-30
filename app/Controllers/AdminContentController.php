@@ -272,6 +272,30 @@ class AdminContentController {
             exit;
         }
 
+        // ── Dashboard Stats ──
+        $stats_hoy = 0; $stats_total = 0; $stats_vistas = 0; $stats_completados = 0; $stats_pendientes = 0;
+        $stats_por_autor = [];
+        $hoy = date('Y-m-d');
+        foreach ($agrupados as $autor => $meses) {
+            $autor_count = 0;
+            foreach ($meses as $semanas) {
+                foreach ($semanas as $fechas) {
+                    foreach ($fechas as $fecha_key => $pubs) {
+                        foreach ($pubs as $p) {
+                            $stats_total++;
+                            $autor_count++;
+                            $stats_vistas += intval($p['vistas'] ?? 0);
+                            if ($p['completado']) $stats_completados++; else $stats_pendientes++;
+                            if ($fecha_key === $hoy) $stats_hoy++;
+                        }
+                    }
+                }
+            }
+            $stats_por_autor[$autor] = $autor_count;
+        }
+        $stats_top_autor = !empty($stats_por_autor) ? array_keys($stats_por_autor, max($stats_por_autor))[0] : '-';
+        $stats_top_count = !empty($stats_por_autor) ? max($stats_por_autor) : 0;
+
         $page_title = 'Planificador de Contenidos';
         
         ob_start();
