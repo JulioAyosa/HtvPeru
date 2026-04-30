@@ -129,6 +129,7 @@ class AdminContentController {
 
             echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">';
             echo '<head><meta charset="utf-8">';
+            echo '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Planificador</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->';
             echo '<style>';
             echo 'body { font-family: Calibri, Arial, sans-serif; font-size: 10pt; }';
             echo 'table { border-collapse: collapse; width: 100%; }';
@@ -199,10 +200,10 @@ class AdminContentController {
                         }
                     }
                     if ($tm === 0) {
-                        echo "<tr><td colspan='{$col_count}' style='background:#334155; color:#94a3b8; font-weight:bold; padding:6px 10px;'>📅 " . htmlspecialchars($mes_nombre) . "  —  SIN ACTIVIDAD</td></tr>";
+                        echo "<tr style='mso-outline-level:1'><td colspan='{$col_count}' style='background:#334155; color:#94a3b8; font-weight:bold; padding:6px 10px;'>📅 " . htmlspecialchars($mes_nombre) . "  —  SIN ACTIVIDAD</td></tr>";
                         continue;
                     }
-                    echo "<tr><td colspan='{$col_count}' style='background:#334155; color:#fff; font-size:11pt; font-weight:bold; padding:6px 10px;'>📅 " . htmlspecialchars($mes_nombre) . "  —  {$tm} pub.  |  👁 " . number_format($vm) . " vistas</td></tr>";
+                    echo "<tr style='mso-outline-level:1'><td colspan='{$col_count}' style='background:#334155; color:#fff; font-size:11pt; font-weight:bold; padding:6px 10px;'>📅 " . htmlspecialchars($mes_nombre) . "  —  {$tm} pub.  |  👁 " . number_format($vm) . " vistas</td></tr>";
 
                     foreach ($semanas as $semana_nombre => $fechas) {
                         $ts = 0; $vs = 0;
@@ -211,16 +212,16 @@ class AdminContentController {
                             foreach ($p as $pp) { $vs += intval($pp['vistas'] ?? 0); }
                         }
                         if ($ts === 0) continue; // Skip empty weeks entirely
-                        echo "<tr><td colspan='{$col_count}' style='background:#64748b; color:#fff; font-weight:bold; padding:5px 14px;'>📆 " . htmlspecialchars($semana_nombre) . "  —  {$ts} pub.  |  👁 " . number_format($vs) . " vistas</td></tr>";
+                        echo "<tr style='mso-outline-level:2'><td colspan='{$col_count}' style='background:#64748b; color:#fff; font-weight:bold; padding:5px 14px;'>📆 " . htmlspecialchars($semana_nombre) . "  —  {$ts} pub.  |  👁 " . number_format($vs) . " vistas</td></tr>";
 
                         foreach ($fechas as $fecha => $pubs) {
                             if (count($pubs) === 0) continue; // Skip empty days
                             $vd = 0;
                             foreach ($pubs as $pp) { $vd += intval($pp['vistas'] ?? 0); }
-                            echo "<tr><td colspan='{$col_count}' style='background:#e2e8f0; font-weight:bold; padding:4px 18px;'>📌 " . date('d/m/Y', strtotime($fecha)) . "  —  " . count($pubs) . " reg.  |  👁 " . number_format($vd) . " vistas</td></tr>";
+                            echo "<tr style='mso-outline-level:3'><td colspan='{$col_count}' style='background:#e2e8f0; font-weight:bold; padding:4px 18px;'>📌 " . date('d/m/Y', strtotime($fecha)) . "  —  " . count($pubs) . " reg.  |  👁 " . number_format($vd) . " vistas</td></tr>";
 
                             // Column headers
-                            echo "<tr style='background:#f1f5f9; font-weight:bold; text-align:center; font-size:9pt; color:#475569;'>";
+                            echo "<tr style='mso-outline-level:4; background:#f1f5f9; font-weight:bold; text-align:center; font-size:9pt; color:#475569;'>";
                             echo "<th>HORA</th><th>TITULAR</th><th>ENLACE</th><th>FUENTE</th><th>SECCIÓN</th><th>PLATAFORMA</th><th>VISTAS</th><th>ESTADO</th><th>✓</th>";
                             echo "</tr>";
 
@@ -238,7 +239,7 @@ class AdminContentController {
                                 $comp = $r['completado'] ? 'SÍ' : 'NO';
                                 $cc = $r['completado'] ? '#059669' : '#dc2626';
 
-                                echo "<tr style='{$rs}'>";
+                                echo "<tr style='mso-outline-level:4; {$rs}'>";
                                 echo "<td style='text-align:center;'>" . date('H:i', strtotime($r['hora'])) . "</td>";
                                 echo "<td>" . htmlspecialchars($r['titular'] ?? '') . "</td>";
                                 echo "<td>" . (!empty($ev) ? "<a href='" . htmlspecialchars($ev) . "'>" . htmlspecialchars($ev) . "</a>" : '-') . "</td>";
