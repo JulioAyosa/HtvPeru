@@ -135,7 +135,6 @@ class AdminContentController {
             }
 
             // ── HTML Header with worksheet definitions ──
-            echo '<?xml version="1.0" encoding="utf-8"?>';
             echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
             echo '<head><meta charset="utf-8">';
             echo '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>';
