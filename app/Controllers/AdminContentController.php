@@ -39,9 +39,12 @@ class AdminContentController {
 
         $where_sql = implode(' AND ', $where_clauses);
 
-        $sql_datos = "SELECT r.*, u.nombre_completo AS autor 
-                      FROM registro_contenidos r LEFT JOIN usuarios u ON r.usuario_id = u.id 
-                      WHERE $where_sql ORDER BY r.fecha DESC, r.hora DESC";
+        $sql_datos = "SELECT r.*, u.nombre_completo AS autor,
+                       COALESCE(n.vistas, 0) AS vistas
+                       FROM registro_contenidos r 
+                       LEFT JOIN usuarios u ON r.usuario_id = u.id 
+                       LEFT JOIN noticias n ON n.id = CAST(SUBSTRING_INDEX(r.enlace, '=', -1) AS UNSIGNED) AND r.enlace LIKE 'article.php?id=%'
+                       WHERE $where_sql ORDER BY r.fecha DESC, r.hora DESC";
         $stmt = $pdo->prepare($sql_datos);
         $stmt->execute($params);
         $registros = $stmt->fetchAll();

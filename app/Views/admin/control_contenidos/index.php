@@ -167,48 +167,60 @@
 
     <?php foreach($agrupados as $autor => $meses): 
         // Calculate total for author
-        $total_autor = 0;
+        $total_autor = 0; $vistas_autor = 0;
         foreach($meses as $semanas) { 
             foreach($semanas as $fechas) {
-                foreach($fechas as $pubs) { $total_autor += count($pubs); }
+                foreach($fechas as $pubs) { 
+                    $total_autor += count($pubs); 
+                    foreach($pubs as $p) { $vistas_autor += intval($p['vistas'] ?? 0); }
+                }
             }
         }
     ?>
     <div class="acc-user">
         <div class="acc-user-header" onclick="toggleAcc(this, 'user')">
             <span><i class="ri-user-smile-line" style="margin-right: 8px; color: var(--primary-color);"></i> <?php echo htmlspecialchars($autor); ?></span>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <span style="font-size:0.8rem; background: #e2e8f0; padding: 2px 8px; border-radius: 50px; color: #475569;"><?php echo $total_autor; ?> publicacion(es) totales</span>
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <span style="font-size:0.8rem; background: #e2e8f0; padding: 2px 8px; border-radius: 50px; color: #475569;"><?php echo $total_autor; ?> pub.</span>
+                <span style="font-size:0.8rem; background: #fce7f3; padding: 2px 8px; border-radius: 50px; color: #be185d;"><i class="ri-eye-line"></i> <?php echo number_format($vistas_autor); ?></span>
                 <i class="ri-arrow-down-s-line"></i>
             </div>
         </div>
         <div class="acc-user-body">
             
             <?php foreach($meses as $mes_nombre => $semanas): 
-                $total_mes = 0;
+                $total_mes = 0; $vistas_mes = 0;
                 foreach($semanas as $f) {
-                    foreach($f as $p) { $total_mes += count($p); }
+                    foreach($f as $p) { 
+                        $total_mes += count($p); 
+                        foreach($p as $pp) { $vistas_mes += intval($pp['vistas'] ?? 0); }
+                    }
                 }
             ?>
             <div class="acc-month">
                 <div class="acc-month-header" onclick="toggleAcc(this)">
                     <span><i class="ri-calendar-2-line" style="margin-right: 6px;"></i> <?php echo htmlspecialchars($mes_nombre); ?></span>
-                    <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.6rem;">
                         <span style="font-size:0.75rem; background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $total_mes; ?> pub.</span>
+                        <span style="font-size:0.75rem; background: #fce7f3; color: #be185d; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><i class="ri-eye-line"></i> <?php echo number_format($vistas_mes); ?></span>
                         <i class="ri-arrow-down-s-line"></i>
                     </div>
                 </div>
                 <div class="acc-month-body">
 
                     <?php foreach($semanas as $semana_nombre => $fechas): 
-                        $total_semana = 0;
-                        foreach($fechas as $p) { $total_semana += count($p); }
+                        $total_semana = 0; $vistas_semana = 0;
+                        foreach($fechas as $p) { 
+                            $total_semana += count($p); 
+                            foreach($p as $pp) { $vistas_semana += intval($pp['vistas'] ?? 0); }
+                        }
                     ?>
                     <div class="acc-week">
                         <div class="acc-week-header" onclick="toggleAcc(this)">
                             <span><i class="ri-calendar-view-day-line" style="margin-right: 6px; color:#64748b;"></i> <?php echo htmlspecialchars($semana_nombre); ?></span>
-                            <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.6rem;">
                                 <span style="font-size:0.75rem; background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $total_semana; ?> pub.</span>
+                                <span style="font-size:0.75rem; background: #fce7f3; color: #be185d; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><i class="ri-eye-line"></i> <?php echo number_format($vistas_semana); ?></span>
                                 <i class="ri-arrow-down-s-line"></i>
                             </div>
                         </div>
@@ -223,11 +235,15 @@
                                     <span style="color: <?php echo $is_empty ? '#94a3b8' : 'var(--text-main)'; ?>;">
                                         <i class="ri-calendar-event-line" style="margin-right: 6px;"></i> <?php echo date('d/m/Y', strtotime($fecha)); ?>
                                     </span>
-                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.6rem;">
                                         <?php if($is_empty): ?>
                                             <span style="font-size:0.75rem; background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 4px; font-weight: bold;">Sin publicaciones</span>
-                                        <?php else: ?>
+                                        <?php else: 
+                                            $vistas_dia = 0;
+                                            foreach($pubs as $pp) { $vistas_dia += intval($pp['vistas'] ?? 0); }
+                                        ?>
                                             <span style="font-size:0.75rem; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $count_pubs; ?> reg.</span>
+                                            <span style="font-size:0.75rem; background: #fce7f3; color: #be185d; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><i class="ri-eye-line"></i> <?php echo number_format($vistas_dia); ?></span>
                                         <?php endif; ?>
                                         <i class="ri-arrow-down-s-line"></i>
                                     </div>
@@ -243,6 +259,7 @@
                                                     <th style="width: 60px;">Hora</th>
                                                     <th>Titular</th>
                                                     <th>Sección / Plat.</th>
+                                                    <th style="width: 70px; text-align:center;"><i class="ri-eye-line"></i> Vistas</th>
                                                     <th style="width: 50px; text-align:center;">✓</th>
                                                     <th style="width: 50px; text-align:center;">Del</th>
                                                 </tr>
@@ -277,6 +294,9 @@
                                                     <td>
                                                         <span style="font-size:0.75rem; background:#e2e8f0; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['seccion']); ?></span>
                                                         <span style="font-size:0.75rem; background:#e0e7ff; color:#4338ca; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['plataforma']); ?></span>
+                                                    </td>
+                                                    <td style="text-align:center; font-weight:600; color:#be185d; font-size:0.85rem;">
+                                                        <i class="ri-eye-line" style="margin-right:2px;"></i> <?php echo number_format(intval($r['vistas'] ?? 0)); ?>
                                                     </td>
                                                     <td style="text-align:center;">
                                                         <a href="/piura_noticias_php/admin/contenidos/action?toggle_id=<?php echo $r['id']; ?>&val=<?php echo $r['completado'] ? 0 : 1; ?>&csrf_token=<?php echo csrf_token(); ?>" style="color: <?php echo $r['completado'] ? '#10b981' : '#cbd5e1'; ?>; font-size:1.4rem; transition: transform 0.2s;" title="<?php echo $r['completado'] ? 'Completado' : 'Pendiente'; ?>">
