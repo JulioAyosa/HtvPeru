@@ -208,8 +208,13 @@
                                     <td style="font-weight:600; color:#475569;"><?php echo date('H:i', strtotime($r['hora'])); ?></td>
                                     <td>
                                         <strong><?php echo htmlspecialchars($r['titular']); ?></strong><br>
-                                        <?php if(!empty($r['enlace'])): ?>
-                                        <a href="<?php echo htmlspecialchars($r['enlace']); ?>" target="_blank" style="font-size:0.75rem; color:var(--primary-color);">Ver Enlace</a>
+                                        <?php if(!empty($r['enlace'])): 
+                                            $link = $r['enlace'];
+                                            if (strpos($link, 'http') !== 0) {
+                                                $link = 'https://' . ltrim($link, '/');
+                                            }
+                                        ?>
+                                        <a href="<?php echo htmlspecialchars($link); ?>" target="_blank" style="font-size:0.75rem; color:var(--primary-color);">Ver Enlace</a>
                                         <?php endif; ?>
                                     </td>
                                     <td>
