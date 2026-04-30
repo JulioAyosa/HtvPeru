@@ -91,6 +91,58 @@ class AdminContentController {
 
         $autores = $pdo->query("SELECT id, nombre_completo FROM usuarios ORDER BY nombre_completo ASC")->fetchAll();
         
+        $agrupados = [];
+        try {
+            $period = new \DatePeriod(
+                 new \DateTime($f_fecha_ini),
+                 new \DateInterval('P1D'),
+                 (new \DateTime($f_fecha_fin))->modify('+1 day')
+            );
+            $dates = [];
+            foreach ($period as $dt) {
+                $dates[] = $dt->format("Y-m-d");
+            }
+            // Reverse so newest date is first
+            $dates = array_reverse($dates);
+            
+            $autores_filtrados = [];
+            if (!empty($f_autor)) {
+                foreach($autores as $a) {
+                    if ($a['id'] == $f_autor) $autores_filtrados[] = $a;
+                }
+            } else {
+                $autores_filtrados = $autores;
+            }
+
+            foreach ($autores_filtrados as $a) {
+                $nombre = $a['nombre_completo'];
+                foreach ($dates as $d) {
+                    $agrupados[$nombre][$d] = [];
+                }
+            }
+            
+            foreach ($registros as $r) {
+                $autor_nombre = $r['autor'] ?? 'Desconocido';
+                $fecha = $r['fecha'];
+                // Only group if author is in filtered list (or if they are unknown)
+                if (!isset($agrupados[$autor_nombre])) {
+                    if (empty($f_autor)) {
+                        foreach ($dates as $d) {
+                            $agrupados[$autor_nombre][$d] = [];
+                        }
+                    } else {
+                        continue; // Skip if filtered and author doesn't match
+                    }
+                }
+                if (!isset($agrupados[$autor_nombre][$fecha])) {
+                    $agrupados[$autor_nombre][$fecha] = [];
+                }
+                $agrupados[$autor_nombre][$fecha][] = $r;
+            }
+        } catch (\Exception $e) {
+            $agrupados = [];
+        }
+
         $page_title = 'Planificador de Contenidos';
         
         ob_start();
