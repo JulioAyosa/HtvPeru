@@ -221,6 +221,8 @@
                                             
                                             <?php if(!empty($r['fuente_url'])): ?>
                                             <a href="<?php echo htmlspecialchars($r['fuente_url']); ?>" target="_blank" style="font-size:0.75rem; color:#64748b; display:inline-flex; align-items:center; gap:3px;"><i class="ri-article-line"></i> Fuente</a>
+                                            <?php else: ?>
+                                            <span style="font-size:0.75rem; color:#cbd5e1; display:inline-flex; align-items:center; gap:3px;"><i class="ri-article-line"></i> Sin Fuente</span>
                                             <?php endif; ?>
                                         </div>
                                     </td>
