@@ -83,6 +83,20 @@
 .acc-date-body { display: none; padding: 1rem 1.5rem 1rem 3.5rem; background: #fcfcfc; border-top: 1px solid #f1f5f9; }
 .acc-date-body.active { display: block; }
 
+.acc-month-header { background: #f1f5f9; padding: 0.85rem 1.5rem; padding-left: 2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: #334155; border-bottom: 1px solid var(--border-color); }
+.acc-month-header:hover { background: #e2e8f0; }
+.acc-month-header i { transition: transform 0.3s; }
+.acc-month-header.active i { transform: rotate(180deg); }
+.acc-month-body { display: none; }
+.acc-month-body.active { display: block; }
+
+.acc-week-header { background: #f8fafc; padding: 0.8rem 1.5rem; padding-left: 2.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: #475569; border-bottom: 1px solid #e2e8f0; }
+.acc-week-header:hover { background: #f1f5f9; }
+.acc-week-header i { transition: transform 0.3s; }
+.acc-week-header.active i { transform: rotate(180deg); }
+.acc-week-body { display: none; }
+.acc-week-body.active { display: block; }
+
 .acc-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .acc-table th { text-align: left; padding: 0.5rem; border-bottom: 2px solid #e2e8f0; color: #64748b; font-weight: 600; }
 .acc-table td { padding: 0.5rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
@@ -151,10 +165,14 @@
         </div>
     <?php endif; ?>
 
-    <?php foreach($agrupados as $autor => $fechas): 
+    <?php foreach($agrupados as $autor => $meses): 
         // Calculate total for author
         $total_autor = 0;
-        foreach($fechas as $pubs) { $total_autor += count($pubs); }
+        foreach($meses as $semanas) { 
+            foreach($semanas as $fechas) {
+                foreach($fechas as $pubs) { $total_autor += count($pubs); }
+            }
+        }
     ?>
     <div class="acc-user">
         <div class="acc-user-header" onclick="toggleAcc(this, 'user')">
@@ -166,85 +184,109 @@
         </div>
         <div class="acc-user-body">
             
-            <?php foreach($fechas as $fecha => $pubs): 
-                $count_pubs = count($pubs);
-                $is_empty = $count_pubs === 0;
-            ?>
-            <div class="acc-date">
-                <div class="acc-date-header" onclick="toggleAcc(this, 'date')">
-                    <span style="color: <?php echo $is_empty ? '#94a3b8' : 'var(--text-main)'; ?>;">
-                        <i class="ri-calendar-event-line" style="margin-right: 6px;"></i> <?php echo date('d/m/Y', strtotime($fecha)); ?>
-                    </span>
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <?php if($is_empty): ?>
-                            <span style="font-size:0.75rem; background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 4px; font-weight: bold;">Sin publicaciones</span>
-                        <?php else: ?>
-                            <span style="font-size:0.75rem; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $count_pubs; ?> reg.</span>
-                        <?php endif; ?>
-                        <i class="ri-arrow-down-s-line"></i>
-                    </div>
+            <?php foreach($meses as $mes_nombre => $semanas): ?>
+            <div class="acc-month">
+                <div class="acc-month-header" onclick="toggleAcc(this)">
+                    <span><i class="ri-calendar-2-line" style="margin-right: 6px;"></i> <?php echo htmlspecialchars($mes_nombre); ?></span>
+                    <i class="ri-arrow-down-s-line"></i>
                 </div>
-                
-                <div class="acc-date-body">
-                    <?php if($is_empty): ?>
-                        <p style="margin: 0; color: #94a3b8; font-style: italic; font-size: 0.9rem;">No se registró actividad este día.</p>
-                    <?php else: ?>
-                        <table class="acc-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 60px;">Hora</th>
-                                    <th>Titular</th>
-                                    <th>Sección / Plat.</th>
-                                    <th style="width: 50px; text-align:center;">✓</th>
-                                    <th style="width: 50px; text-align:center;">Del</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($pubs as $r): 
-                                    $row_bg = "";
-                                    if(strtoupper($r['seccion']) === 'PUBLICIDAD') $row_bg = "background: #f0f9ff;";
-                                    if(strtoupper($r['seccion']) === 'FLYER') $row_bg = "background: #fefce8;";
-                                ?>
-                                <tr style="<?php echo $row_bg; ?>">
-                                    <td style="font-weight:600; color:#475569;"><?php echo date('H:i', strtotime($r['hora'])); ?></td>
-                                    <td>
-                                        <strong><?php echo htmlspecialchars($r['titular']); ?></strong><br>
-                                        <div style="display:flex; gap:10px; margin-top:4px;">
-                                            <?php if(!empty($r['enlace'])): 
-                                                $link = $r['enlace'];
-                                                if (strpos($link, 'http') !== 0) {
-                                                    $link = base_url(ltrim($link, '/'));
-                                                }
-                                            ?>
-                                            <a href="<?php echo htmlspecialchars($link); ?>" target="_blank" style="font-size:0.75rem; color:var(--primary-color); display:inline-flex; align-items:center; gap:3px;"><i class="ri-external-link-line"></i> Link Corto</a>
-                                            <?php endif; ?>
-                                            
-                                            <?php if(!empty($r['fuente_url'])): ?>
-                                            <a href="<?php echo htmlspecialchars($r['fuente_url']); ?>" target="_blank" style="font-size:0.75rem; color:#64748b; display:inline-flex; align-items:center; gap:3px;"><i class="ri-article-line"></i> Fuente</a>
-                                            <?php else: ?>
-                                            <span style="font-size:0.75rem; color:#cbd5e1; display:inline-flex; align-items:center; gap:3px;"><i class="ri-article-line"></i> Sin Fuente</span>
-                                            <?php endif; ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span style="font-size:0.75rem; background:#e2e8f0; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['seccion']); ?></span>
-                                        <span style="font-size:0.75rem; background:#e0e7ff; color:#4338ca; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['plataforma']); ?></span>
-                                    </td>
-                                    <td style="text-align:center;">
-                                        <a href="/piura_noticias_php/admin/contenidos/action?toggle_id=<?php echo $r['id']; ?>&val=<?php echo $r['completado'] ? 0 : 1; ?>&csrf_token=<?php echo csrf_token(); ?>" style="color: <?php echo $r['completado'] ? '#10b981' : '#cbd5e1'; ?>; font-size:1.4rem; transition: transform 0.2s;" title="<?php echo $r['completado'] ? 'Completado' : 'Pendiente'; ?>">
-                                            <i class="<?php echo $r['completado'] ? 'ri-checkbox-circle-fill' : 'ri-checkbox-blank-circle-line'; ?>"></i>
-                                        </a>
-                                    </td>
-                                    <td style="text-align:center;">
-                                        <?php if($is_admin): ?>
-                                        <a href="/piura_noticias_php/admin/contenidos/action?delete_id=<?php echo $r['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Eliminar?');" style="color:#ef4444; font-size:1.2rem;"><i class="ri-delete-bin-line"></i></a>
+                <div class="acc-month-body">
+
+                    <?php foreach($semanas as $semana_nombre => $fechas): ?>
+                    <div class="acc-week">
+                        <div class="acc-week-header" onclick="toggleAcc(this)">
+                            <span><i class="ri-calendar-view-day-line" style="margin-right: 6px; color:#64748b;"></i> <?php echo htmlspecialchars($semana_nombre); ?></span>
+                            <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                        <div class="acc-week-body">
+                            
+                            <?php foreach($fechas as $fecha => $pubs): 
+                                $count_pubs = count($pubs);
+                                $is_empty = $count_pubs === 0;
+                            ?>
+                            <div class="acc-date">
+                                <div class="acc-date-header" onclick="toggleAcc(this, 'date')" style="padding-left: 3.5rem;">
+                                    <span style="color: <?php echo $is_empty ? '#94a3b8' : 'var(--text-main)'; ?>;">
+                                        <i class="ri-calendar-event-line" style="margin-right: 6px;"></i> <?php echo date('d/m/Y', strtotime($fecha)); ?>
+                                    </span>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <?php if($is_empty): ?>
+                                            <span style="font-size:0.75rem; background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 4px; font-weight: bold;">Sin publicaciones</span>
+                                        <?php else: ?>
+                                            <span style="font-size:0.75rem; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $count_pubs; ?> reg.</span>
                                         <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
+                                        <i class="ri-arrow-down-s-line"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="acc-date-body" style="padding-left: 4.5rem;">
+                                    <?php if($is_empty): ?>
+                                        <p style="margin: 0; color: #94a3b8; font-style: italic; font-size: 0.9rem;">No se registró actividad este día.</p>
+                                    <?php else: ?>
+                                        <table class="acc-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 60px;">Hora</th>
+                                                    <th>Titular</th>
+                                                    <th>Sección / Plat.</th>
+                                                    <th style="width: 50px; text-align:center;">✓</th>
+                                                    <th style="width: 50px; text-align:center;">Del</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach($pubs as $r): 
+                                                    $row_bg = "";
+                                                    if(strtoupper($r['seccion']) === 'PUBLICIDAD') $row_bg = "background: #f0f9ff;";
+                                                    if(strtoupper($r['seccion']) === 'FLYER') $row_bg = "background: #fefce8;";
+                                                ?>
+                                                <tr style="<?php echo $row_bg; ?>">
+                                                    <td style="font-weight:600; color:#475569;"><?php echo date('H:i', strtotime($r['hora'])); ?></td>
+                                                    <td>
+                                                        <strong><?php echo htmlspecialchars($r['titular']); ?></strong><br>
+                                                        <div style="display:flex; gap:10px; margin-top:4px;">
+                                                            <?php if(!empty($r['enlace'])): 
+                                                                $link = $r['enlace'];
+                                                                if (strpos($link, 'http') !== 0) {
+                                                                    $link = base_url(ltrim($link, '/'));
+                                                                }
+                                                            ?>
+                                                            <a href="<?php echo htmlspecialchars($link); ?>" target="_blank" style="font-size:0.75rem; color:var(--primary-color); display:inline-flex; align-items:center; gap:3px;"><i class="ri-external-link-line"></i> Link Corto</a>
+                                                            <?php endif; ?>
+                                                            
+                                                            <?php if(!empty($r['fuente_url'])): ?>
+                                                            <a href="<?php echo htmlspecialchars($r['fuente_url']); ?>" target="_blank" style="font-size:0.75rem; color:#64748b; display:inline-flex; align-items:center; gap:3px;"><i class="ri-article-line"></i> Fuente</a>
+                                                            <?php else: ?>
+                                                            <span style="font-size:0.75rem; color:#cbd5e1; display:inline-flex; align-items:center; gap:3px;"><i class="ri-article-line"></i> Sin Fuente</span>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span style="font-size:0.75rem; background:#e2e8f0; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['seccion']); ?></span>
+                                                        <span style="font-size:0.75rem; background:#e0e7ff; color:#4338ca; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['plataforma']); ?></span>
+                                                    </td>
+                                                    <td style="text-align:center;">
+                                                        <a href="/piura_noticias_php/admin/contenidos/action?toggle_id=<?php echo $r['id']; ?>&val=<?php echo $r['completado'] ? 0 : 1; ?>&csrf_token=<?php echo csrf_token(); ?>" style="color: <?php echo $r['completado'] ? '#10b981' : '#cbd5e1'; ?>; font-size:1.4rem; transition: transform 0.2s;" title="<?php echo $r['completado'] ? 'Completado' : 'Pendiente'; ?>">
+                                                            <i class="<?php echo $r['completado'] ? 'ri-checkbox-circle-fill' : 'ri-checkbox-blank-circle-line'; ?>"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td style="text-align:center;">
+                                                        <?php if($is_admin): ?>
+                                                        <a href="/piura_noticias_php/admin/contenidos/action?delete_id=<?php echo $r['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Eliminar?');" style="color:#ef4444; font-size:1.2rem;"><i class="ri-delete-bin-line"></i></a>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+
                 </div>
             </div>
             <?php endforeach; ?>

@@ -114,30 +114,42 @@ class AdminContentController {
                 $autores_filtrados = $autores;
             }
 
+            $meses_es = ['01'=>'Enero', '02'=>'Febrero', '03'=>'Marzo', '04'=>'Abril', '05'=>'Mayo', '06'=>'Junio', '07'=>'Julio', '08'=>'Agosto', '09'=>'Septiembre', '10'=>'Octubre', '11'=>'Noviembre', '12'=>'Diciembre'];
+
             foreach ($autores_filtrados as $a) {
                 $nombre = $a['nombre_completo'];
                 foreach ($dates as $d) {
-                    $agrupados[$nombre][$d] = [];
+                    $ts = strtotime($d);
+                    $m_str = $meses_es[date('m', $ts)] . ' ' . date('Y', $ts);
+                    $w_str = 'Semana ' . ceil(date('j', $ts) / 7);
+                    $agrupados[$nombre][$m_str][$w_str][$d] = [];
                 }
             }
             
             foreach ($registros as $r) {
                 $autor_nombre = $r['autor'] ?? 'Desconocido';
                 $fecha = $r['fecha'];
+                $ts = strtotime($fecha);
+                $m_str = $meses_es[date('m', $ts)] . ' ' . date('Y', $ts);
+                $w_str = 'Semana ' . ceil(date('j', $ts) / 7);
+                
                 // Only group if author is in filtered list (or if they are unknown)
                 if (!isset($agrupados[$autor_nombre])) {
                     if (empty($f_autor)) {
                         foreach ($dates as $d) {
-                            $agrupados[$autor_nombre][$d] = [];
+                            $dts = strtotime($d);
+                            $dm_str = $meses_es[date('m', $dts)] . ' ' . date('Y', $dts);
+                            $dw_str = 'Semana ' . ceil(date('j', $dts) / 7);
+                            $agrupados[$autor_nombre][$dm_str][$dw_str][$d] = [];
                         }
                     } else {
                         continue; // Skip if filtered and author doesn't match
                     }
                 }
-                if (!isset($agrupados[$autor_nombre][$fecha])) {
-                    $agrupados[$autor_nombre][$fecha] = [];
+                if (!isset($agrupados[$autor_nombre][$m_str][$w_str][$fecha])) {
+                    $agrupados[$autor_nombre][$m_str][$w_str][$fecha] = [];
                 }
-                $agrupados[$autor_nombre][$fecha][] = $r;
+                $agrupados[$autor_nombre][$m_str][$w_str][$fecha][] = $r;
             }
         } catch (\Exception $e) {
             $agrupados = [];
