@@ -211,7 +211,7 @@
                                         <?php if(!empty($r['enlace'])): 
                                             $link = $r['enlace'];
                                             if (strpos($link, 'http') !== 0) {
-                                                $link = 'https://' . ltrim($link, '/');
+                                                $link = base_url(ltrim($link, '/'));
                                             }
                                         ?>
                                         <a href="<?php echo htmlspecialchars($link); ?>" target="_blank" style="font-size:0.75rem; color:var(--primary-color);">Ver Enlace</a>
