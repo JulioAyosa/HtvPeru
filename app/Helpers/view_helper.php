@@ -59,7 +59,8 @@ function get_ad_from_cache($ads_pool, $ubicacion) {
 function renderMedia($fileUrl, $cssClass = '', $posterUrl = '', $autoplay = true, $inlineStyle = '') {
     if (empty($fileUrl) || ($fileUrl !== '' && strpos($fileUrl, 'http') === false && !file_exists(__DIR__ . '/../../' . ltrim($fileUrl, '/')))) {
         $placeholderSvg = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22400%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23e2e8f0%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22200%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22bold%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3ESin%20Imagen%3C%2Ftext%3E%3C%2Fsvg%3E';
-        return '<img loading="lazy" src="' . $placeholderSvg . '" class="' . htmlspecialchars($cssClass) . '" alt="Placeholder">';
+        $styleAttr = $inlineStyle ? ' style="' . htmlspecialchars($inlineStyle) . '"' : '';
+        return '<img loading="lazy" src="' . $placeholderSvg . '" class="' . htmlspecialchars($cssClass) . '" alt="Placeholder"' . $styleAttr . '>';
     }
 
     $extension = strtolower(pathinfo($fileUrl, PATHINFO_EXTENSION));
