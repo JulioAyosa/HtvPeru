@@ -105,6 +105,7 @@
         <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">H. Prog.</label><input type="time" name="hora_publicacion" class="input-excel" title="Hora Programada" style="width:100%;"></div>
         <div style="grid-column: span 2;"><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Titular</label><input type="text" name="titular" class="input-excel" placeholder="Escribe el titular..." required style="width:100%;"></div>
         <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Enlace</label><input type="text" name="enlace" class="input-excel" placeholder="URL cortada..." style="width:100%;"></div>
+        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Fuente</label><input type="url" name="fuente_url" class="input-excel" placeholder="URL original..." style="width:100%;"></div>
         
         <?php if ($is_admin): ?>
             <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Redactor</label>
@@ -208,14 +209,20 @@
                                     <td style="font-weight:600; color:#475569;"><?php echo date('H:i', strtotime($r['hora'])); ?></td>
                                     <td>
                                         <strong><?php echo htmlspecialchars($r['titular']); ?></strong><br>
-                                        <?php if(!empty($r['enlace'])): 
-                                            $link = $r['enlace'];
-                                            if (strpos($link, 'http') !== 0) {
-                                                $link = base_url(ltrim($link, '/'));
-                                            }
-                                        ?>
-                                        <a href="<?php echo htmlspecialchars($link); ?>" target="_blank" style="font-size:0.75rem; color:var(--primary-color);">Ver Enlace</a>
-                                        <?php endif; ?>
+                                        <div style="display:flex; gap:10px; margin-top:4px;">
+                                            <?php if(!empty($r['enlace'])): 
+                                                $link = $r['enlace'];
+                                                if (strpos($link, 'http') !== 0) {
+                                                    $link = base_url(ltrim($link, '/'));
+                                                }
+                                            ?>
+                                            <a href="<?php echo htmlspecialchars($link); ?>" target="_blank" style="font-size:0.75rem; color:var(--primary-color); display:inline-flex; align-items:center; gap:3px;"><i class="ri-external-link-line"></i> Link Corto</a>
+                                            <?php endif; ?>
+                                            
+                                            <?php if(!empty($r['fuente_url'])): ?>
+                                            <a href="<?php echo htmlspecialchars($r['fuente_url']); ?>" target="_blank" style="font-size:0.75rem; color:#64748b; display:inline-flex; align-items:center; gap:3px;"><i class="ri-article-line"></i> Fuente</a>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
                                     <td>
                                         <span style="font-size:0.75rem; background:#e2e8f0; padding:2px 4px; border-radius:3px;"><?php echo htmlspecialchars($r['seccion']); ?></span>
