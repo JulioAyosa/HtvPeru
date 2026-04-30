@@ -49,48 +49,7 @@ class AdminContentController {
         $stmt->execute($params);
         $registros = $stmt->fetchAll();
 
-        if (isset($_GET['download_csv']) && $_GET['download_csv'] == '1') {
-            header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-            header("Content-Disposition: attachment; filename=control_contenidos_" . date('Y-m-d') . ".xls");
-            header("Pragma: no-cache");
-            header("Expires: 0");
-
-            echo '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
-            echo '<head><meta charset="utf-8"></head>';
-            echo '<body>';
-            echo '<table border="1" cellpadding="5">';
-            echo '<tr style="background-color: #1e293b; color: #ffffff; font-weight: bold; text-align: center;">';
-            echo '<th>FECHA</th><th>HORA</th><th>HORA PUBL.</th><th>TITULAR</th><th>ENLACE</th><th>FUENTE</th><th>REDACTOR</th><th>SECCIÓN</th><th>PLATAFORMA</th><th>ESTADO/REBOTE</th><th>COMPLETADO</th>';
-            echo '</tr>';
-            
-            foreach ($registros as $r) {
-                $comp = $r['completado'] ? 'SÍ' : 'NO';
-                
-                $r_style = "";
-                $sec = strtoupper($r['seccion']);
-                if ($sec === 'PUBLICIDAD') $r_style = "background-color: #cffafe;";
-                if ($sec === 'FLYER') $r_style = "background-color: #fef08a;";
-
-                echo "<tr style='{$r_style}'>";
-                echo "<td style='text-align:center;'>" . date('d/m/Y', strtotime($r['fecha'])) . "</td>";
-                echo "<td style='text-align:center;'>" . date('H:i', strtotime($r['hora'])) . "</td>";
-                echo "<td style='text-align:center;'>" . (!empty($r['hora_publicacion']) ? date('H:i', strtotime($r['hora_publicacion'])) : '-') . "</td>";
-                echo "<td>" . htmlspecialchars($r['titular']) . "</td>";
-                $enlace_full = strpos($r['enlace'], 'http') === 0 ? $r['enlace'] : "https://htvperu.com/" . ltrim($r['enlace'], '/');
-                echo "<td><a href='" . htmlspecialchars($enlace_full) . "'>Abrir Enlace</a></td>";
-                echo "<td>" . (!empty($r['fuente_url']) ? htmlspecialchars($r['fuente_url']) : '-') . "</td>";
-                echo "<td>" . htmlspecialchars($r['autor'] ?? '') . "</td>";
-                echo "<td>" . htmlspecialchars($r['seccion']) . "</td>";
-                echo "<td>" . htmlspecialchars($r['plataforma']) . "</td>";
-                echo "<td>" . htmlspecialchars($r['rebote']) . "</td>";
-                
-                $color_comp = $r['completado'] ? '#10b981' : '#ef4444';
-                echo "<td style='text-align:center; color: {$color_comp}; font-weight:bold;'>" . $comp . "</td>";
-                echo "</tr>";
-            }
-            echo '</table></body></html>';
-            exit;
-        }
+        // Excel export is handled after grouping (see below)
 
         $autores = $pdo->query("SELECT id, nombre_completo FROM usuarios ORDER BY nombre_completo ASC")->fetchAll();
         
@@ -156,6 +115,131 @@ class AdminContentController {
             }
         } catch (\Exception $e) {
             $agrupados = [];
+        }
+        // ── Excel Export (Hierarchical) ──
+        if (isset($_GET['download_csv']) && $_GET['download_csv'] == '1') {
+            header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+            header("Content-Disposition: attachment; filename=planificador_contenidos_" . date('Y-m-d') . ".xls");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+
+            $base_domain = 'https://htvperu.com.pe/';
+
+            echo '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+            echo '<head><meta charset="utf-8">';
+            echo '<style>';
+            echo 'body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; }';
+            echo 'table { border-collapse: collapse; width: 100%; }';
+            echo 'td, th { border: 1px solid #cbd5e1; padding: 5px 8px; vertical-align: middle; }';
+            echo '.author-row { background-color: #1e293b; color: #ffffff; font-size: 13pt; font-weight: bold; }';
+            echo '.month-row { background-color: #334155; color: #ffffff; font-size: 12pt; font-weight: bold; }';
+            echo '.week-row { background-color: #64748b; color: #ffffff; font-size: 11pt; font-weight: bold; }';
+            echo '.date-row { background-color: #e2e8f0; color: #1e293b; font-size: 11pt; font-weight: bold; }';
+            echo '.date-empty { background-color: #fee2e2; color: #dc2626; font-style: italic; }';
+            echo '.header-row { background-color: #f1f5f9; color: #475569; font-weight: bold; font-size: 10pt; text-align: center; }';
+            echo '.pub-row { font-size: 10pt; }';
+            echo '.pub-row-ad { background-color: #ecfeff; }';
+            echo '.pub-row-flyer { background-color: #fefce8; }';
+            echo '.stat { font-size: 9pt; }';
+            echo '</style>';
+            echo '</head><body>';
+            echo '<table>';
+
+            // Title row
+            echo '<tr><td colspan="9" style="background-color:#0f172a; color:#ffffff; font-size:16pt; font-weight:bold; text-align:center; padding:12px;">PLANIFICADOR DE CONTENIDOS — HTV PERÚ</td></tr>';
+            echo '<tr><td colspan="9" style="background-color:#0f172a; color:#94a3b8; font-size:10pt; text-align:center; padding:4px 0 8px 0;">Período: ' . date('d/m/Y', strtotime($f_fecha_ini)) . ' al ' . date('d/m/Y', strtotime($f_fecha_fin)) . ' | Generado: ' . date('d/m/Y H:i') . '</td></tr>';
+            echo '<tr><td colspan="9"></td></tr>';
+
+            $col_count = 9;
+
+            foreach ($agrupados as $autor => $meses) {
+                // Calculate author totals
+                $total_autor = 0; $vistas_autor = 0;
+                foreach ($meses as $semanas) {
+                    foreach ($semanas as $fechas) {
+                        foreach ($fechas as $pubs) {
+                            $total_autor += count($pubs);
+                            foreach ($pubs as $p) { $vistas_autor += intval($p['vistas'] ?? 0); }
+                        }
+                    }
+                }
+                echo "<tr class='author-row'><td colspan='{$col_count}'>▸ REDACTOR: " . htmlspecialchars(strtoupper($autor)) . "  —  {$total_autor} publicaciones  |  👁 " . number_format($vistas_autor) . " vistas totales</td></tr>";
+
+                foreach ($meses as $mes_nombre => $semanas) {
+                    // Month totals
+                    $total_mes = 0; $vistas_mes = 0;
+                    foreach ($semanas as $f) {
+                        foreach ($f as $p) {
+                            $total_mes += count($p);
+                            foreach ($p as $pp) { $vistas_mes += intval($pp['vistas'] ?? 0); }
+                        }
+                    }
+                    echo "<tr class='month-row'><td colspan='{$col_count}'>    📅 " . htmlspecialchars($mes_nombre) . "  —  {$total_mes} pub.  |  👁 " . number_format($vistas_mes) . " vistas</td></tr>";
+
+                    foreach ($semanas as $semana_nombre => $fechas) {
+                        // Week totals
+                        $total_semana = 0; $vistas_semana = 0;
+                        foreach ($fechas as $p) {
+                            $total_semana += count($p);
+                            foreach ($p as $pp) { $vistas_semana += intval($pp['vistas'] ?? 0); }
+                        }
+                        echo "<tr class='week-row'><td colspan='{$col_count}'>        📆 " . htmlspecialchars($semana_nombre) . "  —  {$total_semana} pub.  |  👁 " . number_format($vistas_semana) . " vistas</td></tr>";
+
+                        foreach ($fechas as $fecha => $pubs) {
+                            $count_pubs = count($pubs);
+                            $is_empty = $count_pubs === 0;
+
+                            if ($is_empty) {
+                                echo "<tr class='date-empty'><td colspan='{$col_count}'>            📌 " . date('d/m/Y', strtotime($fecha)) . "  —  SIN PUBLICACIONES</td></tr>";
+                            } else {
+                                $vistas_dia = 0;
+                                foreach ($pubs as $pp) { $vistas_dia += intval($pp['vistas'] ?? 0); }
+                                echo "<tr class='date-row'><td colspan='{$col_count}'>            📌 " . date('d/m/Y', strtotime($fecha)) . "  —  {$count_pubs} registros  |  👁 " . number_format($vistas_dia) . " vistas</td></tr>";
+
+                                // Table header for publications
+                                echo "<tr class='header-row'>";
+                                echo "<th>HORA</th><th>TITULAR</th><th>ENLACE</th><th>FUENTE</th><th>SECCIÓN</th><th>PLATAFORMA</th><th>VISTAS</th><th>ESTADO</th><th>✓</th>";
+                                echo "</tr>";
+
+                                foreach ($pubs as $r) {
+                                    $row_class = 'pub-row';
+                                    $sec = strtoupper($r['seccion'] ?? '');
+                                    if ($sec === 'PUBLICIDAD') $row_class .= ' pub-row-ad';
+                                    if ($sec === 'FLYER') $row_class .= ' pub-row-flyer';
+
+                                    // Build full URLs
+                                    $enlace_val = $r['enlace'] ?? '';
+                                    if (!empty($enlace_val) && strpos($enlace_val, 'http') !== 0) {
+                                        $enlace_val = $base_domain . ltrim($enlace_val, '/');
+                                    }
+                                    $fuente_val = $r['fuente_url'] ?? '';
+
+                                    $comp = $r['completado'] ? 'SÍ' : 'NO';
+                                    $comp_color = $r['completado'] ? '#059669' : '#dc2626';
+                                    $vistas_r = number_format(intval($r['vistas'] ?? 0));
+
+                                    echo "<tr class='{$row_class}'>";
+                                    echo "<td style='text-align:center; width:60px;'>" . date('H:i', strtotime($r['hora'])) . "</td>";
+                                    echo "<td>" . htmlspecialchars($r['titular'] ?? '') . "</td>";
+                                    echo "<td>" . (!empty($enlace_val) ? "<a href='" . htmlspecialchars($enlace_val) . "'>" . htmlspecialchars($enlace_val) . "</a>" : '-') . "</td>";
+                                    echo "<td>" . (!empty($fuente_val) ? "<a href='" . htmlspecialchars($fuente_val) . "'>" . htmlspecialchars($fuente_val) . "</a>" : '-') . "</td>";
+                                    echo "<td style='text-align:center;'>" . htmlspecialchars($r['seccion'] ?? '') . "</td>";
+                                    echo "<td style='text-align:center;'>" . htmlspecialchars($r['plataforma'] ?? '') . "</td>";
+                                    echo "<td style='text-align:center; font-weight:bold;'>{$vistas_r}</td>";
+                                    echo "<td style='text-align:center;'>" . htmlspecialchars($r['rebote'] ?? '') . "</td>";
+                                    echo "<td style='text-align:center; color:{$comp_color}; font-weight:bold;'>{$comp}</td>";
+                                    echo "</tr>";
+                                }
+                            }
+                        }
+                    }
+                }
+                // Spacer row between authors
+                echo "<tr><td colspan='{$col_count}' style='height:10px; border:none;'></td></tr>";
+            }
+
+            echo '</table></body></html>';
+            exit;
         }
 
         $page_title = 'Planificador de Contenidos';
