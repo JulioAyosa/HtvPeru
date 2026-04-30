@@ -141,6 +141,16 @@ class AdminContentController {
             // ── HEADER ──
             echo '<tr><td colspan="' . $col_count . '" style="background:#0f172a; color:#fff; font-size:16pt; font-weight:bold; text-align:center; padding:12px;">PLANIFICADOR DE CONTENIDOS — HTV PERÚ</td></tr>';
             echo '<tr><td colspan="' . $col_count . '" style="background:#0f172a; color:#94a3b8; font-size:10pt; text-align:center;">Período: ' . $periodo_str . ' | Generado: ' . date('d/m/Y H:i') . '</td></tr>';
+
+            // ── INSTRUCCIONES PARA EL USUARIO ──
+            echo '<tr><td colspan="' . $col_count . '" style="background:#fef08a; color:#854d0e; font-size:11pt; font-weight:bold; padding:10px; border:2px solid #eab308;">';
+            echo '💡 INSTRUCCIONES: Este documento tiene secciones desplegables. ';
+            echo 'Busca los números  1  2  3  4  5  en la esquina SUPERIOR IZQUIERDA de Excel. ';
+            echo 'Haz clic en el número 1 para VER SOLO EL RESUMEN. ';
+            echo 'Haz clic en 2, 3, 4 o 5 para ver más detalle. ';
+            echo 'También puedes usar los botones [+] y [-] en el margen izquierdo para abrir o cerrar cada sección individualmente.';
+            echo '</td></tr>';
+
             echo '<tr><td colspan="' . $col_count . '"></td></tr>';
 
             // ── RESUMEN EJECUTIVO ──
