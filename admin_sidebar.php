@@ -64,7 +64,7 @@
                     <li><a href="/piura_noticias_php/admin/roles" <?php echo (strpos($_SERVER['REQUEST_URI'],'/admin/roles')!==false)?'class="active"':''; ?>><i class="ri-shield-keyhole-line"></i> Roles y Permisos</a></li>
                     <?php endif; ?>
 
-                    <?php if (has_permission('manage_news')): ?>
+                    <?php if (has_permission('system_tools')): ?>
                     <li><a href="/piura_noticias_php/admin/papelera" <?php echo (strpos($_SERVER['REQUEST_URI'],'/admin/papelera')!==false)?'class="active"':''; ?>><i class="ri-delete-bin-line"></i> Papelera</a></li>
                     <?php endif; ?>
 

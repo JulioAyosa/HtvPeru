@@ -57,7 +57,7 @@ foreach ($noticias as $n) {
     $time_ago = time_elapsed_string_local($n['fecha_publicacion']);
     
     // HTML de tarjeta
-    echo '<a href="article.php?slug=' . urlencode($n['slug'] ?? '') . '" class="timeline-item">';
+    echo '<a href="/piura_noticias_php/' . urlencode($n['slug'] ?? '') . '" class="timeline-item">';
     echo '<div class="timeline-time">';
     echo '<span class="hour">' . $time_display . '</span>';
     echo '<span>' . $date_display . '</span>';

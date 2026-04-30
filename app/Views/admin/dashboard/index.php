@@ -173,9 +173,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <th onclick="sortTable(4)">FECHA <i class="ri-expand-up-down-line"></i></th>
                 <th onclick="sortTable(5)">VISITAS <i class="ri-expand-up-down-line"></i></th>
                 <th onclick="sortTable(6)">ESTADO <i class="ri-expand-up-down-line"></i></th>
-                <?php if ($user_role !== 'gerente'): ?>
                 <th style="text-align:right;">ACCIONES</th>
-                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
@@ -206,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         <?php endif; ?>
                     <?php endif; ?>
                 </td>
-                <?php if ($user_role !== 'gerente'): ?>
                 <td style="text-align:right; white-space:nowrap;">
                     <?php if ($n['estado_publicacion'] === 'papelera'): ?>
                         <?php if ($user_role === 'admin'): ?>
@@ -216,15 +213,16 @@ document.addEventListener("DOMContentLoaded", function() {
                             <span style="font-size:0.75rem; color:#9ca3af;">En Papelera</span>
                         <?php endif; ?>
                     <?php else: ?>
-                        <a href="/article.php?id=<?php echo $n['id']; ?>" style="background:var(--primary-color); color:white; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" target="_blank" title="Ver"><i class="ri-eye-line"></i></a>
+                        <a href="/piura_noticias_php/<?php echo urlencode($n['slug']); ?>" style="background:var(--primary-color); color:white; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" target="_blank" title="Ver"><i class="ri-eye-line"></i></a>
+                        <?php if ($user_role !== 'gerente'): ?>
                         <a href="/piura_noticias_php/admin?action=edit&id=<?php echo $n['id']; ?>" style="background:#fef08a; color:#b45309; border:1px solid #fde047; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Editar"><i class="ri-edit-2-line"></i></a>
                         <a href="/piura_noticias_php/admin/dashboard/action?action=duplicate&id=<?php echo $n['id']; ?>" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Duplicar"><i class="ri-file-copy-line"></i></a>
                         <?php if ($user_role === 'admin'): ?>
                             <a href="/piura_noticias_php/admin/dashboard/action?action=delete&id=<?php echo $n['id']; ?>" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none;" onclick="return confirm('¿Enviar esta noticia a la Papelera?')" title="Borrar a Papelera"><i class="ri-delete-bin-line"></i></a>
                         <?php endif; ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </td>
-                <?php endif; ?>
             </tr>
             <?php endforeach; ?>
         </tbody>

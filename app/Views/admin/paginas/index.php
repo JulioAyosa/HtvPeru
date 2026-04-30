@@ -28,7 +28,7 @@
         <?php foreach ($paginas as $p): ?>
         <tr>
             <td><strong><?php echo htmlspecialchars($p['titulo']); ?></strong></td>
-            <td><a href="/pagina.php?s=<?php echo $p['slug']; ?>" target="_blank" style="color:var(--primary-color);"><i class="ri-external-link-line"></i> /pagina.php?s=<?php echo $p['slug']; ?></a></td>
+            <td><a href="/piura_noticias_php/pagina/<?php echo $p['slug']; ?>" target="_blank" style="color:var(--primary-color);"><i class="ri-external-link-line"></i> /pagina/<?php echo $p['slug']; ?></a></td>
             <td>
                 <span class="badge <?php echo $p['estado']==='activo' ? 'badge-activo' : 'badge-inactivo'; ?>">
                     <?php echo strtoupper($p['estado']); ?>

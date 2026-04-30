@@ -30,7 +30,7 @@ class RssController {
         echo '  <atom:link href="' . htmlspecialchars($base_url) . '/rss" rel="self" type="application/rss+xml" />' . "\n";
 
         foreach ($noticias as $row) {
-            $item_link = $base_url . "/article.php?slug=" . urlencode($row['slug']);
+            $item_link = $base_url . "/" . urlencode($row['slug']);
             $pubDate = date('D, d M Y H:i:s T', strtotime($row['fecha_publicacion']));
             
             echo "  <item>\n";

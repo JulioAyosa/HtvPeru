@@ -2,7 +2,7 @@
     <div class="container footer-inner">
         <div class="footer-brand">
             <div style="display:flex; align-items:center; gap:1.25rem; margin-bottom:1.5rem;">
-                <img src="<?php echo htmlspecialchars(!empty($global_configs['logo_url']) ? $global_configs['logo_url'] : 'img/logo.webp'); ?>" alt="Logo" class="footer-logo" style="height:56px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+                <img src="<?php echo htmlspecialchars(base_url(!empty($global_configs['logo_url']) ? $global_configs['logo_url'] : 'img/logo.webp')); ?>" alt="Logo" class="footer-logo" style="height:56px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
                 <div style="display: flex; flex-direction: column;">
                     <h2 class="logo-title-footer" style="font-size: 2.6rem; margin:0; line-height: 1; font-family: 'Arial Black', 'Montserrat', Impact, var(--font-sans); font-weight:900; letter-spacing:-1.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);"><span class="htv-text" style="color:white;">HTV</span><span class="peru-text" style="color:var(--primary-color);">PERU</span></h2>
                     <span style="font-size: 0.70rem; color: #9ca3af; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px;"><?php echo htmlspecialchars($global_configs['site_slogan'] ?? 'Una Mirada al Mundo'); ?></span>
@@ -17,7 +17,7 @@
             <h4>Secciones</h4>
             <ul style="list-style:none; padding:0; margin:0;">
                 <?php foreach($menu_cats_dynamic as $c): ?>
-                <li style="margin-bottom:0.5rem;"><a href="category.php?slug=<?php echo urlencode($c['slug']); ?>"><?php echo htmlspecialchars($c['nombre']); ?></a></li>
+                <li style="margin-bottom:0.5rem;"><a href="/piura_noticias_php/categoria/<?php echo urlencode($c['slug']); ?>"><?php echo htmlspecialchars($c['nombre']); ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -31,7 +31,7 @@
                 $pag_stmt = $pdo->query("SELECT titulo, slug FROM paginas WHERE estado='activo' ORDER BY titulo ASC");
                 while($p = $pag_stmt->fetch()):
                 ?>
-                <li style="margin-bottom:0.5rem;"><a href="pagina.php?s=<?php echo $p['slug']; ?>"><?php echo htmlspecialchars($p['titulo']); ?></a></li>
+                <li style="margin-bottom:0.5rem;"><a href="/piura_noticias_php/pagina/<?php echo $p['slug']; ?>"><?php echo htmlspecialchars($p['titulo']); ?></a></li>
                 <?php endwhile; ?>
                 <?php if(!empty($global_configs['privacy_policy_url'])): ?>
                 <li style="margin-bottom:0.5rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.5rem;">

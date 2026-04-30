@@ -55,7 +55,7 @@
                     </p>
                 </td>
                 <td>
-                    <a href="/piura_noticias_php/article.php?slug=<?php echo urlencode($c['noticia_slug'] ?? ''); ?>" target="_blank" style="font-size:0.85rem; color:var(--primary-color);">
+                    <a href="/piura_noticias_php/<?php echo urlencode($c['noticia_slug'] ?? ''); ?>" target="_blank" style="font-size:0.85rem; color:var(--primary-color);">
                         <?php echo htmlspecialchars($c['noticia_titulo'] ?? 'Noticia Eliminada', ENT_QUOTES | ENT_HTML5, 'UTF-8'); ?>
                     </a>
                 </td>

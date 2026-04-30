@@ -117,7 +117,7 @@
             <div class="ticker__inner">
                 <?php if (!empty($ultimas)): ?>
                     <?php foreach ($ultimas as $u): ?>
-                        <a href="article.php?slug=<?php echo urlencode($u['slug']); ?>" class="ticker__item"
+                        <a href="<?php echo urlencode($u['slug']); ?>" class="ticker__item"
                             style="margin-right: 2rem;">
                             <i class="ri-flashlight-fill"
                                 style="color:#fbbf24; margin-right:8px; font-size: 1.1rem; vertical-align:middle;"></i>
@@ -133,7 +133,7 @@
             <div class="ticker__inner" aria-hidden="true">
                 <?php if (!empty($ultimas)): ?>
                     <?php foreach ($ultimas as $u): ?>
-                        <a href="article.php?slug=<?php echo urlencode($u['slug']); ?>" class="ticker__item"
+                        <a href="<?php echo urlencode($u['slug']); ?>" class="ticker__item"
                             style="margin-right: 2rem;">
                             <i class="ri-flashlight-fill"
                                 style="color:#fbbf24; margin-right:8px; font-size: 1.1rem; vertical-align:middle;"></i>
@@ -163,7 +163,7 @@
             <?php if (count($resultados_busqueda) > 0): ?>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
                     <?php foreach ($resultados_busqueda as $r): ?>
-                        <a href="article.php?slug=<?php echo urlencode($r['slug'] ?? ''); ?>" class="news-card"
+                        <a href="<?php echo urlencode($r['slug'] ?? ''); ?>" class="news-card"
                             style="height: 350px;">
                             <div class="card-img-wrap">
                                 <?php echo renderMedia($r['imagen_url'], 'card-img', $r['video_poster_url'] ?? '', false); ?>
@@ -200,7 +200,7 @@
                 <div class="stories-container" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; scrollbar-width: none;">
                     <style>.stories-container::-webkit-scrollbar { display: none; }</style>
                     <?php foreach ($stories as $story): ?>
-                    <a href="article.php?slug=<?php echo urlencode($story['slug']); ?>" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; flex-shrink: 0; width: 85px;">
+                    <a href="<?php echo urlencode($story['slug']); ?>" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; flex-shrink: 0; width: 85px;">
                         <div style="width: 75px; height: 75px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);">
                             <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; border: 3px solid var(--bg-main);">
                                 <?php echo renderMedia($story['imagen_url'], 'card-img', $story['video_poster_url'] ?? '', false); ?>
@@ -288,7 +288,7 @@
                                         style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; height: 500px;">
 
                                         <!-- Noticia Principal -->
-                                        <a href="article.php?slug=<?php echo urlencode($slide[0]['slug'] ?? ''); ?>" class="news-card"
+                                        <a href="<?php echo urlencode($slide[0]['slug'] ?? ''); ?>" class="news-card"
                                             style="height: 100%;">
                                             <div class="card-img-wrap">
                                                 <?php echo renderMedia($slide[0]['imagen_url'], 'card-img', $slide[0]['video_poster_url'] ?? '', false); ?>
@@ -305,7 +305,7 @@
                                         <?php if (count($slide) > 1): ?>
                                             <div style="display: flex; flex-direction: column; gap: 1rem; height: 100%;">
                                                 <?php for ($i = 1; $i < count($slide); $i++): ?>
-                                                    <a href="article.php?slug=<?php echo urlencode($slide[$i]['slug'] ?? ''); ?>"
+                                                    <a href="<?php echo urlencode($slide[$i]['slug'] ?? ''); ?>"
                                                         class="news-card" style="height: 100%; flex: 1;">
                                                         <div class="card-img-wrap">
                                                             <?php echo renderMedia($slide[$i]['imagen_url'], 'card-img', $slide[$i]['video_poster_url'] ?? '', false); ?>
@@ -398,7 +398,7 @@
                     <?php if(!empty($regionales_todas)): ?>
                         <?php foreach($regionales_todas as $i => $reg): ?>
                             <!-- Cada Tarjeta individual (data-distrito para filtrar con JS) -->
-                            <a href="article.php?slug=<?php echo urlencode($reg['slug'] ?? ''); ?>" 
+                            <a href="<?php echo urlencode($reg['slug'] ?? ''); ?>" 
                                class="regional-card" 
                                data-distrito="<?php echo htmlspecialchars($reg['distrito'] ?? 'Varios'); ?>" 
                                style="display: block; position: relative; height: 280px; text-decoration: none; overflow: hidden; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); <?php echo ($i >= 4) ? 'display: none;' : ''; ?>">
@@ -499,7 +499,7 @@
                     <div id="general-news-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
                         <?php if(count($recientes) > 0): ?>
                             <?php for($i=0; $i<count($recientes); $i++): $r = $recientes[$i]; ?>
-                                <a href="article.php?slug=<?php echo urlencode($r['slug'] ?? ''); ?>" class="gen-news-card" style="display: flex; flex-direction: column; text-decoration: none; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 20px -5px rgba(0,0,0,0.15)'; this.querySelector('.img-scale').style.transform='scale(1.05)'; this.querySelector('.read-more').style.color='var(--primary-color)'; this.querySelector('.read-more').style.transform='translateX(5px)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.05)'; this.querySelector('.img-scale').style.transform='scale(1)'; this.querySelector('.read-more').style.color='#64748b'; this.querySelector('.read-more').style.transform='translateX(0)';">
+                                <a href="<?php echo urlencode($r['slug'] ?? ''); ?>" class="gen-news-card" style="display: flex; flex-direction: column; text-decoration: none; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 20px -5px rgba(0,0,0,0.15)'; this.querySelector('.img-scale').style.transform='scale(1.05)'; this.querySelector('.read-more').style.color='var(--primary-color)'; this.querySelector('.read-more').style.transform='translateX(5px)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.05)'; this.querySelector('.img-scale').style.transform='scale(1)'; this.querySelector('.read-more').style.color='#64748b'; this.querySelector('.read-more').style.transform='translateX(0)';">
                                     
                                     <!-- Contenedor de Imagen -->
                                     <div class="gen-news-img-wrap" style="width: 100%; height: 200px; position: relative; overflow: hidden; background: #f8fafc;">
@@ -547,7 +547,7 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:0;">
                         <?php foreach (array_slice($todas_noticias, 0, 5) as $ul): ?>
-                            <a href="article.php?slug=<?php echo urlencode($ul['slug'] ?? ''); ?>" style="display:flex; gap:1rem; border-bottom:1px solid #e2e8f0; padding: 1rem 0; text-decoration: none;">
+                            <a href="<?php echo urlencode($ul['slug'] ?? ''); ?>" style="display:flex; gap:1rem; border-bottom:1px solid #e2e8f0; padding: 1rem 0; text-decoration: none;">
                                 <div style="width: 70px; height: 50px; flex-shrink:0; border-radius:3px; overflow:hidden;">
                                     <?php echo renderMedia($ul['imagen_url'], 'card-img', $ul['video_poster_url'] ?? '', false, 'width: 100%; height: 100%; object-fit: cover;'); ?>
                                 </div>
@@ -567,7 +567,7 @@
                     <ol style="padding: 0; list-style: none; margin: 0;">
                         <?php foreach ($mas_leido as $i => $ml): ?>
                             <li style="margin-bottom: 0; border-bottom: 1px solid #e2e8f0; position: relative;">
-                                <a href="article.php?slug=<?php echo urlencode($ml['slug'] ?? ''); ?>" style="display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 0; color: var(--text-main); text-decoration: none;">
+                                <a href="<?php echo urlencode($ml['slug'] ?? ''); ?>" style="display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 0; color: var(--text-main); text-decoration: none;">
                                     <span style="font-size: 1.5rem; font-weight: 800; color: #cbd5e1; font-family: var(--font-serif); line-height: 1;"><?php echo $i+1; ?></span>
                                     <h4 style="margin: 0; font-size: 0.95rem; line-height: 1.3; font-weight: 600; font-family: var(--font-sans);"><?php echo htmlspecialchars($ml['titulo']); ?></h4>
                                 </a>
@@ -700,7 +700,7 @@
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
                         <?php foreach ($policiales as $p): ?>
-                            <a href="article.php?slug=<?php echo urlencode($p['slug'] ?? ''); ?>" class="news-card"
+                            <a href="<?php echo urlencode($p['slug'] ?? ''); ?>" class="news-card"
                                 style="height: 300px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.5);">
                                 <div class="card-img-wrap">
                                     <?php echo renderMedia($p['imagen_url'], 'card-img', $p['video_poster_url'] ?? '', false); ?>
@@ -741,7 +741,7 @@
                     <div class="swiper-wrapper">
                         <?php foreach ($politica as $pol): ?>
                             <div class="swiper-slide">
-                                <a href="article.php?slug=<?php echo urlencode($pol['slug'] ?? ''); ?>" class="news-card"
+                                <a href="<?php echo urlencode($pol['slug'] ?? ''); ?>" class="news-card"
                                     style="height: 100%; border-radius: var(--radius-md);">
                                     <div class="card-img-wrap">
                                         <?php echo renderMedia($pol['imagen_url'], 'card-img', $pol['video_poster_url'] ?? '', false); ?>
@@ -770,7 +770,7 @@
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
                     <?php foreach ($entretenimiento as $ent): ?>
-                        <a href="article.php?slug=<?php echo urlencode($ent['slug'] ?? ''); ?>" class="news-card"
+                        <a href="<?php echo urlencode($ent['slug'] ?? ''); ?>" class="news-card"
                             style="height: 250px;">
                             <div class="card-img-wrap">
                                 <?php echo renderMedia($ent['imagen_url'], 'card-img', $ent['video_poster_url'] ?? '', false); ?>

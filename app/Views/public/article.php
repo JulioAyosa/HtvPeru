@@ -235,7 +235,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
                 foreach ($tags_array as $tag):
                     $tag_slug = strtolower(str_replace(' ', '-', $tag));
             ?>
-                <a href="tag.php?slug=<?php echo urlencode($tag_slug); ?>" class="tag" style="text-decoration:none; display:inline-block; transition:transform 0.2s;"><?php echo htmlspecialchars($tag); ?></a>
+                <a href="/piura_noticias_php/etiqueta/<?php echo urlencode($tag_slug); ?>" class="tag" style="text-decoration:none; display:inline-block; transition:transform 0.2s;"><?php echo htmlspecialchars($tag); ?></a>
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
@@ -437,12 +437,12 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
             <div class="related-grid">
                 <?php foreach ($relacionadas as $rel_articulo): ?>
                 <div class="related-card">
-                    <a href="article.php?slug=<?php echo urlencode($rel_articulo['slug']); ?>">
+                    <a href="/piura_noticias_php/<?php echo urlencode($rel_articulo['slug']); ?>">
                         <?php echo renderMedia($rel_articulo['imagen_url'], '', $rel_articulo['video_poster_url'] ?? ''); ?>
                     </a>
                     <div class="related-card-content">
-                        <span class="related-card-category"><a href="category.php?slug=<?php echo urlencode(strtolower($rel_articulo['categoria'])); ?>" style="color:var(--primary-color); text-decoration:none;"><?php echo htmlspecialchars($rel_articulo['categoria']); ?></a></span>
-                        <h3 class="related-card-title"><a href="article.php?slug=<?php echo urlencode($rel_articulo['slug']); ?>"><?php echo htmlspecialchars($rel_articulo['titulo']); ?></a></h3>
+                        <span class="related-card-category"><a href="/piura_noticias_php/categoria/<?php echo urlencode(strtolower($rel_articulo['categoria'])); ?>" style="color:var(--primary-color); text-decoration:none;"><?php echo htmlspecialchars($rel_articulo['categoria']); ?></a></span>
+                        <h3 class="related-card-title"><a href="/piura_noticias_php/<?php echo urlencode($rel_articulo['slug']); ?>"><?php echo htmlspecialchars($rel_articulo['titulo']); ?></a></h3>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -457,7 +457,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
                 <div style="display:flex; flex-direction:column; gap:1.25rem; margin-top:1.5rem;">
                     <?php if(!empty($todas_noticias)): ?>
                     <?php foreach ($todas_noticias as $sn): ?>
-                    <a href="article.php?slug=<?php echo urlencode($sn['slug']); ?>" style="display:flex; gap:1rem; text-decoration:none;">
+                    <a href="/piura_noticias_php/<?php echo urlencode($sn['slug']); ?>" style="display:flex; gap:1rem; text-decoration:none;">
                         <?php echo renderMedia($sn['imagen_url'], '', $sn['video_poster_url'] ?? '', false, 'width: 80px; height: 80px; object-fit: cover; border-radius: 4px; flex-shrink:0;'); ?>
                         <div>
                             <span style="font-size:0.7rem; color:var(--primary-color); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;"><?php echo htmlspecialchars($sn['categoria']); ?></span>
@@ -552,7 +552,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
     <!-- LEY DE COOKIES GDPR -->
     <div id="gdpr-cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#111827; color:white; padding:1rem; z-index:99999; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; box-shadow:0 -5px 20px rgba(0,0,0,0.5);">
         <div style="flex:1; min-width:300px; font-size:0.85rem; margin-right:2rem; font-family:var(--font-sans);">
-            Utilizamos cookies propias y de terceros para fines analíticos y para mostrarte publicidad personalizada en base a un perfil elaborado a partir de tus hábitos de navegación. <a href="pagina.php?slug=politica-y-privacidad" style="color:#60a5fa; text-decoration:underline;">Ver política</a>.
+            Utilizamos cookies propias y de terceros para fines analíticos y para mostrarte publicidad personalizada en base a un perfil elaborado a partir de tus hábitos de navegación. <a href="/piura_noticias_php/pagina/politica-y-privacidad" style="color:#60a5fa; text-decoration:underline;">Ver política</a>.
         </div>
         <button onclick="document.getElementById('gdpr-cookie-banner').style.display='none'; localStorage.setItem('cookies_accepted', 'true');" style="background:var(--primary-color); color:white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; font-family:var(--font-sans); border-radius:4px; margin-top:10px;">Aceptar todas</button>
     </div>

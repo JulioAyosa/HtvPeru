@@ -90,7 +90,7 @@ if (!function_exists('time_elapsed_string')) {
                     // Helper logic inside view inline
                     $time_ago = time_elapsed_string($n['fecha_publicacion']);
                 ?>
-                <a href="article.php?slug=<?php echo urlencode($n['slug']); ?>" class="timeline-item">
+                <a href="<?php echo urlencode($n['slug']); ?>" class="timeline-item">
                     <div class="timeline-time">
                         <span class="hour"><?php echo $time_display; ?></span>
                         <span><?php echo $date_display; ?></span>
@@ -138,7 +138,7 @@ if (!function_exists('time_elapsed_string')) {
                     if(!empty($mas_leidas)): 
                         foreach ($mas_leidas as $sn): 
                     ?>
-                    <a href="article.php?slug=<?php echo urlencode($sn['slug']); ?>" style="display:flex; gap:1rem; text-decoration:none;">
+                    <a href="<?php echo urlencode($sn['slug']); ?>" style="display:flex; gap:1rem; text-decoration:none;">
                         <?php echo renderMedia($sn['imagen_url'], '', $sn['video_poster_url'] ?? '', false, 'width: 80px; height: 80px; object-fit: cover; border-radius: 4px; flex-shrink:0;'); ?>
                         <div>
                             <span style="font-size:0.7rem; color:var(--primary-color); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;"><?php echo htmlspecialchars($sn['categoria']); ?></span>

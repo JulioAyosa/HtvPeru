@@ -54,7 +54,7 @@ class AdminDashboardController {
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-        $query = "SELECT n.id, n.titulo, n.categoria, n.fecha_publicacion, n.es_destacada, n.estado_publicacion, n.fecha_programada, n.vistas, u.nombre_completo AS autor 
+        $query = "SELECT n.id, n.slug, n.titulo, n.categoria, n.fecha_publicacion, n.es_destacada, n.estado_publicacion, n.fecha_programada, n.vistas, u.nombre_completo AS autor 
                   FROM noticias n JOIN usuarios u ON n.autor_id = u.id WHERE n.deleted_at IS NULL ORDER BY n.fecha_publicacion DESC LIMIT $limit OFFSET $offset";
         $noticias = $pdo->query($query)->fetchAll();
 
@@ -392,7 +392,7 @@ class AdminDashboardController {
                         
                         $estado_rebote = ($estado_publicacion === 'programado') ? '(programada)' : (($estado_publicacion === 'borrador') ? '(pendiente)' : '(completada)');
                         $completado_flag = ($estado_publicacion === 'publicado') ? 1 : 0;
-                        $enlace_auto = "article.php?id=" . $nuevo_id;
+                        $enlace_auto = $slug;
                         
                         try {
                             $stmt_plan = $pdo->prepare("INSERT INTO registro_contenidos (fecha, hora, titular, enlace, fuente_url, usuario_id, seccion, plataforma, rebote, completado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");

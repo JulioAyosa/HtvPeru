@@ -150,6 +150,19 @@ $router->add('GET', '/auth/facebook', 'PublicAuthController@facebookRedirect');
 $router->add('GET', '/auth/facebook/callback', 'PublicAuthController@facebookCallback');
 $router->add('GET', '/auth/logout', 'PublicAuthController@logout');
 
+// URLs LIMPIAS (SEO-friendly) - Rutas sin .php ni query strings
+$router->add('GET', '/categoria/{slug}', 'PublicPageController@categoryBySlug');
+$router->add('GET', '/etiqueta/{slug}', 'PublicPageController@tagBySlug');
+$router->add('GET', '/buscar', 'PublicPageController@search');
+$router->add('GET', '/ultimas-noticias', 'PublicPageController@ultimasNoticias');
+$router->add('GET', '/guardados', 'PublicPageController@bookmarks');
+$router->add('GET', '/pagina/{slug}', 'PublicPageController@pageBySlug');
+
+// URLs LIMPIAS: Artículos por slug (CATCH-ALL, debe ir AL FINAL)
+// Esto permite URLs como /piura_noticias_php/mi-titulo-de-noticia
+$router->add('GET', '/{slug}', 'PublicPageController@articleBySlug');
+$router->add('POST', '/{slug}', 'PublicPageController@articleBySlug', ['CsrfMiddleware']);
+
 // ============================================
 // DESPACHADOR Y FALLBACK DE COMPATIBILIDAD
 // ============================================

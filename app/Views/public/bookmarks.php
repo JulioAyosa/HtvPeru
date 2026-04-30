@@ -86,7 +86,7 @@
                     html += `
                     <div class="timeline-item">
                         <button class="btn-remove-bk" data-index="${index}" title="Remover de guardados"><i class="ri-close-line"></i></button>
-                        <a href="/piura_noticias_php/article.php?slug=${encodeURIComponent(b.slug)}" style="text-decoration:none;">
+                        <a href="/piura_noticias_php/${encodeURIComponent(b.slug)}" style="text-decoration:none;">
                             <div class="timeline-img-wrap">
                                 <img src="${b.img ? b.img : '/piura_noticias_php/img/placeholder.webp'}" alt="img">
                             </div>

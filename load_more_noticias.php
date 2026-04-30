@@ -24,7 +24,7 @@ if (count($recientes) === 0) {
 
 foreach ($recientes as $r) {
     ?>
-    <a href="article.php?slug=<?php echo urlencode($r['slug'] ?? ''); ?>" class="news-card">
+    <a href="<?php echo urlencode($r['slug'] ?? ''); ?>" class="news-card">
         <div class="card-img-wrap">
             <?php echo renderMedia($r['imagen_url'], 'card-img', $r['video_poster_url'] ?? '', false); ?>
         </div>

@@ -57,18 +57,23 @@ function get_ad_from_cache($ads_pool, $ubicacion) {
 
 // Renderiza Imagen o Video automáticamente. Permite desactivar autoplay en miniaturas para evitar lag masivo.
 function renderMedia($fileUrl, $cssClass = '', $posterUrl = '', $autoplay = true, $inlineStyle = '') {
-    if (empty($fileUrl) || ($fileUrl !== '' && strpos($fileUrl, 'http') === false && !file_exists(__DIR__ . '/../../' . $fileUrl))) {
-        return '<img loading="lazy" src="https://via.placeholder.com/800x400?text=Sin+Imagen" class="' . htmlspecialchars($cssClass) . '" alt="Placeholder">';
+    if (empty($fileUrl) || ($fileUrl !== '' && strpos($fileUrl, 'http') === false && !file_exists(__DIR__ . '/../../' . ltrim($fileUrl, '/')))) {
+        $placeholderSvg = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22400%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%23e2e8f0%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22200%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22sans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22bold%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3ESin%20Imagen%3C%2Ftext%3E%3C%2Fsvg%3E';
+        return '<img loading="lazy" src="' . $placeholderSvg . '" class="' . htmlspecialchars($cssClass) . '" alt="Placeholder">';
     }
 
     $extension = strtolower(pathinfo($fileUrl, PATHINFO_EXTENSION));
     $video_extensions = ['mp4', 'webm', 'ogg'];
 
+    $finalUrl = (strpos($fileUrl, 'http') === 0) ? $fileUrl : base_url($fileUrl);
+    $finalPoster = (!empty($posterUrl) && strpos($posterUrl, 'http') !== 0) ? base_url($posterUrl) : $posterUrl;
+
     if (in_array($extension, $video_extensions)) {
-        $posterAttr = !empty($posterUrl) ? ' poster="' . htmlspecialchars($posterUrl) . '"' : '';
+        $posterAttr = !empty($finalPoster) ? ' poster="' . htmlspecialchars($finalPoster) . '"' : '';
         
         if (!$autoplay) {
-            $imgSrc = !empty($posterUrl) ? htmlspecialchars($posterUrl) : 'https://via.placeholder.com/800x400/030712/ffffff?text=Video+(Ver+Interior)';
+            $videoPlaceholderSvg = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22800%22%20height%3D%22400%22%20viewBox%3D%220%200%20800%20400%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22800%22%20height%3D%22400%22%20fill%3D%22%230f172a%22%2F%3E%3Ctext%20x%3D%22400%22%20y%3D%22200%22%20fill%3D%22%23ffffff%22%20font-family%3D%22sans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22bold%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3EVideo%20(Ver%20Interior)%3C%2Ftext%3E%3C%2Fsvg%3E';
+            $imgSrc = !empty($finalPoster) ? htmlspecialchars($finalPoster) : $videoPlaceholderSvg;
             
             return '<div style="position:relative; width:100%; height:100%; overflow:hidden;">
                         <img loading="lazy" src="' . $imgSrc . '" class="' . htmlspecialchars($cssClass) . '" alt="Video cover" style="object-fit:cover; width:100%; height:100%;">
@@ -79,11 +84,11 @@ function renderMedia($fileUrl, $cssClass = '', $posterUrl = '', $autoplay = true
         }
 
         return '<video preload="none" class="' . htmlspecialchars($cssClass) . '" autoplay muted loop playsinline' . $posterAttr . ' style="' . ($inlineStyle ? htmlspecialchars($inlineStyle) : 'object-fit:cover; width:100%; height:100%;') . '">
-                    <source src="' . htmlspecialchars($fileUrl) . '" type="video/' . $extension . '">
+                    <source src="' . htmlspecialchars($finalUrl) . '" type="video/' . $extension . '">
                     Tu navegador no soporta la reproducción de video.
                 </video>';
     } else {
         $styleAttr = $inlineStyle ? ' style="' . htmlspecialchars($inlineStyle) . '"' : '';
-        return '<img loading="lazy" src="' . htmlspecialchars($fileUrl) . '" class="' . htmlspecialchars($cssClass) . '" alt="Media"' . $styleAttr . '>';
+        return '<img loading="lazy" src="' . htmlspecialchars($finalUrl) . '" class="' . htmlspecialchars($cssClass) . '" alt="Media"' . $styleAttr . '>';
     }
 }

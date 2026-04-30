@@ -77,7 +77,7 @@
                     $date_display = $date->format('d/m/Y');
                     $time_ago = time_elapsed_string($n['fecha_publicacion']);
                 ?>
-                <a href="/piura_noticias_php/article.php?slug=<?php echo urlencode($n['slug']); ?>" class="timeline-item">
+                <a href="/piura_noticias_php/<?php echo urlencode($n['slug']); ?>" class="timeline-item">
                     <div class="timeline-time">
                         <span class="hour"><?php echo $time_display; ?></span>
                         <span><?php echo $date_display; ?></span>
@@ -113,15 +113,15 @@
         <?php if ($total_pages > 1): ?>
         <div class="pagination">
             <?php if ($page > 1): ?>
-                <a href="?slug=<?php echo urlencode($slug); ?>&page=<?php echo $page - 1; ?>" class="page-link"><i class="ri-arrow-left-s-line"></i></a>
+                <a href="/piura_noticias_php/etiqueta/<?php echo urlencode($slug); ?>?page=<?php echo $page - 1; ?>" class="page-link"><i class="ri-arrow-left-s-line"></i></a>
             <?php endif; ?>
             
             <?php for ($i = max(1, $page - 2); $i <= min($total_pages, $page + 2); $i++): ?>
-                <a href="?slug=<?php echo urlencode($slug); ?>&page=<?php echo $i; ?>" class="page-link <?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                <a href="/piura_noticias_php/etiqueta/<?php echo urlencode($slug); ?>?page=<?php echo $i; ?>" class="page-link <?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
             <?php endfor; ?>
 
             <?php if ($page < $total_pages): ?>
-                <a href="?slug=<?php echo urlencode($slug); ?>&page=<?php echo $page + 1; ?>" class="page-link"><i class="ri-arrow-right-s-line"></i></a>
+                <a href="/piura_noticias_php/etiqueta/<?php echo urlencode($slug); ?>?page=<?php echo $page + 1; ?>" class="page-link"><i class="ri-arrow-right-s-line"></i></a>
             <?php endif; ?>
         </div>
         <?php endif; ?>

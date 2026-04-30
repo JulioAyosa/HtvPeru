@@ -37,6 +37,31 @@ class PublicPageController {
         }
     }
 
+    public function articleBySlug($slug = '') {
+        // Ruta limpia: /{slug} → Inyectamos el slug como parámetro GET
+        // y delegamos al método article() existente que ya lo soporta.
+        $_GET['slug'] = $slug;
+        return $this->article();
+    }
+
+    public function categoryBySlug($slug = '') {
+        // Ruta limpia: /categoria/{slug}
+        $_GET['slug'] = $slug;
+        return $this->category();
+    }
+
+    public function tagBySlug($slug = '') {
+        // Ruta limpia: /etiqueta/{slug}
+        $_GET['slug'] = $slug;
+        return $this->tag();
+    }
+
+    public function pageBySlug($slug = '') {
+        // Ruta limpia: /pagina/{slug}
+        $_GET['s'] = $slug;
+        return $this->page();
+    }
+
     public function article() {
         require_once __DIR__ . '/../../session_config.php';
         @session_start();
@@ -155,7 +180,7 @@ class PublicPageController {
                 $in_read_post = $relacionadas[0];
                 $in_read_html = '<div style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-main); border-left: 4px solid var(--primary-color); border-radius: 4px;">' .
                                 '<span style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Lea También</span>' .
-                                '<a href="article.php?slug=' . urlencode($in_read_post['slug']) . '" style="font-size: 1.25rem; font-weight: 800; color: var(--primary-color); text-decoration: none; line-height: 1.4; display: block;">' .
+                                '<a href="' . urlencode($in_read_post['slug']) . '" style="font-size: 1.25rem; font-weight: 800; color: var(--primary-color); text-decoration: none; line-height: 1.4; display: block;">' .
                                 htmlspecialchars($in_read_post['titulo']) . '</a>' .
                                 '</div>';
                 $paragraphs[1] .= '</p>' . $in_read_html;
