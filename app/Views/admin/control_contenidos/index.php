@@ -184,19 +184,33 @@
         </div>
         <div class="acc-user-body">
             
-            <?php foreach($meses as $mes_nombre => $semanas): ?>
+            <?php foreach($meses as $mes_nombre => $semanas): 
+                $total_mes = 0;
+                foreach($semanas as $f) {
+                    foreach($f as $p) { $total_mes += count($p); }
+                }
+            ?>
             <div class="acc-month">
                 <div class="acc-month-header" onclick="toggleAcc(this)">
                     <span><i class="ri-calendar-2-line" style="margin-right: 6px;"></i> <?php echo htmlspecialchars($mes_nombre); ?></span>
-                    <i class="ri-arrow-down-s-line"></i>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="font-size:0.75rem; background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $total_mes; ?> pub.</span>
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
                 </div>
                 <div class="acc-month-body">
 
-                    <?php foreach($semanas as $semana_nombre => $fechas): ?>
+                    <?php foreach($semanas as $semana_nombre => $fechas): 
+                        $total_semana = 0;
+                        foreach($fechas as $p) { $total_semana += count($p); }
+                    ?>
                     <div class="acc-week">
                         <div class="acc-week-header" onclick="toggleAcc(this)">
                             <span><i class="ri-calendar-view-day-line" style="margin-right: 6px; color:#64748b;"></i> <?php echo htmlspecialchars($semana_nombre); ?></span>
-                            <i class="ri-arrow-down-s-line"></i>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="font-size:0.75rem; background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 4px; font-weight: bold;"><?php echo $total_semana; ?> pub.</span>
+                                <i class="ri-arrow-down-s-line"></i>
+                            </div>
                         </div>
                         <div class="acc-week-body">
                             
