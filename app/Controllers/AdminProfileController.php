@@ -112,6 +112,9 @@ class AdminProfileController {
                     $stmt->execute([$nombre, $email, $user_id]);
                 }
                 if ($avatar_path) {
+                    if (!empty($old['avatar_url']) && file_exists(__DIR__ . '/../../' . ltrim($old['avatar_url'], '/'))) {
+                        @unlink(__DIR__ . '/../../' . ltrim($old['avatar_url'], '/'));
+                    }
                     $pdo->prepare("UPDATE usuarios SET avatar_url = ? WHERE id = ?")->execute([$avatar_path, $user_id]);
                     $_SESSION['user_avatar'] = '/' . $avatar_path;
                 }

@@ -18,7 +18,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($global_configs['site_title'] ?? 'HTVPERU - Una Mirada al Mundo'); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($global_configs['site_slogan'] ?? ''); ?>">
-    
+    <?php $current_url = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>
+    <link rel="canonical" href="<?php echo htmlspecialchars($current_url); ?>" />
     <?php $og_protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://'; ?>
     <meta property="og:title" content="<?php echo htmlspecialchars($global_configs['site_title'] ?? 'HTVPERU'); ?>" />
     <meta property="og:description" content="<?php echo htmlspecialchars($global_configs['seo_og_desc'] ?? $global_configs['site_slogan'] ?? ''); ?>" />

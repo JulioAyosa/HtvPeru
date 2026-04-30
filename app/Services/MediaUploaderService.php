@@ -124,14 +124,6 @@ class MediaUploaderService {
             return ['success' => false, 'url' => '', 'msg' => 'Tipo de archivo no permitido (Solo imágenes y videos).'];
         }
 
-        $saved_name = '';
-        $saved = $this->transcodeToWebp($tmp_path, $mime);
-        
-        if ($saved) {
-            // Find the generated webp name by checking highest modification time or simply we update transcodeToWebp to return the filename
-            // Since transcodeToWebp currently returns boolean, let's just do a secure fallback for now if we can't get the name
-            // Wait, I will just generate the name here and pass it.
-        }
 
         // Mejorado: generar nombre aquí
         $dest_base = uniqid('media_') . '_' . bin2hex(random_bytes(4));

@@ -115,7 +115,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
         }
         ?>
 
-        .article-header { margin-top: 2rem; margin-bottom: 2rem; text-align: left; }
+        .article-header { margin-top: 2rem; margin-bottom: 2rem; text-align: left; position: relative; z-index: 10; }
         .article-category { color: var(--primary-color); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.875rem; display: block; margin-bottom: 1rem; }
         .article-title { font-family: var(--font-serif); font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem; width: 100%; margin: 0; color: var(--text-main); }
         .article-excerpt { font-size: 1.25rem; color: var(--text-muted); width: 100%; margin: 0 0 2rem 0; line-height: 1.6; }
@@ -403,7 +403,7 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
                         <div style="background:var(--bg-main); padding:1.5rem; border-radius:var(--radius-lg); border:1px solid var(--border-color); display:flex; gap:1rem;">
                             <div style="width:48px; height:48px; border-radius:50%; background:var(--primary-light); color:var(--primary-color); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.5rem; overflow:hidden;">
                                 <?php if (!empty($com['avatar_url'])): ?>
-                                    <img src="<?php echo htmlspecialchars($com['avatar_url']); ?>" style="width:100%; height:100%; object-fit:cover;">
+                                    <img src="<?php echo htmlspecialchars(base_url($com['avatar_url'])); ?>" style="width:100%; height:100%; object-fit:cover;">
                                 <?php else: ?>
                                     <i class="ri-user-smile-fill"></i>
                                 <?php endif; ?>

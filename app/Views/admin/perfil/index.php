@@ -16,7 +16,7 @@
 <div class="profile-card">
     <div style="text-align:center; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem;">
         <?php if (!empty($info['avatar_url'])): ?>
-            <img src="<?php echo htmlspecialchars($info['avatar_url']); ?>" alt="Avatar" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--primary-light); margin-bottom:1rem; box-shadow:var(--shadow-md);">
+            <img src="<?php echo htmlspecialchars(base_url($info['avatar_url'])); ?>" alt="Avatar" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--primary-light); margin-bottom:1rem; box-shadow:var(--shadow-md);">
         <?php else: ?>
             <i class="ri-user-smile-fill" style="font-size: 5rem; color: var(--primary-color); display:block; margin-bottom:1rem;"></i>
         <?php endif; ?>

@@ -38,7 +38,7 @@
                 <?php foreach ($usuarios as $u): ?>
                     <tr style="border-bottom: 1px solid #f1f5f9;">
                         <td style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
-                            <img src="<?php echo htmlspecialchars($u['avatar_url'] ?: '/piura_noticias_php/img/default_avatar.png'); ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                            <img src="<?php echo htmlspecialchars($u['avatar_url'] ? base_url($u['avatar_url']) : base_url('/img/default_avatar.png')); ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                             <div>
                                 <strong style="display: block; color: #1e293b;"><?php echo htmlspecialchars($u['nombre']); ?></strong>
                                 <span style="font-size: 0.8rem; color: #64748b;"><?php echo htmlspecialchars($u['email']); ?></span>

@@ -71,3 +71,23 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<!-- Banner de Cookies -->
+<div id="cookies-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--bg-card); border-top:1px solid var(--border-color); padding:1rem; z-index:9999; box-shadow:0 -4px 10px rgba(0,0,0,0.1); justify-content:center; align-items:center; gap:1.5rem; flex-wrap:wrap; text-align:center;">
+    <p style="margin:0; font-size:0.9rem; color:var(--text-main); max-width:800px;">
+        Utilizamos cookies propias y de terceros para mejorar nuestros servicios y mostrarle publicidad relacionada con sus preferencias mediante el análisis de sus hábitos de navegación. Si continúa navegando, consideramos que acepta su uso. Puede obtener más información en nuestra <a href="/piura_noticias_php/pagina/politica-de-privacidad" style="color:var(--primary-color); text-decoration:underline;">Política de Privacidad</a>.
+    </p>
+    <button id="btn-accept-cookies" style="background:var(--primary-color); color:white; border:none; padding:0.5rem 1.5rem; border-radius:var(--radius-md); font-weight:bold; cursor:pointer; font-family:var(--font-sans);">Aceptar Cookies</button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!localStorage.getItem('cookies_accepted')) {
+            document.getElementById('cookies-banner').style.display = 'flex';
+        }
+        document.getElementById('btn-accept-cookies').addEventListener('click', function() {
+            localStorage.setItem('cookies_accepted', 'true');
+            document.getElementById('cookies-banner').style.display = 'none';
+        });
+    });
+</script>
