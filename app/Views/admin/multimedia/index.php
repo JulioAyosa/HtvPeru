@@ -428,10 +428,15 @@ function formatBytes($bytes, $precision = 2) {
         if (usageData && usageData.length > 0) {
             let html = '';
             usageData.forEach(u => {
-                html += `<div style="display:flex; align-items:center; gap:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:6px;">`;
+                const tag = u.url ? 'a' : 'div';
+                const href = u.url ? ` href="${u.url}" target="_blank"` : '';
+                const cursor = u.url ? ' cursor:pointer; text-decoration:none;' : '';
+                const hoverClass = u.url ? ' onmouseover="this.style.borderColor=\'#94a3b8\'" onmouseout="this.style.borderColor=\'#e2e8f0\'"' : '';
+                
+                html += `<${tag}${href} style="display:flex; align-items:center; gap:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:6px; transition:border-color 0.2s;${cursor}"${hoverClass}>`;
                 html += `<i class="${u.icon}" style="color:${u.color}; font-size:1.1rem; flex-shrink:0;"></i>`;
                 html += `<div><div style="font-weight:600; color:#1d2327; font-size:0.8rem;">${u.label}</div>`;
-                html += `<div style="color:#64748b; font-size:0.75rem;">${u.detail}</div></div></div>`;
+                html += `<div style="color:#64748b; font-size:0.75rem;">${u.detail}</div></div></${tag}>`;
             });
             usageDiv.innerHTML = html;
         } else {

@@ -94,25 +94,25 @@ class AdminMultimediaController extends Controller {
             $stmt = $this->pdo->query("SELECT id, titulo, imagen_url FROM noticias WHERE imagen_url IS NOT NULL AND imagen_url != ''");
             foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
                 $fname = basename($row['imagen_url']);
-                $usage_map[$fname][] = ['type' => 'noticia', 'label' => 'Portada de noticia', 'detail' => $row['titulo'], 'id' => $row['id'], 'icon' => 'ri-newspaper-line', 'color' => '#3b82f6'];
+                $usage_map[$fname][] = ['type' => 'noticia', 'label' => 'Portada de noticia', 'detail' => $row['titulo'], 'id' => $row['id'], 'icon' => 'ri-newspaper-line', 'color' => '#3b82f6', 'url' => '/piura_noticias_php/admin?action=edit&id='.$row['id']];
             }
             // Usuarios avatar
             $stmt = $this->pdo->query("SELECT id, nombre_completo, avatar_url FROM usuarios WHERE avatar_url IS NOT NULL AND avatar_url != ''");
             foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
                 $fname = basename($row['avatar_url']);
-                $usage_map[$fname][] = ['type' => 'avatar', 'label' => 'Foto de perfil', 'detail' => $row['nombre_completo'], 'id' => $row['id'], 'icon' => 'ri-user-line', 'color' => '#8b5cf6'];
+                $usage_map[$fname][] = ['type' => 'avatar', 'label' => 'Foto de perfil', 'detail' => $row['nombre_completo'], 'id' => $row['id'], 'icon' => 'ri-user-line', 'color' => '#8b5cf6', 'url' => '/piura_noticias_php/admin/usuarios'];
             }
             // Publicidad
             $stmt = $this->pdo->query("SELECT id, titulo, imagen_url FROM publicidad WHERE imagen_url IS NOT NULL AND imagen_url != ''");
             foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
                 $fname = basename($row['imagen_url']);
-                $usage_map[$fname][] = ['type' => 'publicidad', 'label' => 'Anuncio publicitario', 'detail' => $row['titulo'], 'id' => $row['id'], 'icon' => 'ri-advertisement-line', 'color' => '#f59e0b'];
+                $usage_map[$fname][] = ['type' => 'publicidad', 'label' => 'Anuncio publicitario', 'detail' => $row['titulo'], 'id' => $row['id'], 'icon' => 'ri-advertisement-line', 'color' => '#f59e0b', 'url' => '/piura_noticias_php/admin/publicidad'];
             }
             // Categorías
             $stmt = $this->pdo->query("SELECT id, nombre, imagen_fondo FROM categorias WHERE imagen_fondo IS NOT NULL AND imagen_fondo != ''");
             foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
                 $fname = basename($row['imagen_fondo']);
-                $usage_map[$fname][] = ['type' => 'categoria', 'label' => 'Fondo de categoría', 'detail' => $row['nombre'], 'id' => $row['id'], 'icon' => 'ri-folder-image-line', 'color' => '#10b981'];
+                $usage_map[$fname][] = ['type' => 'categoria', 'label' => 'Fondo de categoría', 'detail' => $row['nombre'], 'id' => $row['id'], 'icon' => 'ri-folder-image-line', 'color' => '#10b981', 'url' => '/piura_noticias_php/admin/categorias'];
             }
         } catch (\Exception $e) { /* silently fail */ }
 
