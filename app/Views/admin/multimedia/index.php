@@ -428,15 +428,19 @@ function formatBytes($bytes, $precision = 2) {
         if (usageData && usageData.length > 0) {
             let html = '';
             usageData.forEach(u => {
-                const tag = u.url ? 'a' : 'div';
-                const href = u.url ? ` href="${u.url}" target="_blank"` : '';
-                const cursor = u.url ? ' cursor:pointer; text-decoration:none;' : '';
-                const hoverClass = u.url ? ' onmouseover="this.style.borderColor=\'#94a3b8\'" onmouseout="this.style.borderColor=\'#e2e8f0\'"' : '';
-                
-                html += `<${tag}${href} style="display:flex; align-items:center; gap:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:6px; transition:border-color 0.2s;${cursor}"${hoverClass}>`;
+                html += `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:6px;">`;
+                html += `<div style="display:flex; align-items:center; gap:8px;">`;
                 html += `<i class="${u.icon}" style="color:${u.color}; font-size:1.1rem; flex-shrink:0;"></i>`;
                 html += `<div><div style="font-weight:600; color:#1d2327; font-size:0.8rem;">${u.label}</div>`;
-                html += `<div style="color:#64748b; font-size:0.75rem;">${u.detail}</div></div></${tag}>`;
+                html += `<div style="color:#64748b; font-size:0.75rem;">${u.detail}</div></div></div>`;
+                html += `<div style="display:flex; gap:6px;">`;
+                if (u.edit_url) {
+                    html += `<a href="${u.edit_url}" target="_blank" style="background:white; border:1px solid #cbd5e1; color:#334155; padding:3px 8px; border-radius:4px; text-decoration:none; font-size:0.7rem; font-weight:600; display:flex; align-items:center; gap:3px; transition:all 0.15s;" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#94a3b8'" onmouseout="this.style.background='white'; this.style.borderColor='#cbd5e1'"><i class="ri-edit-2-line"></i> Editar</a>`;
+                }
+                if (u.view_url) {
+                    html += `<a href="${u.view_url}" target="_blank" style="background:white; border:1px solid #cbd5e1; color:#3b82f6; padding:3px 8px; border-radius:4px; text-decoration:none; font-size:0.7rem; font-weight:600; display:flex; align-items:center; gap:3px; transition:all 0.15s;" onmouseover="this.style.background='#eff6ff'; this.style.borderColor='#93c5fd'" onmouseout="this.style.background='white'; this.style.borderColor='#cbd5e1'"><i class="ri-external-link-line"></i> Ver</a>`;
+                }
+                html += `</div></div>`;
             });
             usageDiv.innerHTML = html;
         } else {
