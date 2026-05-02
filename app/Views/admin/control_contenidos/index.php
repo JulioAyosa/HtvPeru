@@ -490,25 +490,90 @@ function toggleAllAcc(expand) {
     });
 }
 
-// 3.3 Search by titular
+// 3.3 Smart search — hides empty sections, scrolls to first match
 function filterByTitular(query) {
     const q = query.toLowerCase().trim();
-    const rows = document.querySelectorAll('.acc-table tbody tr');
-    let visibleCount = 0;
-    rows.forEach(row => {
-        const titular = row.querySelector('td:nth-child(2)');
-        if (!titular) return;
-        const text = titular.textContent.toLowerCase();
-        if (q === '' || text.includes(q)) {
-            row.style.display = '';
-            visibleCount++;
-        } else {
-            row.style.display = 'none';
+    
+    // Reset everything when search is empty
+    if (q === '') {
+        document.querySelectorAll('.acc-table tbody tr').forEach(r => { r.style.display = ''; r.style.background = ''; });
+        document.querySelectorAll('.acc-date').forEach(d => d.style.display = '');
+        document.querySelectorAll('.acc-week').forEach(w => w.style.display = '');
+        document.querySelectorAll('.acc-month').forEach(m => m.style.display = '');
+        document.querySelectorAll('.acc-user').forEach(u => u.style.display = '');
+        toggleAllAcc(false);
+        return;
+    }
+
+    // First collapse all
+    toggleAllAcc(false);
+    let firstMatch = null;
+
+    // 1. Filter rows, hide/show dates
+    document.querySelectorAll('.acc-date').forEach(dateDiv => {
+        const table = dateDiv.querySelector('.acc-table');
+        if (!table) { dateDiv.style.display = 'none'; return; }
+        const rows = table.querySelectorAll('tbody tr');
+        let hasMatch = false;
+        rows.forEach(row => {
+            const td = row.querySelector('td:nth-child(2)');
+            if (!td) return;
+            if (td.textContent.toLowerCase().includes(q)) {
+                row.style.display = ''; row.style.background = '#fefce8';
+                hasMatch = true;
+                if (!firstMatch) firstMatch = row;
+            } else {
+                row.style.display = 'none'; row.style.background = '';
+            }
+        });
+        dateDiv.style.display = hasMatch ? '' : 'none';
+        if (hasMatch) {
+            const h = dateDiv.querySelector('.acc-date-header');
+            const b = dateDiv.querySelector('.acc-date-body');
+            if (h) h.classList.add('active');
+            if (b) b.classList.add('active');
         }
     });
-    // Auto-expand all when searching
-    if (q.length > 0) {
-        toggleAllAcc(true);
+
+    // 2. Hide weeks with no visible dates
+    document.querySelectorAll('.acc-week').forEach(weekDiv => {
+        const has = Array.from(weekDiv.querySelectorAll('.acc-week-body .acc-date')).some(d => d.style.display !== 'none');
+        weekDiv.style.display = has ? '' : 'none';
+        if (has) {
+            const h = weekDiv.querySelector('.acc-week-header');
+            const b = weekDiv.querySelector('.acc-week-body');
+            if (h) h.classList.add('active');
+            if (b) b.classList.add('active');
+        }
+    });
+
+    // 3. Hide months with no visible weeks
+    document.querySelectorAll('.acc-month').forEach(monthDiv => {
+        const has = Array.from(monthDiv.querySelectorAll('.acc-month-body .acc-week')).some(w => w.style.display !== 'none');
+        monthDiv.style.display = has ? '' : 'none';
+        if (has) {
+            const h = monthDiv.querySelector('.acc-month-header');
+            const b = monthDiv.querySelector('.acc-month-body');
+            if (h) h.classList.add('active');
+            if (b) b.classList.add('active');
+        }
+    });
+
+    // 4. Hide authors with no visible months
+    document.querySelectorAll('.acc-user').forEach(userDiv => {
+        const has = Array.from(userDiv.querySelectorAll('.acc-user-body .acc-month')).some(m => m.style.display !== 'none');
+        userDiv.style.display = has ? '' : 'none';
+        if (has) {
+            const h = userDiv.querySelector('.acc-user-header');
+            const b = userDiv.querySelector('.acc-user-body');
+            if (h) h.classList.add('active');
+            if (b) b.classList.add('active');
+        }
+    });
+
+    // 5. Scroll to first match
+    if (firstMatch) {
+        setTimeout(() => firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
     }
 }
 
