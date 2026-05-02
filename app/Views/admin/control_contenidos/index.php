@@ -337,7 +337,14 @@
                                                     if(strtoupper($r['seccion']) === 'FLYER') $row_bg = "background: #fefce8;";
                                                 ?>
                                                 <tr style="<?php echo $row_bg; ?>">
-                                                    <td style="font-weight:600; color:#475569;"><?php echo date('H:i', strtotime($r['hora'])); ?></td>
+                                                    <td style="font-weight:600; color:#475569;">
+                                                        <?php echo date('H:i', strtotime($r['hora'])); ?>
+                                                        <?php if(!empty($r['hora_publicacion'])): ?>
+                                                            <div style="font-size:0.7rem; color:#8b5cf6; font-weight:600; margin-top:2px;" title="Hora programada">
+                                                                <i class="ri-timer-line"></i> <?php echo date('H:i', strtotime($r['hora_publicacion'])); ?>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td>
                                                         <strong><?php echo htmlspecialchars($r['titular']); ?></strong><br>
                                                         <div style="display:flex; gap:10px; margin-top:4px;">
