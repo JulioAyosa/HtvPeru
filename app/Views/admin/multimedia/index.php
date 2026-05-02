@@ -194,8 +194,8 @@ function formatBytes($bytes, $precision = 2) {
         <div style="background: white; border-bottom: 1px solid #dcdcde; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; height: 35px; box-sizing: content-box;">
             <h3 style="margin:0; font-size:1.15rem; font-weight:600; color:#1d2327;">Detalles del adjunto</h3>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <button style="background:transparent; border:none; color:#1d2327; font-size:1.5rem; cursor:pointer;" disabled><i class="ri-arrow-left-s-line" style="opacity:0.3;"></i></button>
-                <button style="background:transparent; border:none; color:#1d2327; font-size:1.5rem; cursor:pointer;" disabled><i class="ri-arrow-right-s-line" style="opacity:0.3;"></i></button>
+                <button id="btnPrevMedia" style="background:transparent; border:none; color:#1d2327; font-size:1.5rem; cursor:pointer;" disabled><i class="ri-arrow-left-s-line" style="opacity:0.3;"></i></button>
+                <button id="btnNextMedia" style="background:transparent; border:none; color:#1d2327; font-size:1.5rem; cursor:pointer;" disabled><i class="ri-arrow-right-s-line" style="opacity:0.3;"></i></button>
                 <div style="width:1px; height:24px; background:#dcdcde; margin: 0 0.5rem;"></div>
                 <button onclick="closeViewModal()" style="background:transparent; border:none; color:#1d2327; font-size:1.6rem; cursor:pointer; transition:color 0.2s;"><i class="ri-close-line"></i></button>
             </div>
@@ -452,6 +452,46 @@ function formatBytes($bytes, $precision = 2) {
             content.innerHTML = `<video src="${url}" controls autoplay style="max-width:100%; max-height:100%; object-fit:contain; box-shadow:0 0 15px rgba(0,0,0,0.1); outline:none;"></video>`;
         } else {
             content.innerHTML = `<img src="${url}" style="max-width:100%; max-height:100%; object-fit:contain; box-shadow:0 0 15px rgba(0,0,0,0.1);">`;
+        }
+        
+        // Setup navigation arrows
+        const visibleCards = Array.from(document.querySelectorAll('.media-card[style*="display: block;"], .media-card:not([style*="display"])'));
+        let currentIndex = -1;
+        for (let i = 0; i < visibleCards.length; i++) {
+            const cb = visibleCards[i].querySelector('.card-checkbox');
+            if (cb && cb.value === relPath) {
+                currentIndex = i;
+                break;
+            }
+        }
+        
+        const btnPrev = document.getElementById('btnPrevMedia');
+        const btnNext = document.getElementById('btnNextMedia');
+        
+        if (currentIndex > 0) {
+            btnPrev.disabled = false;
+            btnPrev.querySelector('i').style.opacity = '1';
+            btnPrev.onclick = () => {
+                const prevBtn = visibleCards[currentIndex - 1].querySelector('.media-actions button[title="Ver Detalles"]');
+                if (prevBtn) prevBtn.click();
+            };
+        } else {
+            btnPrev.disabled = true;
+            btnPrev.querySelector('i').style.opacity = '0.3';
+            btnPrev.onclick = null;
+        }
+        
+        if (currentIndex !== -1 && currentIndex < visibleCards.length - 1) {
+            btnNext.disabled = false;
+            btnNext.querySelector('i').style.opacity = '1';
+            btnNext.onclick = () => {
+                const nextBtn = visibleCards[currentIndex + 1].querySelector('.media-actions button[title="Ver Detalles"]');
+                if (nextBtn) nextBtn.click();
+            };
+        } else {
+            btnNext.disabled = true;
+            btnNext.querySelector('i').style.opacity = '0.3';
+            btnNext.onclick = null;
         }
         
         vModal.style.display = 'flex';
