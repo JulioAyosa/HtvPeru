@@ -130,7 +130,8 @@ function formatBytes($bytes, $precision = 2) {
             <input type="checkbox" name="selected_files[]" value="<?php echo htmlspecialchars($f['rel_path']); ?>" class="card-checkbox" title="Seleccionar archivo">
 
             <div class="media-actions">
-                <button type="button" onclick="openViewModal('<?php echo addslashes(htmlspecialchars($f['name'])); ?>', '<?php echo $full_url; ?>', <?php echo $is_video?'true':'false'; ?>, '<?php echo addslashes(htmlspecialchars($f['rel_path'])); ?>', '<?php echo addslashes($file_date); ?>', '<?php echo addslashes($file_size); ?>', '<?php echo addslashes($dimensions); ?>', '<?php echo addslashes($f['ext']); ?>')" title="Ver Detalles"><i class="ri-eye-line"></i></button>
+                <?php $file_usage = $usage_map[$f['name']] ?? []; ?>
+                <button type="button" onclick='openViewModal(<?php echo json_encode($f["name"]); ?>, <?php echo json_encode($full_url); ?>, <?php echo $is_video?"true":"false"; ?>, <?php echo json_encode($f["rel_path"]); ?>, <?php echo json_encode($file_date); ?>, <?php echo json_encode($file_size); ?>, <?php echo json_encode($dimensions); ?>, <?php echo json_encode($f["ext"]); ?>, <?php echo json_encode($file_usage, JSON_HEX_APOS|JSON_HEX_QUOT); ?>)' title="Ver Detalles"><i class="ri-eye-line"></i></button>
                 <a href="<?php echo '/piura_noticias_php/' . $f['path']; ?>" download="<?php echo htmlspecialchars($f['name']); ?>" title="Descargar al Equipo"><i class="ri-download-2-line"></i></a>
                 <button type="button" onclick="copyToClipboard('<?php echo $full_url; ?>')" title="Copiar Enlace Público"><i class="ri-links-line"></i></button>
                 <?php if($user_role === 'admin'): ?>
@@ -209,7 +210,6 @@ function formatBytes($bytes, $precision = 2) {
                 <div style="font-size: 0.8rem; color: #50575e; line-height: 1.5;">
                     <div style="margin-bottom:0.15rem;"><strong style="font-weight:600; color:#1d2327;">Subido el:</strong> <span id="wpDate"></span></div>
                     <div style="margin-bottom:0.15rem;"><strong style="font-weight:600; color:#1d2327;">Subido por:</strong> <span><?php echo $user_name; ?></span></div>
-                    <div style="margin-bottom:0.15rem;"><strong style="font-weight:600; color:#1d2327;">Subido a:</strong> <span>(Sin adjuntar)</span></div>
                     <div style="margin-bottom:0.15rem;"><strong style="font-weight:600; color:#1d2327;">Nombre del archivo:</strong> <span id="viewModalTitle"></span></div>
                     <div style="margin-bottom:0.15rem;"><strong style="font-weight:600; color:#1d2327;">Tipo de archivo:</strong> <span id="wpExt"></span></div>
                     <div style="margin-bottom:0.15rem;"><strong style="font-weight:600; color:#1d2327;">Tamaño del archivo:</strong> <span id="wpSize"></span></div>
@@ -235,7 +235,15 @@ function formatBytes($bytes, $precision = 2) {
                     </div>
                 </div>
                 
-                <div style="border-top:1px solid #dcdcde; margin-top:0.5rem; padding-top:1.5rem; display:flex; justify-content:flex-end; font-size:0.9rem;">
+                <div style="border-top:1px solid #dcdcde; margin-top:0.5rem; padding-top:1.5rem;">
+                    <label style="font-size:0.85rem; font-weight:600; color:#1d2327; margin-bottom:0.5rem; display:block;"><i class="ri-links-fill" style="margin-right:4px;"></i> Usado en</label>
+                    <div id="wpUsage" style="font-size:0.8rem; color:#646970;">
+                        <span style="color:#94a3b8;">Sin uso detectado</span>
+                    </div>
+                </div>
+
+                <div style="border-top:1px solid #dcdcde; margin-top:0.5rem; padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; font-size:0.9rem; gap:0.75rem;">
+                    <a href="#" id="wpDownload" download style="color:var(--primary-color); border: 1px solid var(--primary-color); border-radius: 6px; padding: 0.5rem 1rem; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem; transition: background 0.2s;" onmouseover="this.style.background='var(--primary-color)'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='var(--primary-color)'"><i class="ri-download-2-line"></i> Descargar</a>
                     <?php if($user_role === 'admin'): ?>
                         <a href="#" id="wpDelete" style="color:#ef4444; border: 1px solid #ef4444; border-radius: 6px; padding: 0.5rem 1rem; text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:0.35rem; transition: background 0.2s;"><i class="ri-delete-bin-fill"></i> Enviar a Papelera</a>
                     <?php endif; ?>
@@ -401,7 +409,7 @@ function formatBytes($bytes, $precision = 2) {
     const vModal = document.getElementById('viewModal');
     const vModalBox = document.getElementById('viewModalBox');
 
-    function openViewModal(name, url, isVideo, relPath, fDate, fSize, fDim, fExt) {
+    function openViewModal(name, url, isVideo, relPath, fDate, fSize, fDim, fExt, usageData) {
         const content = document.getElementById('viewModalContent');
         
         document.getElementById('viewModalTitle').textContent = name;
@@ -412,6 +420,23 @@ function formatBytes($bytes, $precision = 2) {
         document.getElementById('wpSize').textContent = fSize;
         document.getElementById('wpDim').textContent = fDim;
         document.getElementById('wpUrl').value = url;
+        document.getElementById('wpDownload').href = url;
+        document.getElementById('wpDownload').setAttribute('download', name);
+        
+        // Usage section
+        const usageDiv = document.getElementById('wpUsage');
+        if (usageData && usageData.length > 0) {
+            let html = '';
+            usageData.forEach(u => {
+                html += `<div style="display:flex; align-items:center; gap:8px; padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:6px;">`;
+                html += `<i class="${u.icon}" style="color:${u.color}; font-size:1.1rem; flex-shrink:0;"></i>`;
+                html += `<div><div style="font-weight:600; color:#1d2327; font-size:0.8rem;">${u.label}</div>`;
+                html += `<div style="color:#64748b; font-size:0.75rem;">${u.detail}</div></div></div>`;
+            });
+            usageDiv.innerHTML = html;
+        } else {
+            usageDiv.innerHTML = '<div style="padding:6px 10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; color:#94a3b8; font-size:0.8rem;"><i class="ri-link-unlink" style="margin-right:4px;"></i> Sin uso detectado — Este archivo no está vinculado a ninguna publicación.</div>';
+        }
         
         <?php if($user_role === 'admin'): ?>
         document.getElementById('wpDelete').onclick = function() {

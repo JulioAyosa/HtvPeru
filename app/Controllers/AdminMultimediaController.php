@@ -87,11 +87,41 @@ class AdminMultimediaController extends Controller {
             usort($files, function($a, $b) { return $b['time'] - $a['time']; });
         }
 
+        // Build usage map: where each file is used
+        $usage_map = [];
+        try {
+            // Noticias
+            $stmt = $this->pdo->query("SELECT id, titulo, imagen_url FROM noticias WHERE imagen_url IS NOT NULL AND imagen_url != ''");
+            foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                $fname = basename($row['imagen_url']);
+                $usage_map[$fname][] = ['type' => 'noticia', 'label' => 'Portada de noticia', 'detail' => $row['titulo'], 'id' => $row['id'], 'icon' => 'ri-newspaper-line', 'color' => '#3b82f6'];
+            }
+            // Usuarios avatar
+            $stmt = $this->pdo->query("SELECT id, nombre_completo, avatar_url FROM usuarios WHERE avatar_url IS NOT NULL AND avatar_url != ''");
+            foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                $fname = basename($row['avatar_url']);
+                $usage_map[$fname][] = ['type' => 'avatar', 'label' => 'Foto de perfil', 'detail' => $row['nombre_completo'], 'id' => $row['id'], 'icon' => 'ri-user-line', 'color' => '#8b5cf6'];
+            }
+            // Publicidad
+            $stmt = $this->pdo->query("SELECT id, titulo, imagen_url FROM publicidad WHERE imagen_url IS NOT NULL AND imagen_url != ''");
+            foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                $fname = basename($row['imagen_url']);
+                $usage_map[$fname][] = ['type' => 'publicidad', 'label' => 'Anuncio publicitario', 'detail' => $row['titulo'], 'id' => $row['id'], 'icon' => 'ri-advertisement-line', 'color' => '#f59e0b'];
+            }
+            // Categorías
+            $stmt = $this->pdo->query("SELECT id, nombre, imagen_fondo FROM categorias WHERE imagen_fondo IS NOT NULL AND imagen_fondo != ''");
+            foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                $fname = basename($row['imagen_fondo']);
+                $usage_map[$fname][] = ['type' => 'categoria', 'label' => 'Fondo de categoría', 'detail' => $row['nombre'], 'id' => $row['id'], 'icon' => 'ri-folder-image-line', 'color' => '#10b981'];
+            }
+        } catch (\Exception $e) { /* silently fail */ }
+
         $this->render('admin/multimedia/index', [
             'files' => $files,
             'msg' => $msg,
             'user_role' => $user_role,
-            'user_name' => htmlspecialchars($_SESSION['user_name'])
+            'user_name' => htmlspecialchars($_SESSION['user_name']),
+            'usage_map' => $usage_map
         ], 'admin');
     }
 
