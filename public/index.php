@@ -69,6 +69,7 @@ $router->add('GET', '/admin/paginas/action', 'AdminPageController@action', ['Aut
 $router->add('GET', '/admin/contenidos', 'AdminContentController@index', ['AuthMiddleware', 'AdminMiddleware']);
 $router->add('POST', '/admin/contenidos/store', 'AdminContentController@store', ['AuthMiddleware', 'AdminMiddleware', 'CsrfMiddleware']);
 $router->add('GET', '/admin/contenidos/action', 'AdminContentController@action', ['AuthMiddleware', 'AdminMiddleware']);
+$router->add('POST', '/admin/contenidos/action', 'AdminContentController@action', ['AuthMiddleware', 'AdminMiddleware', 'CsrfMiddleware']);
 
 $router->add('GET', '/admin/encuestas', 'AdminPollController@index', ['AuthMiddleware', 'AdminMiddleware']);
 $router->add('POST', '/admin/encuestas/create', 'AdminPollController@store', ['AuthMiddleware', 'AdminMiddleware', 'CsrfMiddleware']);

@@ -9,6 +9,7 @@ class AdminContentController {
 
     public function index() {
         global $pdo;
+        date_default_timezone_set('America/Lima');
         
         $user_role = $_SESSION['user_role'] ?? 'autor';
         $user_id = $_SESSION['user_id'];
@@ -20,6 +21,18 @@ class AdminContentController {
         $f_fecha_fin = $_GET['fecha_fin'] ?? date('Y-m-d');
         $f_autor = $_GET['autor'] ?? '';
         $f_plataforma = $_GET['plataforma'] ?? '';
+
+        // Validate date range
+        if ($f_fecha_ini > $f_fecha_fin) {
+            $tmp = $f_fecha_ini;
+            $f_fecha_ini = $f_fecha_fin;
+            $f_fecha_fin = $tmp;
+        }
+        $diff_days = (strtotime($f_fecha_fin) - strtotime($f_fecha_ini)) / 86400;
+        if ($diff_days > 365) {
+            $f_fecha_ini = date('Y-m-d', strtotime($f_fecha_fin . ' -365 days'));
+            $msg = 'El rango máximo es de 365 días. Se ajustó automáticamente.';
+        }
 
         if (!$is_admin) {
             $f_autor = $user_id;
@@ -392,20 +405,26 @@ class AdminContentController {
 
     public function action() {
         global $pdo;
+        date_default_timezone_set('America/Lima');
 
         $user_role = $_SESSION['user_role'] ?? 'autor';
         $user_id = $_SESSION['user_id'];
         $is_admin = in_array($user_role, ['admin', 'gerente']);
 
-        if (isset($_GET['delete_id']) && $is_admin) {
-            $pdo->prepare("DELETE FROM registro_contenidos WHERE id = ?")->execute([(int)$_GET['delete_id']]);
+        // Support both GET (legacy/toggle) and POST (delete)
+        $delete_id = $_POST['delete_id'] ?? $_GET['delete_id'] ?? null;
+        $toggle_id = $_POST['toggle_id'] ?? $_GET['toggle_id'] ?? null;
+        $toggle_val = $_POST['val'] ?? $_GET['val'] ?? null;
+
+        if ($delete_id && $is_admin) {
+            $pdo->prepare("DELETE FROM registro_contenidos WHERE id = ?")->execute([(int)$delete_id]);
             header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Registro eliminado permanentemente."));
             exit;
         }
 
-        if (isset($_GET['toggle_id'])) {
-            $tid = (int)$_GET['toggle_id'];
-            $val = (int)$_GET['val'];
+        if ($toggle_id !== null) {
+            $tid = (int)$toggle_id;
+            $val = (int)$toggle_val;
             
             if (!$is_admin) {
                 $check = $pdo->prepare("SELECT id FROM registro_contenidos WHERE id = ? AND usuario_id = ?");

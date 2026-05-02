@@ -386,16 +386,25 @@
                                                         <i class="ri-eye-line" style="margin-right:2px;"></i> <?php echo number_format(intval($r['vistas'] ?? 0)); ?>
                                                     </td>
                                                     <td style="text-align:center;">
-                                                        <a href="/piura_noticias_php/admin/contenidos/action?toggle_id=<?php echo $r['id']; ?>&val=<?php echo $r['completado'] ? 0 : 1; ?>&csrf_token=<?php echo csrf_token(); ?>" style="color: <?php echo $r['completado'] ? '#10b981' : '#cbd5e1'; ?>; font-size:1.4rem; transition: transform 0.2s;" title="<?php echo $r['completado'] ? 'Completado' : 'Pendiente'; ?>">
-                                                            <i class="<?php echo $r['completado'] ? 'ri-checkbox-circle-fill' : 'ri-checkbox-blank-circle-line'; ?>"></i>
-                                                        </a>
+                                                        <form method="POST" action="/piura_noticias_php/admin/contenidos/action" style="display:inline;">
+                                                            <input type="hidden" name="toggle_id" value="<?php echo $r['id']; ?>">
+                                                            <input type="hidden" name="val" value="<?php echo $r['completado'] ? 0 : 1; ?>">
+                                                            <?php echo csrf_field(); ?>
+                                                            <button type="submit" style="background:none; border:none; cursor:pointer; color: <?php echo $r['completado'] ? '#10b981' : '#cbd5e1'; ?>; font-size:1.4rem; padding:0; transition: transform 0.2s;" title="<?php echo $r['completado'] ? 'Completado' : 'Pendiente'; ?>">
+                                                                <i class="<?php echo $r['completado'] ? 'ri-checkbox-circle-fill' : 'ri-checkbox-blank-circle-line'; ?>"></i>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                     <td style="text-align:center;">
                                                         <div style="display:flex; gap:4px; justify-content:center; align-items:center;">
                                                             <a href="javascript:void(0)" onclick='openEditModal(<?php echo json_encode($r, JSON_HEX_APOS|JSON_HEX_QUOT); ?>)' style="color:#3b82f6; font-size:1.1rem;" title="Editar"><i class="ri-edit-line"></i></a>
                                                             <a href="javascript:void(0)" onclick="openDupMenu(this, <?php echo $r['id']; ?>)" style="color:#8b5cf6; font-size:1.1rem;" title="Duplicar"><i class="ri-file-copy-line"></i></a>
                                                             <?php if($is_admin): ?>
-                                                            <a href="/piura_noticias_php/admin/contenidos/action?delete_id=<?php echo $r['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Eliminar?');" style="color:#ef4444; font-size:1.1rem;" title="Eliminar"><i class="ri-delete-bin-line"></i></a>
+                                                            <form method="POST" action="/piura_noticias_php/admin/contenidos/action" style="display:inline;" onsubmit="return confirm('¿Eliminar esta publicación?');">
+                                                                <input type="hidden" name="delete_id" value="<?php echo $r['id']; ?>">
+                                                                <?php echo csrf_field(); ?>
+                                                                <button type="submit" style="background:none; border:none; cursor:pointer; color:#ef4444; font-size:1.1rem; padding:0;" title="Eliminar"><i class="ri-delete-bin-line"></i></button>
+                                                            </form>
                                                             <?php endif; ?>
                                                         </div>
                                                     </td>
