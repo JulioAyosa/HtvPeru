@@ -399,6 +399,12 @@ class AdminDashboardController {
                             $stmt_plan->execute([date('Y-m-d'), date('H:i'), $titulo, $enlace_auto, $fuente_url, $user_id, $map_seccion, 'Web', $estado_rebote, $completado_flag]);
                         } catch (\Exception $e) {}
     
+                        if ($estado_publicacion === 'publicado') {
+                            require_once __DIR__ . '/../Services/SocialPublisherService.php';
+                            $publisher = new \App\Services\SocialPublisherService($pdo);
+                            $publisher->publish($nuevo_id);
+                        }
+
                         $pdo->commit();
                         $cacheService->clear('home');
                         header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia guardada exitosamente y agregada al Planificador ($estado_publicacion)."));
@@ -441,6 +447,12 @@ class AdminDashboardController {
                         $extra_log = ($estado_publicacion === 'programado' && $fecha_programada) ? " para el " . date('d/m/Y H:i', strtotime($fecha_programada)) : '';
                         $this->logActividad($pdo, $user_id, 'Actualización', "Actualizó noticia ID #$edit_item_id ('$titulo') - Estado: $estado_publicacion" . $extra_log);
                         
+                        if ($estado_publicacion === 'publicado') {
+                            require_once __DIR__ . '/../Services/SocialPublisherService.php';
+                            $publisher = new \App\Services\SocialPublisherService($pdo);
+                            $publisher->publish($edit_item_id);
+                        }
+
                         $pdo->commit();
                         $cacheService->clear('home');
                         header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia ID #$edit_item_id actualizada exitosamente a '$estado_publicacion'."));

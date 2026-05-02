@@ -66,7 +66,10 @@ class AdminSettingsController extends Controller {
                 'ui_mostrar_urgente', 'ui_mostrar_carrusel', 'ui_mostrar_stories', 'ui_mostrar_policial',
                 'modo_mantenimiento', 'theme_font_family', 'theme_custom_css', 'header_height',
                 'header_logo_scale', 'header_search_width', 'header_actions_gap',
-                'social_login_estado', 'google_client_id', 'google_client_secret', 'facebook_app_id', 'facebook_app_secret'
+                'social_login_estado', 'google_client_id', 'google_client_secret', 'facebook_app_id', 'facebook_app_secret',
+                'auto_pub_webhook_estado', 'auto_pub_webhook_url',
+                'auto_pub_fb_estado', 'auto_pub_fb_page_id', 'auto_pub_fb_token',
+                'auto_pub_tw_estado', 'auto_pub_tw_api_key', 'auto_pub_tw_api_secret', 'auto_pub_tw_access_token', 'auto_pub_tw_access_secret'
             ];
             
             $stmt_update = $this->pdo->prepare("UPDATE configuracion SET valor = ? WHERE clave = ? AND tipo = 'texto'");

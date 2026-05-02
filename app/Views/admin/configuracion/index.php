@@ -452,6 +452,90 @@
             </div>
         </div>
 
+        <!-- NEW: AUTO-PUBLICADOR SOCIAL -->
+        <div class="cfg-panel" style="grid-column: 1 / -1; border-top: 4px solid #f97316;">
+            <h3><i class="ri-rocket-2-fill" style="color:#f97316;"></i> Auto-Publicador en Redes Sociales (Nativo)</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:-0.5rem; margin-bottom:1.5rem;">Publica tus noticias automáticamente en las redes sociales cuando cambien a estado "Publicado" o cuando el sistema las libere tras ser programadas.</p>
+            
+            <div class="cfg-grid">
+                <!-- Panel Webhook -->
+                <div style="border:1px solid #e2e8f0; border-radius:8px; padding:1.5rem; background:#fffaf0;">
+                    <h4 style="margin-top:0; display:flex; align-items:center; gap:0.5rem; color:#d97706;"><i class="ri-instance-line" style="font-size:1.5rem;"></i> Conexión Vía Webhook (Make / Zapier)</h4>
+                    <p style="font-size:0.8rem; color:var(--text-muted);">Envía los datos de la noticia (JSON) a un servicio de automatización externo.</p>
+                    
+                    <div class="form-group">
+                        <label>Estado del Webhook</label>
+                        <select name="auto_pub_webhook_estado" style="width:100%; padding:0.75rem; border-radius:4px; border:1px solid #cbd5e1; font-weight:bold;">
+                            <option value="inactivo" <?php echo ($configs['auto_pub_webhook_estado'] ?? 'inactivo') === 'inactivo' ? 'selected' : ''; ?>>DESACTIVADO</option>
+                            <option value="activo" <?php echo ($configs['auto_pub_webhook_estado'] ?? 'inactivo') === 'activo' ? 'selected' : ''; ?>>ACTIVO (Disparar Petición HTTP)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>URL del Webhook (Destination URL)</label>
+                        <input type="url" name="auto_pub_webhook_url" value="<?php echo htmlspecialchars($configs['auto_pub_webhook_url'] ?? ''); ?>" placeholder="https://hook.us1.make.com/...">
+                    </div>
+                </div>
+
+                <!-- Panel Facebook -->
+                <div style="border:1px solid #e2e8f0; border-radius:8px; padding:1.5rem; background:#eff6ff;">
+                    <h4 style="margin-top:0; display:flex; align-items:center; gap:0.5rem; color:#1d4ed8;"><i class="ri-facebook-circle-fill" style="font-size:1.5rem;"></i> API Nativa: Facebook Page</h4>
+                    <p style="font-size:0.8rem; color:var(--text-muted);">Publica directamente en el muro de tu Fanpage de Facebook mediante Graph API.</p>
+                    
+                    <div class="form-group">
+                        <label>Estado de Publicación a Facebook</label>
+                        <select name="auto_pub_fb_estado" style="width:100%; padding:0.75rem; border-radius:4px; border:1px solid #cbd5e1; font-weight:bold;">
+                            <option value="inactivo" <?php echo ($configs['auto_pub_fb_estado'] ?? 'inactivo') === 'inactivo' ? 'selected' : ''; ?>>DESACTIVADO</option>
+                            <option value="activo" <?php echo ($configs['auto_pub_fb_estado'] ?? 'inactivo') === 'activo' ? 'selected' : ''; ?>>ACTIVO</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ID de la Página de Facebook (Page ID)</label>
+                        <input type="text" name="auto_pub_fb_page_id" value="<?php echo htmlspecialchars($configs['auto_pub_fb_page_id'] ?? ''); ?>" placeholder="Ej: 104534534534534">
+                    </div>
+                    <div class="form-group">
+                        <label>Page Access Token (Permanente)</label>
+                        <input type="password" name="auto_pub_fb_token" value="<?php echo htmlspecialchars($configs['auto_pub_fb_token'] ?? ''); ?>" placeholder="EAAIxxxxx...">
+                    </div>
+                </div>
+
+                <!-- Panel Twitter -->
+                <div style="border:1px solid #e2e8f0; border-radius:8px; padding:1.5rem; background:#f8fafc; grid-column: 1 / -1;">
+                    <h4 style="margin-top:0; display:flex; align-items:center; gap:0.5rem; color:#0f1419;"><i class="ri-twitter-x-fill" style="font-size:1.5rem;"></i> API Nativa: X (Twitter) v2</h4>
+                    <p style="font-size:0.8rem; color:var(--text-muted);">Publica directamente un Tweet en tu cuenta.</p>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                        <div>
+                            <div class="form-group">
+                                <label>Estado de Publicación a X</label>
+                                <select name="auto_pub_tw_estado" style="width:100%; padding:0.75rem; border-radius:4px; border:1px solid #cbd5e1; font-weight:bold;">
+                                    <option value="inactivo" <?php echo ($configs['auto_pub_tw_estado'] ?? 'inactivo') === 'inactivo' ? 'selected' : ''; ?>>DESACTIVADO</option>
+                                    <option value="activo" <?php echo ($configs['auto_pub_tw_estado'] ?? 'inactivo') === 'activo' ? 'selected' : ''; ?>>ACTIVO</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>API Key (Consumer Key)</label>
+                                <input type="text" name="auto_pub_tw_api_key" value="<?php echo htmlspecialchars($configs['auto_pub_tw_api_key'] ?? ''); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>API Key Secret (Consumer Secret)</label>
+                                <input type="password" name="auto_pub_tw_api_secret" value="<?php echo htmlspecialchars($configs['auto_pub_tw_api_secret'] ?? ''); ?>">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Access Token</label>
+                                <input type="text" name="auto_pub_tw_access_token" value="<?php echo htmlspecialchars($configs['auto_pub_tw_access_token'] ?? ''); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Access Token Secret</label>
+                                <input type="password" name="auto_pub_tw_access_secret" value="<?php echo htmlspecialchars($configs['auto_pub_tw_access_secret'] ?? ''); ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- NEW: SEGURIDAD Y MANTENIMIENTO -->
         <div class="cfg-panel" style="grid-column: 1 / -1; border-top: 4px solid #ef4444;">
             <h3><i class="ri-lock-2-line" style="color:#ef4444;"></i> Seguridad y Control Maestro</h3>
