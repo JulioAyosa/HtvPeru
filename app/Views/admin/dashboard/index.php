@@ -252,6 +252,15 @@ document.addEventListener("DOMContentLoaded", function() {
 </form>
 
 
+<style>
+.modal-tab { padding: 1rem 1.5rem; border: none; background: transparent; text-align: left; font-weight: 600; color: #475569; cursor: pointer; border-left: 3px solid transparent; transition: 0.2s; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px;}
+.modal-tab:hover { background: #f1f5f9; color: var(--primary-color); }
+.modal-tab.active { background: white; color: var(--primary-color); border-left-color: var(--primary-color); }
+.m-pane { display: none; animation: fadeIn 0.3s ease; }
+.m-pane.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
 <!-- Modal Formulario Extendido -->
 <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; box-sizing: border-box;">
     <div style="background: white; border-radius: var(--radius-lg); width: 100%; max-width: 1000px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2); box-sizing: border-box; overflow: hidden;" class="modal-wrapper">
@@ -262,159 +271,184 @@ document.addEventListener("DOMContentLoaded", function() {
             <i class="ri-close-line" style="cursor:pointer; font-size:1.8rem; background:#f1f5f9; color: #475569; border-radius:50%; padding:0.4rem; transition: background 0.2s;" onclick="closeEditorModal()" onmouseover="this.style.background='#e2e8f0'; this.style.color='#ef4444';" onmouseout="this.style.background='#f1f5f9'; this.style.color='#475569';"></i>
         </div>
         
-        <!-- Contenido Scrollable -->
-        <div style="padding: 2.5rem; overflow-y: auto; flex-grow: 1;" class="modal-scroll-body">
-            <form method="POST" action="/piura_noticias_php/admin/dashboard/store" enctype="multipart/form-data">
-            <?php echo csrf_field(); ?>
-            <input type="hidden" name="action_type" value="<?php echo $edit_data ? 'update' : 'create'; ?>">
-            <?php if ($edit_data): ?>
-                <input type="hidden" name="edit_id" value="<?php echo $edit_data['id']; ?>">
-                <input type="hidden" name="original_updated_at" value="<?php echo htmlspecialchars($edit_data['updated_at'] ?? ''); ?>">
-            <?php endif; ?>
+        <!-- Contenedor Flex para Tabs y Contenido -->
+        <div style="display: flex; flex-direction: row; height: calc(100% - 73px); overflow: hidden;">
             
-            <div class="form-row"><input type="text" name="titulo" required placeholder="Escribe un título..." style="font-size:1.5rem; font-weight:800; padding:1rem;" value="<?php echo htmlspecialchars($edit_data['titulo'] ?? ''); ?>"></div>
-            
-            <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div>
-                    <label>Categoría</label>
-                    <select name="categoria" id="categoria_select" required onchange="toggleDistrito()">
-                        <?php 
-                        $cats = ['Nacional','Local (Regional)','Política','Policiales','Economía','Deportes','Entretenimiento','Salud','Tendencias','Publicidad'];
-                        $selected_cat = $edit_data['categoria'] ?? 'Nacional';
-                        if ($selected_cat === 'Local') $selected_cat = 'Local (Regional)';
-                        
-                        foreach($cats as $c) {
-                            $sel = ($selected_cat === $c) ? 'selected' : '';
-                            $style = ($c==='Publicidad') ? 'style="background:#fed7aa; color:#9a3412; font-weight:bold;"' : '';
-                            echo "<option value='$c' $sel $style>$c</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div id="distrito_box" style="display:none; background: #eff6ff; padding: 10px; border-radius: 6px; border: 1px dashed #93c5fd;">
-                    <label style="color: #1e3a8a;"><i class="ri-map-pin-line"></i> Distrito / Provincia</label>
-                    <select name="distrito" id="distrito_select" style="background: white; border-color: #bfdbfe;">
-                        <option value="">Selecciona Distrito (Opcional)</option>
-                        <?php
-                        $distritos = ['Ayabaca', 'Chulucanas', 'Huancabamba', 'Morropón', 'Paita', 'Piura', 'Sechura', 'Sullana', 'Talara', 'Varios / General'];
-                        $sel_dist = $edit_data['distrito'] ?? '';
-                        foreach($distritos as $d) {
-                            $s = ($sel_dist === $d) ? 'selected' : '';
-                            echo "<option value='$d' $s>$d</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
+            <!-- SIDEBAR TABS -->
+            <div style="min-width: 220px; background: #f8fafc; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow-y: auto;">
+                <button type="button" class="modal-tab active" data-target="m-general"><i class="ri-article-line"></i> General y Texto</button>
+                <button type="button" class="modal-tab" data-target="m-media"><i class="ri-image-fill"></i> Archivos Multimedia</button>
+                <button type="button" class="modal-tab" data-target="m-seo"><i class="ri-google-fill"></i> SEO y Taxonomías</button>
+                <button type="button" class="modal-tab" data-target="m-publicar"><i class="ri-rocket-2-fill"></i> Publicación</button>
             </div>
 
-            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
-                <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-image-add-fill"></i> Archivos Multimedia Nativo</h3>
-                <div class="form-row">
-                    <label>Imagen o Video Principal (.mp4, .jpg, .png)</label>
-                    <input type="file" name="media_upload" accept="image/*,video/mp4,video/webm" style="background:white;" <?php echo $edit_data ? '' : 'required'; ?>>
-                    <?php if($edit_data): ?><span style="font-size:0.75rem; color:var(--primary-color);">* Archivo actual: <?php echo basename($edit_data['imagen_url']); ?> (Sube uno nuevo solo si deseas reemplazarlo)</span><?php endif; ?>
-                </div>
-                <div class="form-row" style="margin-bottom:0;">
-                    <label>Poster para Video (Opcional, miniatura si subiste MP4)</label>
-                    <input type="file" name="poster_upload" accept="image/*" style="background:white;">
-                    <span style="font-size:0.75rem; color:#64748b;">* Reemplaza el recuadro negro del video con una portada visible.</span>
-                </div>
-            </div>
+            <!-- Contenido Scrollable -->
+            <div style="padding: 2.5rem; overflow-y: auto; flex-grow: 1; position: relative;" class="modal-scroll-body">
+                <form method="POST" action="/piura_noticias_php/admin/dashboard/store" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="action_type" value="<?php echo $edit_data ? 'update' : 'create'; ?>">
+                <?php if ($edit_data): ?>
+                    <input type="hidden" name="edit_id" value="<?php echo $edit_data['id']; ?>">
+                    <input type="hidden" name="original_updated_at" value="<?php echo htmlspecialchars($edit_data['updated_at'] ?? ''); ?>">
+                <?php endif; ?>
+                
+                <!-- ================== TAB GENERAL ================== -->
+                <div class="m-pane active" id="m-general">
+                    <div class="form-row"><input type="text" name="titulo" required placeholder="Escribe un título..." style="font-size:1.5rem; font-weight:800; padding:1rem;" value="<?php echo htmlspecialchars($edit_data['titulo'] ?? ''); ?>"></div>
+                    
+                    <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                        <div>
+                            <label>Categoría</label>
+                            <select name="categoria" id="categoria_select" required onchange="toggleDistrito()">
+                                <?php 
+                                $cats = ['Nacional','Local (Regional)','Política','Policiales','Economía','Deportes','Entretenimiento','Salud','Tendencias','Publicidad'];
+                                $selected_cat = $edit_data['categoria'] ?? 'Nacional';
+                                if ($selected_cat === 'Local') $selected_cat = 'Local (Regional)';
+                                
+                                foreach($cats as $c) {
+                                    $sel = ($selected_cat === $c) ? 'selected' : '';
+                                    $style = ($c==='Publicidad') ? 'style="background:#fed7aa; color:#9a3412; font-weight:bold;"' : '';
+                                    echo "<option value='$c' $sel $style>$c</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div id="distrito_box" style="display:none; background: #eff6ff; padding: 10px; border-radius: 6px; border: 1px dashed #93c5fd;">
+                            <label style="color: #1e3a8a;"><i class="ri-map-pin-line"></i> Distrito / Provincia</label>
+                            <select name="distrito" id="distrito_select" style="background: white; border-color: #bfdbfe;">
+                                <option value="">Selecciona Distrito (Opcional)</option>
+                                <?php
+                                $distritos = ['Ayabaca', 'Chulucanas', 'Huancabamba', 'Morropón', 'Paita', 'Piura', 'Sechura', 'Sullana', 'Talara', 'Varios / General'];
+                                $sel_dist = $edit_data['distrito'] ?? '';
+                                foreach($distritos as $d) {
+                                    $s = ($sel_dist === $d) ? 'selected' : '';
+                                    echo "<option value='$d' $s>$d</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="form-row">
-                <label>Resumen / Bajada</label>
-                <textarea name="extracto" required maxlength="250" placeholder="Escribe un breve resumen de 2 líneas..."><?php echo htmlspecialchars($edit_data['extracto'] ?? ''); ?></textarea>
-            </div>
-            
-            <div class="form-row">
-                <label>Cuerpo Oficial (Texto Completo - WYSIWYG)</label>
-                <textarea name="contenido" id="editor-contenido" placeholder="Desarrolla el contenido aquí..."><?php echo htmlspecialchars($edit_data['contenido'] ?? ''); ?></textarea>
-            </div>
-            
-            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
-                <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-google-fill"></i> Yoast SEO & Metadatos</h3>
-                <div id="seo-semaforo" style="margin-bottom: 1rem; padding: 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 6px;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 5px;">
-                        Estado SEO: <span id="seo-score-badge" style="padding: 2px 8px; border-radius: 4px; color: white; font-weight: bold; background: #94a3b8;">Por evaluar</span>
-                    </h4>
-                    <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: #475569;" id="seo-checks">
-                        <li id="check-title"><i class="ri-checkbox-blank-circle-line"></i> Título SEO: Mínimo 40, máximo 60 caracteres.</li>
-                        <li id="check-desc"><i class="ri-checkbox-blank-circle-line"></i> Descripción: Mínimo 120, máximo 156 caracteres.</li>
-                        <li id="check-words"><i class="ri-checkbox-blank-circle-line"></i> Contenido: Mínimo 300 palabras.</li>
-                        <li id="check-kw"><i class="ri-checkbox-blank-circle-line"></i> Keyword Density: Introduce una Keyphrase.</li>
-                    </ul>
-                    <div style="margin-top: 10px;">
-                        <input type="text" id="seo_focus_kw" placeholder="Palabra clave objetivo (Focus Keyword)" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;">
+                    <div class="form-row">
+                        <label>Resumen / Bajada</label>
+                        <textarea name="extracto" required maxlength="250" placeholder="Escribe un breve resumen de 2 líneas..."><?php echo htmlspecialchars($edit_data['extracto'] ?? ''); ?></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Cuerpo Oficial (Texto Completo - WYSIWYG)</label>
+                        <textarea name="contenido" id="editor-contenido" placeholder="Desarrolla el contenido aquí..."><?php echo htmlspecialchars($edit_data['contenido'] ?? ''); ?></textarea>
                     </div>
                 </div>
-                <div class="form-row">
-                    <label>Título SEO (Aparecerá en Google)</label>
-                    <input type="text" id="seo_titulo" name="seo_titulo" placeholder="Ej: Fuerte lluvia inunda avenidas..." value="<?php echo htmlspecialchars($edit_data['seo_titulo'] ?? ''); ?>">
-                    <div id="seo_titulo_counter" style="font-size: 0.75rem; color: #64748b; text-align: right; margin-top: 4px;">0 / 60</div>
-                </div>
-                <div class="form-row">
-                    <label>Descripción Meta (Snippet)</label>
-                    <textarea id="seo_descripcion" name="seo_descripcion" placeholder="Escribe un párrafo atractivo..."><?php echo htmlspecialchars($edit_data['seo_descripcion'] ?? ''); ?></textarea>
-                    <div id="seo_desc_counter" style="font-size: 0.75rem; color: #64748b; text-align: right; margin-top: 4px;">0 / 156</div>
-                </div>
-            </div>
 
-            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
-                <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-price-tag-3-fill"></i> Taxonomías y Citaciones (JNews Style)</h3>
-                <div class="form-row">
-                    <label>Etiquetas (Separadas por comas)</label>
-                    <input type="text" name="tags" placeholder="Ej: minsa, chiclayo, sismo" value="<?php echo htmlspecialchars($edit_data['tags'] ?? ''); ?>">
-                </div>
-                <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:0;">
-                    <div>
-                        <label>Fuente (Nombre)</label>
-                        <input type="text" name="fuente_nombre" placeholder="Ej: Diario El Correo" value="<?php echo htmlspecialchars($edit_data['fuente_nombre'] ?? ''); ?>">
+                <!-- ================== TAB MULTIMEDIA ================== -->
+                <div class="m-pane" id="m-media">
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                        <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-image-add-fill"></i> Archivos Multimedia Nativo</h3>
+                        <div class="form-row">
+                            <label>Imagen o Video Principal (.mp4, .jpg, .png)</label>
+                            <input type="file" name="media_upload" accept="image/*,video/mp4,video/webm" style="background:white;" <?php echo $edit_data ? '' : 'required'; ?>>
+                            <?php if($edit_data): ?><span style="font-size:0.75rem; color:var(--primary-color);">* Archivo actual: <?php echo basename($edit_data['imagen_url']); ?> (Sube uno nuevo solo si deseas reemplazarlo)</span><?php endif; ?>
+                        </div>
+                        <div class="form-row" style="margin-bottom:0;">
+                            <label>Poster para Video (Opcional, miniatura si subiste MP4)</label>
+                            <input type="file" name="poster_upload" accept="image/*" style="background:white;">
+                            <span style="font-size:0.75rem; color:#64748b;">* Reemplaza el recuadro negro del video con una portada visible.</span>
+                        </div>
                     </div>
-                    <div>
-                        <label>URL de la Fuente</label>
-                        <input type="url" name="fuente_url" placeholder="Ej: https://diariocorreo.pe/..." value="<?php echo htmlspecialchars($edit_data['fuente_url'] ?? ''); ?>">
-                    </div>
                 </div>
-            </div>
-            
-            <?php if ($user_role === 'admin'): ?>
-            <div style="background:#fff7ed; padding: 1.5rem; border-radius: 8px; border: 1px solid #fed7aa; margin-bottom: 1.5rem;">
-                <label style="display:inline-flex; align-items:center; gap:0.5rem; font-weight:800; color:#c2410c;">
-                    <input type="checkbox" name="es_destacada" value="1" style="width:1.25rem; height:1.25rem;" <?php echo (!empty($edit_data['es_destacada'])) ? 'checked' : ''; ?>> 
-                    Fijar como MEGA HERO Inicial en Portada
-                </label>
-            </div>
-            <?php endif; ?>
 
-            <div style="background:#f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
-                <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-settings-4-fill"></i> Estado de Publicación y Programación</h3>
-                <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:0;">
-                    <div>
-                        <label>Estado</label>
-                        <select name="estado_publicacion" id="estado_select" required onchange="updateSubmitButton()">
-                            <?php 
-                            $estados = ['publicado' => 'Publicar Inmediatamente', 'borrador' => 'Guardar como Borrador', 'programado' => 'Programar para después'];
-                            $sel_estado = $edit_data['estado_publicacion'] ?? 'publicado';
-                            foreach($estados as $val => $label) {
-                                $s = ($sel_estado === $val) ? 'selected' : '';
-                                echo "<option value='$val' $s>$label</option>";
-                            }
-                            ?>
-                        </select>
+                <!-- ================== TAB SEO ================== -->
+                <div class="m-pane" id="m-seo">
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                        <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-google-fill"></i> Yoast SEO & Metadatos</h3>
+                        <div id="seo-semaforo" style="margin-bottom: 1rem; padding: 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 6px;">
+                            <h4 style="margin: 0 0 10px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 5px;">
+                                Estado SEO: <span id="seo-score-badge" style="padding: 2px 8px; border-radius: 4px; color: white; font-weight: bold; background: #94a3b8;">Por evaluar</span>
+                            </h4>
+                            <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: #475569;" id="seo-checks">
+                                <li id="check-title"><i class="ri-checkbox-blank-circle-line"></i> Título SEO: Mínimo 40, máximo 60 caracteres.</li>
+                                <li id="check-desc"><i class="ri-checkbox-blank-circle-line"></i> Descripción: Mínimo 120, máximo 156 caracteres.</li>
+                                <li id="check-words"><i class="ri-checkbox-blank-circle-line"></i> Contenido: Mínimo 300 palabras.</li>
+                                <li id="check-kw"><i class="ri-checkbox-blank-circle-line"></i> Keyword Density: Introduce una Keyphrase.</li>
+                            </ul>
+                            <div style="margin-top: 10px;">
+                                <input type="text" id="seo_focus_kw" placeholder="Palabra clave objetivo (Focus Keyword)" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label>Título SEO (Aparecerá en Google)</label>
+                            <input type="text" id="seo_titulo" name="seo_titulo" placeholder="Ej: Fuerte lluvia inunda avenidas..." value="<?php echo htmlspecialchars($edit_data['seo_titulo'] ?? ''); ?>">
+                            <div id="seo_titulo_counter" style="font-size: 0.75rem; color: #64748b; text-align: right; margin-top: 4px;">0 / 60</div>
+                        </div>
+                        <div class="form-row">
+                            <label>Descripción Meta (Snippet)</label>
+                            <textarea id="seo_descripcion" name="seo_descripcion" placeholder="Escribe un párrafo atractivo..."><?php echo htmlspecialchars($edit_data['seo_descripcion'] ?? ''); ?></textarea>
+                            <div id="seo_desc_counter" style="font-size: 0.75rem; color: #64748b; text-align: right; margin-top: 4px;">0 / 156</div>
+                        </div>
                     </div>
-                    <div>
-                        <label>Fecha de Programación <small style="font-weight:normal; color:var(--text-muted);">(Solo si seleccionaste 'Programar')</small></label>
-                        <input type="datetime-local" name="fecha_programada" value="<?php echo !empty($edit_data['fecha_programada']) ? date('Y-m-d\TH:i', strtotime($edit_data['fecha_programada'])) : ''; ?>">
+
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                        <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-price-tag-3-fill"></i> Taxonomías y Citaciones (JNews Style)</h3>
+                        <div class="form-row">
+                            <label>Etiquetas (Separadas por comas)</label>
+                            <input type="text" name="tags" placeholder="Ej: minsa, chiclayo, sismo" value="<?php echo htmlspecialchars($edit_data['tags'] ?? ''); ?>">
+                        </div>
+                        <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:0;">
+                            <div>
+                                <label>Fuente (Nombre)</label>
+                                <input type="text" name="fuente_nombre" placeholder="Ej: Diario El Correo" value="<?php echo htmlspecialchars($edit_data['fuente_nombre'] ?? ''); ?>">
+                            </div>
+                            <div>
+                                <label>URL de la Fuente</label>
+                                <input type="url" name="fuente_url" placeholder="Ej: https://diariocorreo.pe/..." value="<?php echo htmlspecialchars($edit_data['fuente_url'] ?? ''); ?>">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
-                <button type="button" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="closeEditorModal()"><i class="ri-close-circle-line"></i> CANCELAR / CERRAR</button>
-                <button type="submit" id="btn-submit-main" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;"><i class="ri-send-plane-fill"></i> PUBLICAR NOTICIA</button>
-            </div>
-        </form>
-        </div> <!-- Close Contenido Scrollable -->
+
+                <!-- ================== TAB PUBLICACION ================== -->
+                <div class="m-pane" id="m-publicar">
+                    <?php if ($user_role === 'admin'): ?>
+                    <div style="background:#fff7ed; padding: 1.5rem; border-radius: 8px; border: 1px solid #fed7aa; margin-bottom: 1.5rem;">
+                        <label style="display:inline-flex; align-items:center; gap:0.5rem; font-weight:800; color:#c2410c;">
+                            <input type="checkbox" name="es_destacada" value="1" style="width:1.25rem; height:1.25rem;" <?php echo (!empty($edit_data['es_destacada'])) ? 'checked' : ''; ?>> 
+                            Fijar como MEGA HERO Inicial en Portada
+                        </label>
+                    </div>
+                    <?php endif; ?>
+
+                    <div style="background:#f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                        <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-settings-4-fill"></i> Estado de Publicación y Programación</h3>
+                        <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:0;">
+                            <div>
+                                <label>Estado</label>
+                                <select name="estado_publicacion" id="estado_select" required onchange="updateSubmitButton()">
+                                    <?php 
+                                    $estados = ['publicado' => 'Publicar Inmediatamente', 'borrador' => 'Guardar como Borrador', 'programado' => 'Programar para después'];
+                                    $sel_estado = $edit_data['estado_publicacion'] ?? 'publicado';
+                                    foreach($estados as $val => $label) {
+                                        $s = ($sel_estado === $val) ? 'selected' : '';
+                                        echo "<option value='$val' $s>$label</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Fecha de Programación <small style="font-weight:normal; color:var(--text-muted);">(Solo si seleccionaste 'Programar')</small></label>
+                                <input type="datetime-local" name="fecha_programada" value="<?php echo !empty($edit_data['fecha_programada']) ? date('Y-m-d\TH:i', strtotime($edit_data['fecha_programada'])) : ''; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; position: sticky; bottom: 0; background: white; padding: 1rem 0; border-top: 1px solid #e2e8f0; z-index: 10;">
+                    <button type="button" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="closeEditorModal()"><i class="ri-close-circle-line"></i> CANCELAR / CERRAR</button>
+                    <button type="submit" id="btn-submit-main" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;"><i class="ri-send-plane-fill"></i> PUBLICAR NOTICIA</button>
+                </div>
+                </form>
+            </div> <!-- Close Contenido Scrollable -->
+
+        </div> <!-- Close Contenedor Flex -->
     </div> <!-- Close Modal Wrapper -->
 </div>
 
@@ -488,6 +522,26 @@ document.addEventListener("DOMContentLoaded", function() {
         <?php if ($edit_data): ?>
         openEditorModal();
         <?php endif; ?>
+
+        // Lógica de las pestañas (Tabs) en el modal
+        const modalTabs = document.querySelectorAll('.modal-tab');
+        const modalPanes = document.querySelectorAll('.m-pane');
+        const modalScrollBody = document.querySelector('.modal-scroll-body');
+
+        modalTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                modalTabs.forEach(t => t.classList.remove('active'));
+                modalPanes.forEach(p => p.classList.remove('active'));
+                
+                this.classList.add('active');
+                const targetId = this.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+                
+                if (modalScrollBody) {
+                    modalScrollBody.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        });
     });
 
     function evaluarSEO() {
