@@ -335,6 +335,56 @@ class AdminContentController {
             header("Location: /piura_noticias_php/admin/contenidos?msg=Registrado");
             exit;
         }
+
+        if ($action === 'edit') {
+            $id = (int)($_POST['edit_id'] ?? 0);
+            if ($id > 0) {
+                // Verify ownership if not admin
+                if (!$is_admin) {
+                    $check = $pdo->prepare("SELECT id FROM registro_contenidos WHERE id = ? AND usuario_id = ?");
+                    $check->execute([$id, $user_id]);
+                    if ($check->rowCount() === 0) {
+                        header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Sin permisos"));
+                        exit;
+                    }
+                }
+                $stmt = $pdo->prepare("UPDATE registro_contenidos SET fecha=?, hora=?, titular=?, enlace=?, fuente_url=?, seccion=?, plataforma=?, completado=? WHERE id=?");
+                $stmt->execute([
+                    $_POST['fecha'] ?? date('Y-m-d'),
+                    $_POST['hora'] ?? date('H:i'),
+                    $_POST['titular'] ?? '',
+                    $_POST['enlace'] ?? '',
+                    $_POST['fuente_url'] ?? '',
+                    $_POST['seccion'] ?? '',
+                    $_POST['plataforma'] ?? '',
+                    isset($_POST['completado']) ? 1 : 0,
+                    $id
+                ]);
+                header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Publicación actualizada"));
+                exit;
+            }
+        }
+
+        if ($action === 'duplicate') {
+            $id = (int)($_POST['source_id'] ?? 0);
+            $new_plat = $_POST['new_plataforma'] ?? '';
+            if ($id > 0 && !empty($new_plat)) {
+                $src = $pdo->prepare("SELECT * FROM registro_contenidos WHERE id = ?");
+                $src->execute([$id]);
+                $row = $src->fetch(\PDO::FETCH_ASSOC);
+                if ($row) {
+                    // Verify ownership if not admin
+                    if (!$is_admin && $row['usuario_id'] != $user_id) {
+                        header("Location: /piura_noticias_php/admin/contenidos");
+                        exit;
+                    }
+                    $stmt = $pdo->prepare("INSERT INTO registro_contenidos (fecha, hora, hora_publicacion, titular, enlace, fuente_url, usuario_id, seccion, plataforma, rebote, completado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$row['fecha'], $row['hora'], $row['hora_publicacion'], $row['titular'], $row['enlace'], $row['fuente_url'], $row['usuario_id'], $row['seccion'], $new_plat, $row['rebote'], $row['completado']]);
+                    header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Duplicado en " . $new_plat));
+                    exit;
+                }
+            }
+        }
         
         header("Location: /piura_noticias_php/admin/contenidos");
         exit;

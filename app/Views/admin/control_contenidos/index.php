@@ -183,7 +183,7 @@
 
 <!-- Controles del Acordeón -->
 <?php if(!empty($agrupados)): ?>
-<div style="display:flex; gap:0.5rem; margin-top:1rem; margin-bottom:-0.5rem;">
+<div style="display:flex; gap:0.5rem; margin-top:1rem; margin-bottom:-0.5rem; align-items:center; flex-wrap:wrap;">
     <button onclick="toggleAllAcc(true)" style="background:#e2e8f0; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.85rem; font-weight:600; color:#475569; display:inline-flex; align-items:center; gap:5px; transition: background 0.2s;"
         onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='#e2e8f0'">
         <i class="ri-expand-diagonal-line"></i> Expandir Todo
@@ -192,6 +192,11 @@
         onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='#e2e8f0'">
         <i class="ri-collapse-diagonal-line"></i> Colapsar Todo
     </button>
+    <div style="flex-grow:1;"></div>
+    <div style="position:relative;">
+        <i class="ri-search-line" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
+        <input type="text" id="searchTitular" oninput="filterByTitular(this.value)" placeholder="Buscar por titular..." style="padding:6px 12px 6px 32px; border:1px solid #e2e8f0; border-radius:6px; font-size:0.85rem; width:220px; outline:none; transition: border 0.2s;" onfocus="this.style.borderColor='var(--primary-color)'" onblur="this.style.borderColor='#e2e8f0'">
+    </div>
 </div>
 <?php endif; ?>
 
@@ -322,7 +327,7 @@
                                                     <th>Sección / Plat.</th>
                                                     <th style="width: 70px; text-align:center;"><i class="ri-eye-line"></i> Vistas</th>
                                                     <th style="width: 50px; text-align:center;">✓</th>
-                                                    <th style="width: 50px; text-align:center;">Del</th>
+                                                    <th style="width: 100px; text-align:center;">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -379,9 +384,13 @@
                                                         </a>
                                                     </td>
                                                     <td style="text-align:center;">
-                                                        <?php if($is_admin): ?>
-                                                        <a href="/piura_noticias_php/admin/contenidos/action?delete_id=<?php echo $r['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Eliminar?');" style="color:#ef4444; font-size:1.2rem;"><i class="ri-delete-bin-line"></i></a>
-                                                        <?php endif; ?>
+                                                        <div style="display:flex; gap:4px; justify-content:center; align-items:center;">
+                                                            <a href="javascript:void(0)" onclick='openEditModal(<?php echo json_encode($r, JSON_HEX_APOS|JSON_HEX_QUOT); ?>)' style="color:#3b82f6; font-size:1.1rem;" title="Editar"><i class="ri-edit-line"></i></a>
+                                                            <a href="javascript:void(0)" onclick="openDupMenu(this, <?php echo $r['id']; ?>)" style="color:#8b5cf6; font-size:1.1rem;" title="Duplicar"><i class="ri-file-copy-line"></i></a>
+                                                            <?php if($is_admin): ?>
+                                                            <a href="/piura_noticias_php/admin/contenidos/action?delete_id=<?php echo $r['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Eliminar?');" style="color:#ef4444; font-size:1.1rem;" title="Eliminar"><i class="ri-delete-bin-line"></i></a>
+                                                            <?php endif; ?>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach; ?>
@@ -405,6 +414,60 @@
     <?php endforeach; ?>
 </div>
 
+<!-- Modal de Edición -->
+<div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;" onclick="if(event.target===this)closeEditModal()">
+    <div style="background:#fff; border-radius:12px; padding:1.5rem; width:95%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <h3 style="margin:0; color:var(--primary-color);"><i class="ri-edit-line"></i> Editar Publicación</h3>
+            <button onclick="closeEditModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#94a3b8;">&times;</button>
+        </div>
+        <form method="POST" action="/piura_noticias_php/admin/contenidos/store">
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="edit_id" id="edit_id">
+            <?php echo csrf_field(); ?>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Fecha</label><input type="date" name="fecha" id="edit_fecha" class="input-excel" style="width:100%;" required></div>
+                <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Hora</label><input type="time" name="hora" id="edit_hora" class="input-excel" style="width:100%;" required></div>
+                <div style="grid-column:span 2;"><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Titular</label><input type="text" name="titular" id="edit_titular" class="input-excel" style="width:100%;" required></div>
+                <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Enlace</label><input type="text" name="enlace" id="edit_enlace" class="input-excel" style="width:100%;"></div>
+                <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Fuente</label><input type="url" name="fuente_url" id="edit_fuente" class="input-excel" style="width:100%;"></div>
+                <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Sección</label>
+                    <select name="seccion" id="edit_seccion" class="input-excel" style="width:100%;">
+                        <option value="Actualidad">Actualidad</option><option value="Deportes">Deportes</option><option value="Entretenimiento">Entretenimiento</option><option value="Politica">Politica</option><option value="Publicidad">Publicidad (C)</option><option value="Flyer">Flyer (A)</option><option value="Shorts">Shorts</option>
+                    </select>
+                </div>
+                <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Plataforma</label>
+                    <select name="plataforma" id="edit_plataforma" class="input-excel" style="width:100%;">
+                        <option value="Web">Web</option><option value="Facebook">Facebook</option><option value="Youtube">Youtube</option><option value="Instagram">Instagram</option><option value="TikTok">TikTok</option><option value="Twitter">Twitter / X</option>
+                    </select>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; padding-top:1.2rem;">
+                    <input type="checkbox" name="completado" id="edit_completado" class="chk-excel">
+                    <label for="edit_completado" style="font-size:0.85rem; color:#64748b; cursor:pointer;">Completado</label>
+                </div>
+                <div style="padding-top:1.2rem;">
+                    <button type="submit" style="background:var(--primary-color); color:#fff; border:none; padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:600; width:100%; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="ri-save-line"></i> Guardar Cambios</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Menu Duplicar -->
+<div id="dupMenu" style="display:none; position:absolute; background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:0.5rem; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:9998; min-width:140px;">
+    <form method="POST" action="/piura_noticias_php/admin/contenidos/store" id="dupForm">
+        <input type="hidden" name="action" value="duplicate">
+        <input type="hidden" name="source_id" id="dup_source_id">
+        <?php echo csrf_field(); ?>
+        <div style="font-size:0.75rem; color:#94a3b8; padding:4px 8px; font-weight:600;">Duplicar en:</div>
+        <?php $dup_plats = ['Web','Facebook','Youtube','Instagram','TikTok','Twitter']; foreach($dup_plats as $dp): ?>
+        <button type="submit" name="new_plataforma" value="<?php echo $dp; ?>" style="display:block; width:100%; text-align:left; background:none; border:none; padding:6px 10px; cursor:pointer; font-size:0.85rem; border-radius:4px; transition:background 0.15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='none'">
+            <?php echo $dp; ?>
+        </button>
+        <?php endforeach; ?>
+    </form>
+</div>
+
 <script>
 function toggleAcc(element, type) {
     element.classList.toggle('active');
@@ -426,4 +489,73 @@ function toggleAllAcc(expand) {
         else b.classList.remove('active');
     });
 }
+
+// 3.3 Search by titular
+function filterByTitular(query) {
+    const q = query.toLowerCase().trim();
+    const rows = document.querySelectorAll('.acc-table tbody tr');
+    let visibleCount = 0;
+    rows.forEach(row => {
+        const titular = row.querySelector('td:nth-child(2)');
+        if (!titular) return;
+        const text = titular.textContent.toLowerCase();
+        if (q === '' || text.includes(q)) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    // Auto-expand all when searching
+    if (q.length > 0) {
+        toggleAllAcc(true);
+    }
+}
+
+// 3.1 Edit modal
+function openEditModal(data) {
+    document.getElementById('edit_id').value = data.id;
+    document.getElementById('edit_fecha').value = data.fecha;
+    document.getElementById('edit_hora').value = data.hora ? data.hora.substring(0,5) : '';
+    document.getElementById('edit_titular').value = data.titular || '';
+    document.getElementById('edit_enlace').value = data.enlace || '';
+    document.getElementById('edit_fuente').value = data.fuente_url || '';
+    document.getElementById('edit_seccion').value = data.seccion || 'Actualidad';
+    document.getElementById('edit_plataforma').value = data.plataforma || 'Web';
+    document.getElementById('edit_completado').checked = data.completado == 1;
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'flex';
+}
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+// 3.2 Duplicate menu
+function openDupMenu(anchor, sourceId) {
+    const menu = document.getElementById('dupMenu');
+    document.getElementById('dup_source_id').value = sourceId;
+    const rect = anchor.getBoundingClientRect();
+    menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+    menu.style.left = (rect.left + window.scrollX - 50) + 'px';
+    menu.style.display = 'block';
+    // Close on click outside
+    setTimeout(() => {
+        document.addEventListener('click', closeDupOnOutside);
+    }, 10);
+}
+function closeDupOnOutside(e) {
+    const menu = document.getElementById('dupMenu');
+    if (!menu.contains(e.target)) {
+        menu.style.display = 'none';
+        document.removeEventListener('click', closeDupOnOutside);
+    }
+}
+
+// Close modal with Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeEditModal();
+        document.getElementById('dupMenu').style.display = 'none';
+    }
+});
 </script>
