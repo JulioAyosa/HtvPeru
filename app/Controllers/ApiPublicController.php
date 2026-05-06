@@ -73,24 +73,24 @@ class ApiPublicController {
             exit;
         }
 
-        $view_key = $slug ? 'viewed_' . md5($slug) : 'viewed_id_' . $id;
-        
-        if (!isset($_SESSION[$view_key])) {
-            try {
-                $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+        try {
+            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+            // Basic rate limit to prevent DB flood from same IP in short time
+            $rate_stmt = $this->pdo->prepare("SELECT COUNT(*) FROM cola_vistas WHERE ip_address = ? AND (noticia_slug = ? OR noticia_id = ?)");
+            $rate_stmt->execute([$ip, $slug, $id]);
+            if ((int)$rate_stmt->fetchColumn() < 3) {
                 if ($slug) {
                     $this->pdo->prepare("INSERT INTO cola_vistas (noticia_slug, ip_address) VALUES (?, ?)")->execute([$slug, $ip]);
                 } else {
                     $this->pdo->prepare("INSERT INTO cola_vistas (noticia_id, ip_address) VALUES (?, ?)")->execute([$id, $ip]);
                 }
-                $_SESSION[$view_key] = true;
                 echo json_encode(['success' => true, 'message' => 'View queued asynchronously']);
-            } catch(\Exception $e) {
-                http_response_code(500);
-                echo json_encode(['success' => false, 'error' => 'DB execution error']);
+            } else {
+                echo json_encode(['success' => true, 'message' => 'View limited by IP rules']);
             }
-        } else {
-             echo json_encode(['success' => true, 'cached' => true, 'message' => 'View already counted in session']);
+        } catch(\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'DB execution error']);
         }
         exit;
     }

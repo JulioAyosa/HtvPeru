@@ -64,7 +64,9 @@ class PublicPageController {
 
     public function article() {
         require_once __DIR__ . '/../../session_config.php';
-        @session_start();
+        if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            @session_start();
+        }
         require_once __DIR__ . '/../../conexion.php';
         require_once __DIR__ . '/../../html_sanitizer.php';
         
@@ -132,24 +134,32 @@ class PublicPageController {
         $slug = isset($_GET['slug']) ? trim($_GET['slug']) : null;
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-        $newsRepo = new \App\Repositories\NewsRepository($pdo);
-        if ($slug) {
-            $view_key = 'viewed_' . md5($slug);
-            if (!isset($_SESSION[$view_key])) { $_SESSION[$view_key] = true; }
-            $articulo = $newsRepo->getArticleBySlug($slug);
+        $cacheService = new \App\Services\CacheService();
+        $cache_key = 'article_data_' . ($slug ? md5($slug) : $id);
+        $cached_data = $cacheService->get($cache_key);
+
+        if ($cached_data) {
+            $articulo = $cached_data['articulo'];
+            $relacionadas = $cached_data['relacionadas'];
+            $todas_noticias = $cached_data['todas_noticias'];
         } else {
-            $view_key = 'viewed_id_' . $id;
-            if (!isset($_SESSION[$view_key])) { $_SESSION[$view_key] = true; }
-            $articulo = $newsRepo->getArticleById($id);
-        }
+            $newsRepo = new \App\Repositories\NewsRepository($pdo);
+            if ($slug) {
+                $articulo = $newsRepo->getArticleBySlug($slug);
+            } else {
+                $articulo = $newsRepo->getArticleById($id);
+            }
 
-        if (!$articulo || ($articulo['estado_publicacion'] !== 'publicado')) {
-            header("Location: /");
-            exit;
-        }
+            if (!$articulo || ($articulo['estado_publicacion'] !== 'publicado')) {
+                header("Location: /");
+                exit;
+            }
 
-        $relacionadas = $newsRepo->getRelacionadas($articulo['categoria'], $articulo['id'], 3);
-        $todas_noticias = $newsRepo->getTodasNoticias(10);
+            $relacionadas = $newsRepo->getRelacionadas($articulo['categoria'], $articulo['id'], 3);
+            $todas_noticias = $newsRepo->getTodasNoticias(10);
+            
+            $cacheService->set($cache_key, compact('articulo', 'relacionadas', 'todas_noticias'), 300);
+        }
 
         $contenido_html = sanitize_html($articulo['contenido']);
         $contenido_html = str_replace('<img ', '<img loading="lazy" ', $contenido_html);
@@ -194,7 +204,9 @@ class PublicPageController {
 
     public function category() {
         require_once __DIR__ . '/../../session_config.php';
-        @session_start();
+        if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            @session_start();
+        }
         require_once __DIR__ . '/../../conexion.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
@@ -213,21 +225,37 @@ class PublicPageController {
 
         if(empty($category_name)) { header("Location: /"); exit; }
 
-        $catRepo = new \App\Repositories\CategoryRepository($pdo);
-        $cat_info = $catRepo->getCategoryByNameOrSlug($category_name, $slug);
+        $cacheService = new \App\Services\CacheService();
+        $cache_key = 'category_data_' . md5($category_name . '_' . $page);
+        $cached_data = $cacheService->get($cache_key);
 
-        if($cat_info && !empty($cat_info['nombre'])) {
-            $category_name = $cat_info['nombre'];
+        if ($cached_data) {
+            $category_name = $cached_data['category_name'];
+            $category_desc = $cached_data['category_desc'];
+            $category_bg = $cached_data['category_bg'];
+            $total_rows = $cached_data['total_rows'];
+            $total_pages = $cached_data['total_pages'];
+            $noticias = $cached_data['noticias'];
+            $todas_noticias = $cached_data['todas_noticias'];
+        } else {
+            $catRepo = new \App\Repositories\CategoryRepository($pdo);
+            $cat_info = $catRepo->getCategoryByNameOrSlug($category_name, $slug);
+
+            if($cat_info && !empty($cat_info['nombre'])) {
+                $category_name = $cat_info['nombre'];
+            }
+            $category_desc = ($cat_info && !empty($cat_info['descripcion'])) ? $cat_info['descripcion'] : "Encuentra todas las noticias de " . $category_name;
+            $category_bg = ($cat_info && !empty($cat_info['imagen_fondo'])) ? $cat_info['imagen_fondo'] : '';
+
+            $newsRepo = new \App\Repositories\NewsRepository($pdo);
+            $total_rows = $newsRepo->countCategory($category_name);
+            $total_pages = ceil($total_rows / $limit);
+            $noticias = $newsRepo->getCategoryPaginated($category_name, $limit, $offset);
+
+            $todas_noticias = $newsRepo->getTodasNoticias(50);
+            
+            $cacheService->set($cache_key, compact('category_name', 'category_desc', 'category_bg', 'total_rows', 'total_pages', 'noticias', 'todas_noticias'), 300);
         }
-        $category_desc = ($cat_info && !empty($cat_info['descripcion'])) ? $cat_info['descripcion'] : "Encuentra todas las noticias de " . $category_name;
-        $category_bg = ($cat_info && !empty($cat_info['imagen_fondo'])) ? $cat_info['imagen_fondo'] : '';
-
-        $newsRepo = new \App\Repositories\NewsRepository($pdo);
-        $total_rows = $newsRepo->countCategory($category_name);
-        $total_pages = ceil($total_rows / $limit);
-        $noticias = $newsRepo->getCategoryPaginated($category_name, $limit, $offset);
-
-        $todas_noticias = $newsRepo->getTodasNoticias(50);
 
         chdir(__DIR__ . '/../../');
         require __DIR__ . '/../Views/public/category.php';
@@ -235,7 +263,9 @@ class PublicPageController {
 
     public function search() {
         require_once __DIR__ . '/../../session_config.php';
-        @session_start();
+        if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            @session_start();
+        }
         require_once __DIR__ . '/../../conexion.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
@@ -248,11 +278,6 @@ class PublicPageController {
 
         if(empty($q)) { header("Location: /"); exit; }
 
-        if (isset($_SESSION['last_search_time']) && (time() - $_SESSION['last_search_time']) < 2) {
-            die("<div style='padding:2rem; font-family:sans-serif; text-align:center;'>Has excedido el límite de búsquedas. Por favor espera unos segundos.</div>");
-        }
-        $_SESSION['last_search_time'] = time();
-
         $words = explode(' ', $q);
         $boolean_q = '';
         foreach($words as $w) {
@@ -264,12 +289,25 @@ class PublicPageController {
         $boolean_q = trim($boolean_q);
         if(empty($boolean_q)) { $boolean_q = $q; }
 
-        $newsRepo = new \App\Repositories\NewsRepository($pdo);
-        $total_rows = $newsRepo->countSearchFulltext($boolean_q);
-        $total_pages = ceil($total_rows / $limit);
-        $noticias = $newsRepo->searchFulltextPaginated($boolean_q, $limit, $offset);
+        $cacheService = new \App\Services\CacheService();
+        $cache_key = 'search_' . md5($boolean_q . '_' . $page);
+        $cached_data = $cacheService->get($cache_key);
 
-        $todas_noticias = $newsRepo->getTodasNoticias(50);
+        if ($cached_data) {
+            $total_rows = $cached_data['total_rows'];
+            $total_pages = $cached_data['total_pages'];
+            $noticias = $cached_data['noticias'];
+            $todas_noticias = $cached_data['todas_noticias'];
+        } else {
+            $newsRepo = new \App\Repositories\NewsRepository($pdo);
+            $total_rows = $newsRepo->countSearchFulltext($boolean_q);
+            $total_pages = ceil($total_rows / $limit);
+            $noticias = $newsRepo->searchFulltextPaginated($boolean_q, $limit, $offset);
+
+            $todas_noticias = $newsRepo->getTodasNoticias(50);
+            
+            $cacheService->set($cache_key, compact('total_rows', 'total_pages', 'noticias', 'todas_noticias'), 300);
+        }
 
         chdir(__DIR__ . '/../../');
         require __DIR__ . '/../Views/public/search.php';
@@ -277,7 +315,9 @@ class PublicPageController {
 
     public function ultimasNoticias() {
         require_once __DIR__ . '/../../session_config.php';
-        @session_start();
+        if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            @session_start();
+        }
         require_once __DIR__ . '/../../conexion.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
@@ -287,9 +327,20 @@ class PublicPageController {
         $limit = 15;
         $offset = 0;
 
-        $newsRepo = new \App\Repositories\NewsRepository($pdo);
-        $noticias = $newsRepo->getUltimasPaginated($limit, $offset);
-        $todas_noticias = $newsRepo->getTodasNoticias(50);
+        $cacheService = new \App\Services\CacheService();
+        $cache_key = 'ultimas_noticias_page_' . $page;
+        $cached_data = $cacheService->get($cache_key);
+
+        if ($cached_data) {
+            $noticias = $cached_data['noticias'];
+            $todas_noticias = $cached_data['todas_noticias'];
+        } else {
+            $newsRepo = new \App\Repositories\NewsRepository($pdo);
+            $noticias = $newsRepo->getUltimasPaginated($limit, $offset);
+            $todas_noticias = $newsRepo->getTodasNoticias(50);
+            
+            $cacheService->set($cache_key, compact('noticias', 'todas_noticias'), 300);
+        }
 
         chdir(__DIR__ . '/../../');
         require __DIR__ . '/../Views/public/ultimas_noticias.php';
@@ -297,7 +348,9 @@ class PublicPageController {
 
     public function tag() {
         require_once __DIR__ . '/../../session_config.php';
-        @session_start();
+        if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            @session_start();
+        }
         require_once __DIR__ . '/../../conexion.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
@@ -315,12 +368,25 @@ class PublicPageController {
 
         $tag_name = str_replace('-', ' ', $slug);
 
-        $newsRepo = new \App\Repositories\NewsRepository($pdo);
-        $total_rows = $newsRepo->countByTag($tag_name);
-        $total_pages = ceil($total_rows / $limit);
-        $noticias = $newsRepo->getByTagPaginated($tag_name, $limit, $offset);
+        $cacheService = new \App\Services\CacheService();
+        $cache_key = 'tag_data_' . md5($tag_name . '_' . $page);
+        $cached_data = $cacheService->get($cache_key);
 
-        $todas_noticias = $newsRepo->getTodasNoticias(50);
+        if ($cached_data) {
+            $total_rows = $cached_data['total_rows'];
+            $total_pages = $cached_data['total_pages'];
+            $noticias = $cached_data['noticias'];
+            $todas_noticias = $cached_data['todas_noticias'];
+        } else {
+            $newsRepo = new \App\Repositories\NewsRepository($pdo);
+            $total_rows = $newsRepo->countByTag($tag_name);
+            $total_pages = ceil($total_rows / $limit);
+            $noticias = $newsRepo->getByTagPaginated($tag_name, $limit, $offset);
+
+            $todas_noticias = $newsRepo->getTodasNoticias(50);
+            
+            $cacheService->set($cache_key, compact('total_rows', 'total_pages', 'noticias', 'todas_noticias'), 300);
+        }
 
         chdir(__DIR__ . '/../../');
         require __DIR__ . '/../Views/public/tag.php';
@@ -328,14 +394,25 @@ class PublicPageController {
 
     public function bookmarks() {
         require_once __DIR__ . '/../../session_config.php';
-        @session_start();
+        if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            @session_start();
+        }
         require_once __DIR__ . '/../../conexion.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
 
-        $newsRepo = new \App\Repositories\NewsRepository($pdo);
-        $todas_noticias = $newsRepo->getTodasNoticias(50);
+        $cacheService = new \App\Services\CacheService();
+        $cache_key = 'bookmarks_sidebar_noticias';
+        $cached_data = $cacheService->get($cache_key);
+        
+        if ($cached_data) {
+            $todas_noticias = $cached_data['todas_noticias'];
+        } else {
+            $newsRepo = new \App\Repositories\NewsRepository($pdo);
+            $todas_noticias = $newsRepo->getTodasNoticias(50);
+            $cacheService->set($cache_key, compact('todas_noticias'), 300);
+        }
 
         chdir(__DIR__ . '/../../');
         require __DIR__ . '/../Views/public/bookmarks.php';
@@ -343,16 +420,28 @@ class PublicPageController {
 
     public function page() {
         require_once __DIR__ . '/../../session_config.php';
-        @session_start();
+        if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            @session_start();
+        }
         require_once __DIR__ . '/../../conexion.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
 
         $slug = isset($_GET['s']) ? $_GET['s'] : '';
-        $stmt = $pdo->prepare("SELECT * FROM paginas WHERE slug = ? AND estado = 'activo'");
-        $stmt->execute([$slug]);
-        $pagina = $stmt->fetch();
+        
+        $cacheService = new \App\Services\CacheService();
+        $cache_key = 'page_' . md5($slug);
+        $cached_data = $cacheService->get($cache_key);
+        
+        if ($cached_data) {
+            $pagina = $cached_data['pagina'];
+        } else {
+            $stmt = $pdo->prepare("SELECT * FROM paginas WHERE slug = ? AND estado = 'activo'");
+            $stmt->execute([$slug]);
+            $pagina = $stmt->fetch();
+            $cacheService->set($cache_key, compact('pagina'), 86400); // 24 hours
+        }
 
         if (!$pagina) {
             header("HTTP/1.0 404 Not Found");

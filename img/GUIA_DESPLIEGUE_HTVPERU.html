@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Despliegue — HTVPERU</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#c9d1d9;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.7;padding:2rem;max-width:900px;margin:0 auto}
+h1{color:#58a6ff;font-size:2rem;margin-bottom:.5rem;border-bottom:1px solid #21262d;padding-bottom:1rem}
+h2{color:#f0f6fc;font-size:1.5rem;margin-top:2.5rem;margin-bottom:1rem;border-bottom:1px solid #21262d;padding-bottom:.5rem}
+h3{color:#d2a8ff;font-size:1.15rem;margin-top:1.5rem;margin-bottom:.75rem}
+p{margin-bottom:1rem}
+strong{color:#f0f6fc}
+code{background:#161b22;color:#79c0ff;padding:2px 6px;border-radius:4px;font-size:.9em;font-family:'Cascadia Code','Fira Code',monospace}
+pre{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1rem;overflow-x:auto;margin:1rem 0;font-size:.85rem;line-height:1.5}
+pre code{background:none;padding:0;color:#c9d1d9}
+a{color:#58a6ff;text-decoration:none}
+a:hover{text-decoration:underline}
+hr{border:none;border-top:1px solid #21262d;margin:2rem 0}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th{background:#161b22;color:#f0f6fc;text-align:left;padding:10px 14px;border:1px solid #30363d;font-size:.9rem}
+td{padding:10px 14px;border:1px solid #30363d;font-size:.9rem}
+tr:nth-child(even){background:#161b2280}
+ul,ol{margin:0 0 1rem 1.5rem}
+li{margin-bottom:.4rem}
+.alert{border-radius:8px;padding:1rem 1.25rem;margin:1rem 0;border-left:4px solid}
+.alert-caution{background:#3d1e1e;border-color:#f85149;color:#ffa198}
+.alert-important{background:#1e2a3d;border-color:#58a6ff;color:#a5d6ff}
+.alert-warning{background:#3d2e1e;border-color:#d29922;color:#e3b341}
+.alert-tip{background:#1e3d2e;border-color:#3fb950;color:#7ee787}
+.alert-note{background:#1e2a3d;border-color:#8b949e;color:#c9d1d9}
+.alert strong{display:block;margin-bottom:.25rem;text-transform:uppercase;font-size:.8rem;letter-spacing:1px}
+.diff-add{color:#3fb950;background:#0d2818}
+.diff-del{color:#f85149;background:#3d1e1e}
+.diff-line{font-family:'Cascadia Code','Fira Code',monospace;font-size:.85rem;padding:2px 8px;display:block}
+.check-section{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.25rem;margin:1rem 0}
+.check-section label{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;cursor:pointer;font-size:.9rem}
+.check-section input[type=checkbox]{accent-color:#58a6ff;width:18px;height:18px}
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:1.5rem 0}
+.flow-step{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:.75rem 1.5rem;text-align:center;width:100%;max-width:500px;font-weight:600;font-size:.9rem}
+.flow-step:nth-child(odd){border-left:3px solid #58a6ff}
+.flow-step:nth-child(even){border-left:3px solid #d2a8ff}
+.flow-arrow{color:#484f58;font-size:1.5rem;line-height:1}
+.flow-final{background:#0d2818;border-color:#3fb950;color:#3fb950;font-size:1.1rem}
+@media print{body{background:#fff;color:#1a1a1a}h1,a{color:#0969da}h2{color:#1a1a1a}h3{color:#6639ba}pre,code,.check-section,.flow-step{background:#f6f8fa;border-color:#d1d5db;color:#1a1a1a}.alert{print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<h1>🚀 Guía Definitiva de Despliegue: HTVPERU en Producción</h1>
+<p>Esta guía cubre <strong>absolutamente todo</strong> lo que debes configurar en tu hosting cuando subas el proyecto. Sigue cada paso en orden.</p>
+
+<hr>
+<h2>FASE 1: Preparación de Archivos (Antes de Subir)</h2>
+
+<h3>1.1 Archivos que NO debes subir al hosting</h3>
+<div class="alert alert-caution"><strong>⛔ CAUTION</strong>Estos archivos/carpetas son solo de desarrollo. <strong>No los subas nunca.</strong></div>
+
+<table>
+<tr><th>Archivo/Carpeta</th><th>Razón</th></tr>
+<tr><td><code>_dev_quarantine/</code></td><td>Scripts de desarrollo obsoletos</td></tr>
+<tr><td><code>capturas/</code></td><td>Screenshots de desarrollo</td></tr>
+<tr><td><code>check.php</code></td><td>Script de prueba con ruta hardcodeada a XAMPP</td></tr>
+<tr><td><code>database.sql</code></td><td>Dump completo de BD (pesa mucho y es sensible)</td></tr>
+<tr><td><code>patch_database_schema.sql</code></td><td>Parches ya aplicados</td></tr>
+<tr><td><code>cron_publicador.php</code></td><td><strong>Obsoleto</strong>, reemplazado por <code>cron_worker.php</code></td></tr>
+<tr><td><code>*_cache.json</code></td><td>Archivos de caché temporal (<code>home_cache.json</code>, <code>global_cache.json</code>, etc.)</td></tr>
+<tr><td><code>.git/</code></td><td>Historial de Git</td></tr>
+</table>
+
+<h3>1.2 Archivos que SÍ debes subir pero con cuidado</h3>
+<table>
+<tr><th>Archivo</th><th>Acción requerida</th></tr>
+<tr><td><code>.env</code></td><td><strong>Crear uno nuevo</strong> en el servidor (ver Fase 2)</td></tr>
+<tr><td><code>.htaccess</code></td><td><strong>Modificar</strong> las rutas antes de subir (ver Fase 3)</td></tr>
+<tr><td><code>conexion.php</code></td><td>Subir tal cual, se autoconfigura con <code>.env</code></td></tr>
+<tr><td><code>vendor/</code></td><td>Subir completo, o ejecutar <code>composer install</code> en el servidor</td></tr>
+</table>
+
+<hr>
+<h2>FASE 2: Configurar el archivo <code>.env</code> en el Servidor</h2>
+
+<div class="alert alert-important"><strong>⚠️ IMPORTANT</strong><strong>Este es el paso más crítico.</strong> El <code>.env</code> controla las credenciales de la base de datos, el entorno y la seguridad de los Cron Jobs.</div>
+
+<p>Crear el archivo <code>.env</code> en la <strong>raíz</strong> del proyecto dentro de <code>public_html/</code>:</p>
+
+<pre><code># ==========================================
+# CONFIGURACIÓN DE BASE DE DATOS
+# ==========================================
+# Estos datos los encuentras en cPanel > MySQL Databases
+DB_HOST=localhost
+DB_NAME=tucuenta_htvperu
+DB_USER=tucuenta_dbuser
+DB_PASS=TuContraseñaSuperSegura123!
+DB_CHARSET=utf8mb4
+
+# ==========================================
+# ENTORNO DE APLICACIÓN
+# ==========================================
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://htvperu.com.pe
+
+# ==========================================
+# SEGURIDAD Y TAREAS (CRON)
+# ==========================================
+# Generar un token único en Terminal SSH:
+#   php -r "echo bin2hex(random_bytes(32));"
+CRON_TOKEN=PEGAR_AQUI_EL_TOKEN_GENERADO</code></pre>
+
+<h3>¿Cómo crear la Base de Datos en cPanel?</h3>
+<ol>
+<li>Ir a <strong>cPanel → MySQL® Databases</strong></li>
+<li>Crear una nueva base de datos (ejemplo: <code>tucuenta_htvperu</code>)</li>
+<li>Crear un nuevo usuario con contraseña fuerte</li>
+<li><strong>Asociar</strong> el usuario a la base de datos con <strong>TODOS LOS PRIVILEGIOS</strong></li>
+<li>Ir a <strong>cPanel → phpMyAdmin</strong>, seleccionar tu nueva BD</li>
+<li>Click en <strong>Importar</strong> → subir el archivo <code>database.sql</code> de tu proyecto local</li>
+<li>Verificar que todas las tablas se crearon correctamente (deben ser ~14 tablas)</li>
+</ol>
+
+<div class="alert alert-warning"><strong>⚠️ WARNING</strong>El nombre de la BD en cPanel siempre lleva el prefijo de tu cuenta. Ejemplo: si tu cuenta es <code>htvperu</code>, la BD será <code>htvperu_nombrebd</code>. ¡Usa ese nombre completo en el <code>.env</code>!</div>
+
+<hr>
+<h2>FASE 3: Modificar el <code>.htaccess</code> para Producción</h2>
+
+<p>El <code>.htaccess</code> actual tiene rutas hardcodeadas a <code>/piura_noticias_php/</code>. En producción debes limpiar esas referencias.</p>
+
+<h3>3.1 Cambiar el ErrorDocument (línea 6)</h3>
+<pre><span class="diff-line diff-del">- ErrorDocument 404 /piura_noticias_php/404.php</span><span class="diff-line diff-add">+ ErrorDocument 404 /404.php</span></pre>
+
+<h3>3.2 Cambiar las reglas del Front Controller (líneas 124-131)</h3>
+<pre><span class="diff-line">  # Evitar bucles redirigiendo peticiones ya apuntando a public/</span><span class="diff-line diff-del">- RewriteCond %{REQUEST_URI} !^/piura_noticias_php/public/</span><span class="diff-line diff-add">+ RewriteCond %{REQUEST_URI} !^/public/</span><span class="diff-line"> </span><span class="diff-line">  # Excluir recursos estáticos</span><span class="diff-line diff-del">- RewriteCond %{REQUEST_URI} !^/piura_noticias_php/(css|js|img|uploads|dist) [NC]</span><span class="diff-line diff-add">+ RewriteCond %{REQUEST_URI} !^/(css|js|img|uploads|dist) [NC]</span><span class="diff-line"> </span><span class="diff-line">  # Enviar todo el resto a public/index.php</span><span class="diff-line">  RewriteRule ^(.*)$ public/index.php [L,QSA]</span></pre>
+
+<div class="alert alert-note"><strong>📝 NOTE</strong><strong>No necesitas cambiar nada más en el <code>.htaccess</code></strong>. Las reglas de seguridad (CSP, HSTS, bloqueos) funcionan igual en cualquier entorno.</div>
+
+<hr>
+<h2>FASE 4: Configurar la Base de Datos del CMS</h2>
+
+<h3>4.1 Actualizar la tabla <code>configuracion</code></h3>
+<p>Ir a <strong>phpMyAdmin</strong> y ejecutar estas queries SQL:</p>
+<pre><code>-- Cambiar el título del sitio
+UPDATE configuracion SET valor = 'HTVPERU' WHERE clave = 'site_title';
+
+-- Verificar que la URL del sitio esté correcta
+UPDATE configuracion SET valor = 'https://htvperu.com.pe' WHERE clave = 'site_url';</code></pre>
+
+<h3>4.2 Crear la tabla <code>cola_vistas</code> (si no existe)</h3>
+<pre><code>CREATE TABLE IF NOT EXISTS cola_vistas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    noticia_id INT NULL DEFAULT NULL,
+    noticia_slug VARCHAR(255) NULL DEFAULT NULL,
+    ip_address VARCHAR(45) NULL DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_noticia_id (noticia_id),
+    INDEX idx_noticia_slug (noticia_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</code></pre>
+
+<hr>
+<h2>FASE 5: Configurar los Cron Jobs en cPanel</h2>
+
+<div class="alert alert-important"><strong>⚠️ IMPORTANT</strong>Sin esto, las vistas no se contabilizan y las noticias programadas no se publican automáticamente.</div>
+
+<h3>Cron Job 1: Worker (Tareas Ligeras — Cada 1 minuto)</h3>
+<table>
+<tr><th>Campo</th><th>Valor</th></tr>
+<tr><td>Minuto</td><td><code>*</code> (cada minuto)</td></tr>
+<tr><td>Hora / Día / Mes / Día semana</td><td><code>*</code></td></tr>
+<tr><td><strong>Comando</strong></td><td><code>php /home/tucuenta/public_html/cron_worker.php >> /dev/null 2>&1</code></td></tr>
+</table>
+<p><strong>¿Qué hace?</strong> Publica noticias programadas, vuelca la cola de vistas, limpia rate-limits antiguos.</p>
+
+<h3>Cron Job 2: Backup (Tareas Pesadas — 1 vez al día a las 3 AM)</h3>
+<table>
+<tr><th>Campo</th><th>Valor</th></tr>
+<tr><td>Minuto</td><td><code>0</code></td></tr>
+<tr><td>Hora</td><td><code>3</code></td></tr>
+<tr><td>Día / Mes / Día semana</td><td><code>*</code></td></tr>
+<tr><td><strong>Comando</strong></td><td><code>php /home/tucuenta/public_html/cron_backup.php >> /dev/null 2>&1</code></td></tr>
+</table>
+<p><strong>¿Qué hace?</strong> Purga papelera (+15 días), crea backup ZIP, limpia backups antiguos.</p>
+
+<div class="alert alert-tip"><strong>💡 TIP</strong><strong>¿Cómo encontrar la ruta absoluta?</strong> En cPanel → Terminal ejecuta: <code>echo $HOME</code>. Tu <code>public_html</code> estará en <code>/home/tucuenta/public_html/</code>.</div>
+
+<hr>
+<h2>FASE 6: Permisos de Carpetas (chmod)</h2>
+
+<p>Ejecuta estos comandos por <strong>SSH Terminal</strong> (cPanel → Terminal):</p>
+<pre><code># Carpetas que necesitan escritura por PHP
+chmod -R 755 /home/tucuenta/public_html/uploads/
+chmod -R 755 /home/tucuenta/public_html/backups/
+chmod -R 755 /home/tucuenta/public_html/storage/
+chmod -R 755 /home/tucuenta/public_html/dist/
+chmod -R 755 /home/tucuenta/public_html/img/
+
+# Proteger el archivo .env
+chmod 600 /home/tucuenta/public_html/.env</code></pre>
+
+<table>
+<tr><th>Carpeta</th><th>Permiso</th><th>Razón</th></tr>
+<tr><td><code>uploads/</code></td><td>755</td><td>Subida de imágenes/videos desde el admin</td></tr>
+<tr><td><code>backups/</code></td><td>755</td><td>Escritura de backups automáticos</td></tr>
+<tr><td><code>storage/logs/</code></td><td>755</td><td>Escritura de logs de Monolog</td></tr>
+<tr><td><code>dist/</code></td><td>755</td><td>Archivos CSS/JS minificados</td></tr>
+<tr><td><code>.env</code></td><td>600</td><td><strong>Solo el propietario puede leerlo</strong></td></tr>
+</table>
+
+<hr>
+<h2>FASE 7: Configurar SSL (HTTPS)</h2>
+<ol>
+<li>Ir a <strong>cPanel → SSL/TLS</strong> o <strong>cPanel → Let's Encrypt</strong></li>
+<li>Generar certificado SSL gratuito para <code>htvperu.com.pe</code> y <code>www.htvperu.com.pe</code></li>
+<li>Instalar el certificado</li>
+</ol>
+<p>Tu <code>.htaccess</code> y <code>conexion.php</code> ya tienen reglas de redirección HTTPS integradas. Solo necesitas que el certificado esté activo. El HSTS también ya está configurado.</p>
+
+<hr>
+<h2>FASE 8: Configurar Cloudflare (CDN + Protección DDoS)</h2>
+
+<h3>8.1 Configuración DNS</h3>
+<ol>
+<li>Crear cuenta en <a href="https://cloudflare.com" target="_blank">Cloudflare</a></li>
+<li>Agregar tu dominio <code>htvperu.com.pe</code></li>
+<li>Cambiar los <strong>Nameservers</strong> en tu registrador de dominio</li>
+<li>Verificar que los registros DNS apunten a la IP de tu hosting</li>
+</ol>
+
+<h3>8.2 Reglas de Caché (Page Rules)</h3>
+<table>
+<tr><th>#</th><th>URL Pattern</th><th>Configuración</th></tr>
+<tr><td>1</td><td><code>htvperu.com.pe/admin/*</code></td><td><strong>Cache Level: Bypass</strong></td></tr>
+<tr><td>2</td><td><code>htvperu.com.pe/login*</code></td><td><strong>Cache Level: Bypass</strong></td></tr>
+<tr><td>3</td><td><code>htvperu.com.pe/*</code></td><td><strong>Cache Everything</strong>, Edge TTL: 2 hours</td></tr>
+</table>
+
+<h3>8.3 Configuración SSL en Cloudflare</h3>
+<ul>
+<li><strong>SSL/TLS Mode</strong>: <code>Full (Strict)</code></li>
+<li><strong>Always Use HTTPS</strong>: <code>ON</code></li>
+<li><strong>Automatic HTTPS Rewrites</strong>: <code>ON</code></li>
+<li><strong>Minimum TLS Version</strong>: <code>1.2</code></li>
+</ul>
+
+<h3>8.4 Optimización de Velocidad</h3>
+<ul>
+<li><strong>Auto Minify</strong>: Activar CSS, JS, HTML</li>
+<li><strong>Brotli</strong>: <code>ON</code></li>
+<li><strong>Tiered Cache</strong>: <code>ON</code></li>
+</ul>
+
+<hr>
+<h2>FASE 9: Verificación Post-Despliegue (Checklist)</h2>
+
+<h3>✅ Funcionalidad</h3>
+<div class="check-section">
+<label><input type="checkbox"> La página principal (<code>https://htvperu.com.pe</code>) carga correctamente</label>
+<label><input type="checkbox"> Los artículos se abren con URL limpia (<code>/mi-titulo-de-noticia</code>)</label>
+<label><input type="checkbox"> Las categorías cargan (<code>/categoria/politica</code>)</label>
+<label><input type="checkbox"> El buscador funciona (barra de búsqueda del header)</label>
+<label><input type="checkbox"> Los videos se reproducen correctamente</label>
+<label><input type="checkbox"> Las imágenes se muestran correctamente</label>
+</div>
+
+<h3>✅ Panel de Administración</h3>
+<div class="check-section">
+<label><input type="checkbox"> El login funciona (<code>/login</code>)</label>
+<label><input type="checkbox"> El dashboard carga sin errores (<code>/admin</code>)</label>
+<label><input type="checkbox"> Se puede crear/editar una noticia de prueba</label>
+<label><input type="checkbox"> Se puede subir una imagen</label>
+<label><input type="checkbox"> Los backups manuales funcionan</label>
+<label><input type="checkbox"> El editor de texto (CKEditor) carga correctamente</label>
+</div>
+
+<h3>✅ SEO y Rendimiento</h3>
+<div class="check-section">
+<label><input type="checkbox"> El <code>robots.txt</code> es accesible</label>
+<label><input type="checkbox"> El <code>sitemap.xml</code> es accesible</label>
+<label><input type="checkbox"> El <code>manifest.json</code> carga (PWA)</label>
+<label><input type="checkbox"> Las Open Graph tags funcionan (Facebook Debugger)</label>
+<label><input type="checkbox"> Google PageSpeed Insights marca >80 en móvil</label>
+</div>
+
+<h3>✅ Seguridad</h3>
+<div class="check-section">
+<label><input type="checkbox"> <code>.env</code> NO es accesible desde el navegador → error 403</label>
+<label><input type="checkbox"> <code>vendor/</code> NO es accesible → error 403</label>
+<label><input type="checkbox"> <code>app/</code> NO es accesible → error 403</label>
+<label><input type="checkbox"> <code>conexion.php</code> NO es accesible → error 403</label>
+<label><input type="checkbox"> HTTPS funciona y redirige desde HTTP</label>
+<label><input type="checkbox"> Security Headers presentes (<a href="https://securityheaders.com" target="_blank">securityheaders.com</a>)</label>
+</div>
+
+<h3>✅ Cron Jobs</h3>
+<div class="check-section">
+<label><input type="checkbox"> Esperar 5 min y verificar que <code>cola_vistas</code> se vacía</label>
+<label><input type="checkbox"> Crear noticia programada y verificar auto-publicación</label>
+<label><input type="checkbox"> Al día siguiente, verificar backup nuevo en <code>/backups/</code></label>
+</div>
+
+<hr>
+<h2>FASE 10: Fix Especial — SocialPublisherService</h2>
+
+<div class="alert alert-warning"><strong>⚠️ WARNING</strong>El archivo <code>app/Services/SocialPublisherService.php</code> tiene URLs hardcodeadas a <code>/piura_noticias_php/</code>. Esto afecta publicaciones automáticas en redes sociales.</div>
+
+<p>En <code>SocialPublisherService.php</code>, <strong>línea 41</strong>:</p>
+<pre><span class="diff-line diff-del">- $domain = "https://tudominio.com";</span><span class="diff-line diff-add">+ $domain = rtrim($_ENV['APP_URL'] ?? 'https://htvperu.com.pe', '/');</span></pre>
+
+<p><strong>Líneas 44 y 46</strong>:</p>
+<pre><span class="diff-line diff-del">- $link = $domain . "/piura_noticias_php/article.php?id=" . $noticia['id'];</span><span class="diff-line diff-add">+ $link = $domain . "/" . ($noticia['slug'] ?? 'article.php?id=' . $noticia['id']);</span><span class="diff-line"> </span><span class="diff-line diff-del">- $imagen_url = ... $domain . '/piura_noticias_php/' . $noticia['imagen_url'] ...</span><span class="diff-line diff-add">+ $imagen_url = ... $domain . '/' . ltrim($noticia['imagen_url'], '/') ...</span></pre>
+
+<hr>
+<h2>Resumen: Orden de Ejecución</h2>
+
+<div class="flow">
+<div class="flow-step">1. Crear BD en cPanel</div><div class="flow-arrow">↓</div>
+<div class="flow-step">2. Importar database.sql en phpMyAdmin</div><div class="flow-arrow">↓</div>
+<div class="flow-step">3. Crear archivo .env en el servidor</div><div class="flow-arrow">↓</div>
+<div class="flow-step">4. Modificar .htaccess (quitar /piura_noticias_php/)</div><div class="flow-arrow">↓</div>
+<div class="flow-step">5. Subir archivos por FTP / File Manager</div><div class="flow-arrow">↓</div>
+<div class="flow-step">6. Ajustar permisos chmod</div><div class="flow-arrow">↓</div>
+<div class="flow-step">7. Fix SocialPublisherService.php</div><div class="flow-arrow">↓</div>
+<div class="flow-step">8. Configurar Cron Jobs (Worker + Backup)</div><div class="flow-arrow">↓</div>
+<div class="flow-step">9. Activar SSL (Let's Encrypt)</div><div class="flow-arrow">↓</div>
+<div class="flow-step">10. Configurar Cloudflare</div><div class="flow-arrow">↓</div>
+<div class="flow-step">11. Ejecutar Checklist de Verificación</div><div class="flow-arrow">↓</div>
+<div class="flow-step flow-final">🎉 ¡SITIO EN VIVO!</div>
+</div>
+
+<hr>
+<p style="text-align:center;color:#484f58;font-size:.85rem;margin-top:2rem">Documento generado para HTVPERU — Mayo 2026<br>Guía técnica de despliegue a producción</p>
+
+</body>
+</html>

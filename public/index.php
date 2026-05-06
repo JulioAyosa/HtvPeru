@@ -1,9 +1,26 @@
 <?php
 // /public/index.php
 // FRONT CONTROLLER & PROGRESSIVE FALLBACK
+
+// === GLOBAL SECURITY HEADERS (OWASP) ===
+header("X-Frame-Options: SAMEORIGIN");
+header("X-Content-Type-Options: nosniff");
+header("Referrer-Policy: strict-origin-when-cross-origin");
+header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
+// =======================================
+
 // Configuración robusta de Sesiones (Antes de iniciar)
 require_once __DIR__ . '/../session_config.php';
-@session_start();
+// Inicio de sesión inteligente para habilitar Edge Caching perimetral
+$req_uri = $_SERVER['REQUEST_URI'] ?? '';
+$is_admin_or_auth = (strpos($req_uri, '/admin') !== false || strpos($req_uri, '/login') !== false || strpos($req_uri, '/auth') !== false);
+$is_stateless_api = (strpos($req_uri, '/api/view_counter') !== false || strpos($req_uri, '/ajax_view_counter') !== false);
+
+$needs_session = isset($_COOKIE[session_name()]) || $is_admin_or_auth || ($_SERVER['REQUEST_METHOD'] === 'POST' && !$is_stateless_api);
+
+if ($needs_session) {
+    @session_start();
+}
 
 // FASE 1 MODERNIZACIÓN: Autoloader PSR-4 estándar de Composer
 // Reemplaza el autoloader manual anterior. Composer resuelve todos los namespaces

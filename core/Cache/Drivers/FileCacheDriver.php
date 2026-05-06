@@ -32,4 +32,16 @@ class FileCacheDriver implements CacheInterface {
         }
         return true;
     }
+
+    public function clearAll() {
+        $files = glob(rtrim($this->cache_dir, '/') . '/*_cache.json');
+        if ($files) {
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    @unlink($file);
+                }
+            }
+        }
+        return true;
+    }
 }

@@ -23,35 +23,13 @@ if (!$is_cli && !$valid_token) {
 // CRIT-05 FIX: Tareas automáticas movidas aquí desde conexion.php
 date_default_timezone_set('America/Lima');
 
-// === TAREAS AUTOMÁTICAS (antes en conexion.php pseudo-cron) ===
+// === TAREAS AUTOMÁTICAS PESADAS ===
 require_once __DIR__ . '/conexion.php';
 
 try {
     $now_db = date('Y-m-d H:i:s');
     
-    // 1. Auto-publicar noticias programadas
-    $stmt_auto = $pdo->prepare("UPDATE noticias SET estado_publicacion = 'publicado' WHERE estado_publicacion = 'programado' AND fecha_programada <= ?");
-    $stmt_auto->execute([$now_db]);
-    $auto_pub = $stmt_auto->rowCount();
-    echo "Auto-publicadas: $auto_pub noticias\n";
-    
-    // 1.5 ANTIGRAVITY: Volcar Cola de Vistas
-    $pdo->beginTransaction();
-    try {
-        // Volcar por ID
-        $pdo->exec("UPDATE noticias n JOIN (SELECT noticia_id, COUNT(*) as suma FROM cola_vistas WHERE noticia_id > 0 GROUP BY noticia_id) c ON n.id = c.noticia_id SET n.vistas = n.vistas + c.suma");
-        // Volcar por Slug
-        $pdo->exec("UPDATE noticias n JOIN (SELECT noticia_slug, COUNT(*) as suma FROM cola_vistas WHERE noticia_slug != '' GROUP BY noticia_slug) c ON n.slug = c.noticia_slug SET n.vistas = n.vistas + c.suma");
-        // Limpiar cola (Usamos DELETE en lugar de TRUNCATE para no romper la transacción)
-        $pdo->exec("DELETE FROM cola_vistas");
-        $pdo->commit();
-        echo "Cola de vistas volcada exitosamente a noticias.\n";
-    } catch (\Exception $e) {
-        $pdo->rollBack();
-        echo "Error al volcar cola de vistas: " . $e->getMessage() . "\n";
-    }
-    
-    // 2. Auto-purgar papelera (Hard Delete >15 días)
+    // Auto-purgar papelera (Hard Delete >15 días)
     $purge_stmt = $pdo->prepare("SELECT id, imagen_url, video_poster_url FROM noticias WHERE estado_publicacion = 'papelera' AND deleted_at < ? - INTERVAL 15 DAY");
     $purge_stmt->execute([$now_db]);
     $to_purge = $purge_stmt->fetchAll();
@@ -62,19 +40,10 @@ try {
     }
     echo "Papelera purgada: " . count($to_purge) . " noticias eliminadas\n";
     
-    // 3. PRE-PRODUCCION: Purgar tablas de rate_limits y login_attempts (>1 día)
-    try {
-        $pdo->exec("DELETE FROM rate_limits WHERE created_at < NOW() - INTERVAL 1 DAY");
-        echo "rate_limits purgada.\n";
-    } catch (\Exception $e) { /* tabla puede no existir */ }
-    try {
-        $pdo->exec("DELETE FROM login_attempts WHERE attempted_at < NOW() - INTERVAL 1 DAY");
-        echo "login_attempts purgada.\n";
-    } catch (\Exception $e) { /* tabla puede no existir */ }
 } catch (\PDOException $e) {
-    echo "Error en tareas automáticas: " . $e->getMessage() . "\n";
+    echo "Error en tareas automáticas pesadas: " . $e->getMessage() . "\n";
 }
-// === FIN TAREAS AUTOMÁTICAS ===
+// === FIN TAREAS AUTOMÁTICAS PESADAS ===
 
 // RISK-09 FIX: Leer credenciales desde .env en vez de hardcodear
 $env_file = __DIR__ . '/.env';

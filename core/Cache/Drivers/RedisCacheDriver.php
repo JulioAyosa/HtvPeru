@@ -53,4 +53,14 @@ class RedisCacheDriver implements CacheInterface {
         
         return $this->redis->del($this->prefix . $key) > 0;
     }
+
+    public function clearAll() {
+        if (!$this->isAvailable()) return false;
+        
+        $keys = $this->redis->keys($this->prefix . '*');
+        if (!empty($keys)) {
+            $this->redis->del($keys);
+        }
+        return true;
+    }
 }

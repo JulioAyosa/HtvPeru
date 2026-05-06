@@ -40,4 +40,11 @@ class CacheService {
     public function clear($key) {
         return $this->driver->clear($key);
     }
+
+    /**
+     * Clear all cache
+     */
+    public function clearAll() {
+        return $this->driver->clearAll();
+    }
 }

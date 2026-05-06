@@ -223,8 +223,8 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
             </div>
         </div>
         
-        <!-- Renderizando la imagen principal o Video con Poster Dinámico -->
-        <?php echo renderMedia($articulo['imagen_url'], 'article-media', $articulo['video_poster_url'] ?? ''); ?>
+        <!-- Renderizando la imagen principal o Video con Poster Dinámico (LCP Priority) -->
+        <?php echo renderMedia($articulo['imagen_url'], 'article-media', $articulo['video_poster_url'] ?? '', true, '', false); ?>
         
         <!-- Etiquetas / Tags -->
         <?php if (!empty($articulo['tags'])): ?>
@@ -586,11 +586,16 @@ $meta_desc = !empty($articulo['seo_descripcion']) ? $articulo['seo_descripcion']
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     setTimeout(() => { // Pequeño retraso para dar prioridad a la carga visible
-        fetch('api/view_counter', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slug: '<?php echo addslashes($slug ?? ""); ?>', id: <?php echo (int)($id ?? 0); ?> })
-        }).catch(e => console.error("Async view fail", e));
+        const viewKey = 'viewed_' + '<?php echo (int)($id ?? 0); ?>';
+        if (!localStorage.getItem(viewKey)) {
+            fetch('api/view_counter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug: '<?php echo addslashes($slug ?? ""); ?>', id: <?php echo (int)($id ?? 0); ?> })
+            })
+            .then(res => { if(res.ok) localStorage.setItem(viewKey, '1'); })
+            .catch(e => console.error("Async view fail", e));
+        }
     }, 1500);
 });
 </script>

@@ -406,7 +406,7 @@ class AdminDashboardController {
                         }
 
                         $pdo->commit();
-                        $cacheService->clear('home');
+                        $cacheService->clearAll(); // Invalidación global para Último Minuto
                         header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia guardada exitosamente y agregada al Planificador ($estado_publicacion)."));
                         exit;
                     }
@@ -454,7 +454,7 @@ class AdminDashboardController {
                         }
 
                         $pdo->commit();
-                        $cacheService->clear('home');
+                        $cacheService->clearAll(); // Invalidación global para Último Minuto
                         header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia ID #$edit_item_id actualizada exitosamente a '$estado_publicacion'."));
                         exit;
                     }
