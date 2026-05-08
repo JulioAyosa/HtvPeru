@@ -14,38 +14,72 @@
     <div class="alert alert-success"><i class="ri-check-line"></i> <?php echo htmlspecialchars($msg); ?></div>
 <?php endif; ?>
 
-<table>
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>URL / Archivo (Slug)</th>
-            <th>Estado</th>
-            <th>Última Modificación</th>
-            <th style="text-align:right;">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($paginas as $p): ?>
-        <tr>
-            <td><strong><?php echo htmlspecialchars($p['titulo']); ?></strong></td>
-            <td><a href="/piura_noticias_php/pagina/<?php echo $p['slug']; ?>" target="_blank" style="color:var(--primary-color);"><i class="ri-external-link-line"></i> /pagina/<?php echo $p['slug']; ?></a></td>
-            <td>
-                <span class="badge <?php echo $p['estado']==='activo' ? 'badge-activo' : 'badge-inactivo'; ?>">
-                    <?php echo strtoupper($p['estado']); ?>
-                </span>
-            </td>
-            <td><?php echo $p['fecha_modificacion']; ?></td>
-            <td style="text-align:right;">
-                <button onclick='editPagina(<?php echo $p['id']; ?>)' style="background:#e0f2fe; color:#0369a1; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;" title="Editar"><i class="ri-edit-2-line"></i></button>
-                <a href="/piura_noticias_php/admin/paginas/action?action=delete&delete=<?php echo $p['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar definitivamente?')" style="background:#fee2e2; color:#b91c1c; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; text-decoration:none;"><i class="ri-delete-bin-line"></i></a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-        <?php if(empty($paginas)): ?>
-        <tr><td colspan="5" style="text-align:center; padding: 2rem;">No hay páginas creadas.</td></tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+<div style="background: white; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 2rem;">
+    <table style="width: 100%; border-collapse: collapse; margin: 0; border: none;">
+        <thead>
+            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                <th style="padding: 1rem 1.5rem; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; text-align: left; border: none;">Título</th>
+                <th style="padding: 1rem 1.5rem; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; text-align: left; border: none;">URL / Archivo (Slug)</th>
+                <th style="padding: 1rem 1.5rem; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; text-align: left; border: none;">Estado</th>
+                <th style="padding: 1rem 1.5rem; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; text-align: left; border: none;">Última Modificación</th>
+                <th style="padding: 1rem 1.5rem; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; text-align: right; border: none;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($paginas as $p): ?>
+            <tr style="border-bottom: 1px solid #e2e8f0; transition: background 0.2s;" onmouseover="this.style.background='#fbfcfd'" onmouseout="this.style.background='transparent'">
+                <td style="padding: 1rem 1.5rem; border: none;">
+                    <div style="font-weight: 800; color: #1e293b; font-size: 0.95rem;">
+                        <?php 
+                        // Fix for bad character encoding from legacy DB inserts
+                        $titulo = $p['titulo'];
+                        $corrupt_map = [
+                            '├í' => 'á', '├⌐' => 'é', '├¡' => 'í', '├│' => 'ó', '├║' => 'ú', '├▒' => 'ñ',
+                            '├ü' => 'Á', '├ë' => 'É', '├ì' => 'Í', '├ô' => 'Ó', '├Ü' => 'Ú', '├æ' => 'Ñ',
+                            '├á' => 'á', // fallback
+                        ];
+                        $titulo = strtr($titulo, $corrupt_map);
+                        // Also fix lowercase é just in case 'TÉrminos' looks weird as 'TÉrminos'
+                        $titulo = str_replace('TÉrminos', 'Términos', $titulo);
+                        echo htmlspecialchars($titulo, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?>
+                    </div>
+                </td>
+                <td style="padding: 1rem 1.5rem; border: none;">
+                    <a href="/piura_noticias_php/pagina/<?php echo $p['slug']; ?>" target="_blank" style="color:var(--primary-color); text-decoration: none; font-family: monospace; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.25rem; background: #eff6ff; padding: 4px 8px; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+                        <i class="ri-external-link-line"></i> /pagina/<?php echo htmlspecialchars($p['slug']); ?>
+                    </a>
+                </td>
+                <td style="padding: 1rem 1.5rem; border: none;">
+                    <?php 
+                        $estado = !empty($p['estado']) ? strtolower($p['estado']) : 'activo';
+                    ?>
+                    <span style="display:inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; <?php echo ($estado==='activo') ? 'background:#ecfdf5; color:#10b981; border:1px solid #a7f3d0;' : 'background:#fef2f2; color:#ef4444; border:1px solid #fecaca;'; ?>">
+                        <?php echo strtoupper($estado); ?>
+                    </span>
+                </td>
+                <td style="padding: 1rem 1.5rem; border: none; color: var(--text-muted); font-size: 0.85rem;">
+                    <?php echo date('d M Y, H:i', strtotime($p['fecha_modificacion'])); ?>
+                </td>
+                <td style="padding: 1rem 1.5rem; border: none; text-align: right;">
+                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <button onclick='editPagina(<?php echo $p['id']; ?>)' style="background:white; color:var(--primary-color); border:1px solid #bfdbfe; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='white'" title="Editar"><i class="ri-edit-2-line"></i></button>
+                        <a href="/piura_noticias_php/admin/paginas/action?action=delete&delete=<?php echo $p['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar definitivamente la página? Esta acción no se puede deshacer.')" style="background:white; color:#ef4444; border:1px solid #fecaca; padding:6px; border-radius:6px; cursor:pointer; text-decoration:none; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='white'"><i class="ri-delete-bin-fill"></i></a>
+                    </div>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            <?php if(empty($paginas)): ?>
+            <tr>
+                <td colspan="5" style="text-align:center; padding: 4rem 2rem; border: none;">
+                    <i class="ri-file-text-line" style="font-size: 3rem; color: #cbd5e1; display: block; margin-bottom: 1rem;"></i>
+                    <p style="color: var(--text-muted); margin: 0; font-size: 1.1rem;">No hay páginas creadas aún.</p>
+                </td>
+            </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
 
 <!-- MODAL -->
 <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 2rem 0;">
@@ -60,26 +94,31 @@
             <?php echo csrf_field(); ?>
             <input type="hidden" name="id" id="form-id" value="">
             
-            <div class="form-row">
-                <label>Título de la Página</label>
-                <input type="text" name="titulo" id="titulo" required placeholder="Ej: Staff de Periodistas">
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                <div class="form-row" style="flex: 2; min-width: 300px;">
+                    <label style="font-weight: 700; color: #334155;">Título de la Página</label>
+                    <input type="text" name="titulo" id="titulo" required placeholder="Ej: Staff de Periodistas" style="width: 100%; padding: 0.85rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1.1rem; background: #f8fafc; transition: all 0.2s;" onfocus="this.style.background='white'; this.style.borderColor='var(--primary-color)';">
+                </div>
+                
+                <div class="form-row" style="flex: 1; min-width: 200px;">
+                    <label style="font-weight: 700; color: #334155;">Estado de Publicación</label>
+                    <select name="estado" id="estado" style="width: 100%; padding: 0.85rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #f8fafc; font-weight: 600;">
+                        <option value="activo">ACTIVO (Público)</option>
+                        <option value="inactivo">INACTIVO (Oculto)</option>
+                    </select>
+                </div>
             </div>
             
-            <div class="form-row">
-                <label>Contenido</label>
-                <textarea name="contenido" id="contenido_editor" rows="15"></textarea>
-            </div>
-
-            <div class="form-row">
-                <label>Estado</label>
-                <select name="estado" id="estado">
-                    <option value="activo">ACTIVO (Público)</option>
-                    <option value="inactivo">INACTIVO (Oculto)</option>
-                </select>
+            <div class="form-row" style="margin-top: 1rem;">
+                <label style="font-weight: 700; color: #334155;">Contenido <span style="font-weight: normal; color: #94a3b8; font-size: 0.85rem;">(HTML permitido)</span></label>
+                <div style="border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden;">
+                    <textarea name="contenido" id="contenido_editor" rows="18"></textarea>
+                </div>
             </div>
             
-            <div style="text-align:right; margin-top: 1rem;">
-                <button type="submit" class="btn btn-primary" style="padding:1rem 2rem; font-size:1.1rem;"><i class="ri-save-3-line"></i> Guardar Página</button>
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'" style="padding:0.75rem 1.5rem; font-size:1rem; border-radius: 8px;"><i class="ri-close-line"></i> Cancelar</button>
+                <button type="submit" class="btn btn-primary" style="padding:0.75rem 2rem; font-size:1rem; border-radius: 8px;"><i class="ri-save-3-line"></i> Guardar Página</button>
             </div>
         </form>
     </div>
@@ -115,7 +154,7 @@
 
     function editPagina(id) {
         // Obtener datos vía fetch MVC route
-        fetch('/admin/paginas/get?id=' + id)
+        fetch('/piura_noticias_php/admin/paginas/get?id=' + id)
             .then(res => res.json())
             .then(data => {
                 if (data.error) {

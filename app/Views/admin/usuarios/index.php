@@ -14,18 +14,21 @@
     <button class="btn btn-primary" onclick="openModal('create')"><i class="ri-user-add-line"></i> Nuevo Usuario</button>
 </div>
 
-<!-- Buscador y Filtros -->
-<div style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; gap:1rem; flex-wrap:wrap; background: white; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-    <div style="display:flex; gap:1rem; flex:1; align-items: center;">
-        <div style="position:relative; width:100%; max-width:400px;">
-            <i class="ri-search-line" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:#9ca3af;"></i>
-            <input type="text" id="searchUsers" placeholder="Buscar usuario..." style="padding:0.75rem 1rem 0.75rem 2.5rem; border:1px solid #d1d5db; border-radius:6px; font-family:var(--font-sans); width:100%; box-sizing: border-box;" onkeyup="filterUsersTable()">
+<!-- Buscador, Filtros y Tabla -->
+<div class="cfg-panel" style="padding: 2rem;">
+    <h3 style="margin-top:0; margin-bottom:1.5rem; font-size:1.1rem; color:#1e293b; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem;"><i class="ri-list-check-2" style="color:var(--primary-color);"></i> Directorio de Usuarios</h3>
+    
+    <div style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; gap:1rem; flex-wrap:wrap;">
+        <div style="display:flex; gap:1rem; flex:1; align-items: center;">
+            <div style="position:relative; width:100%; max-width:400px;">
+                <i class="ri-search-line" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:#9ca3af;"></i>
+                <input type="text" id="searchUsers" placeholder="Buscar usuario..." style="padding:0.75rem 1rem 0.75rem 2.5rem; border:1px solid #d1d5db; border-radius:6px; font-family:var(--font-sans); width:100%; box-sizing: border-box;" onkeyup="filterUsersTable()" onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.1)';" onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
+            </div>
         </div>
+        <span style="font-size:0.85rem; color:var(--text-muted); align-self:center;"><i class="ri-information-line"></i> Clic en las columnas para ordenar asc/desc.</span>
     </div>
-    <span style="font-size:0.85rem; color:var(--text-muted); align-self:center;"><i class="ri-information-line"></i> Haz clic en las columnas para ordenar asc/desc.</span>
-</div>
 
-<table id="usersTable">
+    <table id="usersTable">
     <thead>
         <tr>
             <th style="cursor:pointer;" onclick="sortTable(0)">ID <i class="ri-expand-up-down-line" style="font-size:0.75rem; color:#cbd5e1;"></i></th>
@@ -74,14 +77,15 @@
         </tr>
         <?php endforeach; ?>
     </tbody>
-</table>
+    </table>
+</div>
 
 <!-- Modal Formulario de Usuario -->
-<div id="modal-usuario" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+<div id="modal-usuario" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="cfg-panel" style="width: 100%; max-width: 450px; margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
         <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem;">
-            <h2 id="modal-title" style="margin:0;"><i class="ri-user-add-line"></i> Nuevo Usuario</h2>
-            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('modal-usuario').style.display='none'"></i>
+            <h2 id="modal-title" style="margin:0; display:flex; align-items:center; gap:0.5rem;"><i class="ri-user-add-line" style="color:var(--primary-color);"></i> Nuevo Usuario</h2>
+            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; color:#64748b;" onclick="document.getElementById('modal-usuario').style.display='none'"></i>
         </div>
         <form method="POST" action="/piura_noticias_php/admin/usuarios/action" id="user-form">
             <input type="hidden" name="action" id="form-action" value="create">
@@ -109,57 +113,64 @@
                 <input type="password" name="password" id="form-password" required class="form-control">
             </div>
             
-            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;"><i class="ri-save-3-line"></i> Guardar Usuario</button>
+        <button type="submit" class="btn btn-primary btn-save" style="width:100%; margin-top:1rem; justify-content:center;"><i class="ri-save-3-line"></i> Guardar Usuario</button>
         </form>
     </div>
 </div>
 
 <!-- Modal Bloqueo -->
-<div id="modal-bloqueo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+<div id="modal-bloqueo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="cfg-panel" style="width: 100%; max-width: 450px; margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
         <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem;">
-            <h2 id="modal-block-title" style="margin:0; color: #4b5563;"><i class="ri-lock-line"></i> Bloquear Usuario</h2>
-            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('modal-bloqueo').style.display='none'"></i>
+            <h2 id="modal-block-title" style="margin:0; color: #4b5563; display:flex; align-items:center; gap:0.5rem;"><i class="ri-lock-line" style="color:#ef4444;"></i> Bloquear Usuario</h2>
+            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; color:#64748b;" onclick="document.getElementById('modal-bloqueo').style.display='none'"></i>
         </div>
         <form method="POST" action="/piura_noticias_php/admin/usuarios/action">
             <input type="hidden" name="action" value="block">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="block_user_id" id="form-block-id" value="">
             
-            <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">
-                Estás a punto de bloquear al usuario <strong id="block-user-name"></strong>. No podrá acceder al sistema hasta que sea desbloqueado.
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">
+                Estás a punto de bloquear al usuario <strong id="block-user-name" style="color:#0f172a;"></strong>. No podrá acceder al sistema hasta que sea desbloqueado.
             </p>
             
             <div class="form-row">
-                <label>Motivo de bloqueo</label>
-                <textarea name="motivo_bloqueo" required placeholder="Ecribe el motivo o razón del bloqueo..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; resize: vertical; min-height: 80px; box-sizing: border-box;"></textarea>
+                <label style="font-size:0.85rem; font-weight:700; color:#475569;">Motivo de bloqueo</label>
+                <textarea name="motivo_bloqueo" required placeholder="Escribe el motivo o razón del bloqueo..." style="width: 100%; padding: 0.75rem; border: 1.5px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: vertical; min-height: 80px; box-sizing: border-box; background:#f8fafc; transition:all 0.2s;" onfocus="this.style.background='white'; this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.1)';"></textarea>
             </div>
             
             <div class="form-row" style="margin-bottom: 1.5rem;">
-                <label style="display: flex; gap: 0.5rem; align-items: center; cursor: pointer; font-weight: normal; margin-bottom: 0;">
-                    <input type="checkbox" required> Confirmo que deseo bloquear este acceso.
+                <label style="display: flex; gap: 0.75rem; align-items: center; cursor: pointer; font-weight: 600; margin-bottom: 0; padding: 0.85rem 1rem; border: 1.5px solid #e2e8f0; border-radius: 8px; background: white; font-size:0.9rem;">
+                    <div class="toggle-switch">
+                        <input type="checkbox" required>
+                        <span class="slider"></span>
+                    </div>
+                    <span style="color:#1e293b;">Confirmo que deseo bloquear este acceso.</span>
                 </label>
             </div>
             
-            <button type="submit" class="btn btn-danger" style="width:100%; padding: 0.75rem; font-size: 1rem;"><i class="ri-lock-line"></i> Aceptar y Bloquear</button>
+            <button type="submit" class="btn btn-danger btn-save" style="width:100%; justify-content:center; background:linear-gradient(135deg, #ef4444, #dc2626); box-shadow:0 4px 14px rgba(239, 68, 68, 0.3);"><i class="ri-lock-line"></i> Aceptar y Bloquear</button>
         </form>
     </div>
 </div>
 
 <!-- Modal Eliminar y Reasignar -->
-<div id="modal-delete" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); width: 100%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+<div id="modal-delete" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="cfg-panel" style="width: 100%; max-width: 500px; margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
         <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem;">
-            <h2 id="modal-delete-title" style="margin:0; color: var(--danger);"><i class="ri-delete-bin-line"></i> Eliminar Usuario</h2>
-            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('modal-delete').style.display='none'"></i>
+            <h2 id="modal-delete-title" style="margin:0; color: var(--danger); display:flex; align-items:center; gap:0.5rem;"><i class="ri-delete-bin-line"></i> Eliminar Usuario</h2>
+            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; color:#64748b;" onclick="document.getElementById('modal-delete').style.display='none'"></i>
         </div>
         <form method="POST" action="/piura_noticias_php/admin/usuarios/action">
             <input type="hidden" name="action" value="delete">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="delete_user_id" id="form-delete-id" value="">
             
-            <div class="alert alert-error" style="margin-bottom:1.5rem; font-size:0.9rem;">
-                <strong>Atención:</strong> Vas a eliminar a <span id="delete-user-name" style="font-weight:800;"></span>. Si procedes, el sistema te permite reasignar sus noticias publicadas a otra persona. Si seleccionas "Eliminar Todo", también se borrarán todas las notas que escribió.
+            <div style="margin-bottom:1.5rem; font-size:0.9rem; display: flex; gap: 0.75rem; align-items: flex-start; background: #fee2e2; border: 1px solid #fecaca; padding: 1rem; border-radius: 8px; color: #991b1b;">
+                <i class="ri-error-warning-fill" style="font-size: 1.25rem; flex-shrink: 0;"></i>
+                <div>
+                    <strong>Atención:</strong> Vas a eliminar a <span id="delete-user-name" style="font-weight:800;"></span>. Si procedes, el sistema te permite reasignar sus noticias publicadas a otra persona. Si seleccionas "Eliminar Todo", también se borrarán todas las notas que escribió.
+                </div>
             </div>
             
             <div class="form-row">
@@ -177,12 +188,16 @@
             </div>
             
             <div class="form-row" style="margin-bottom: 1.5rem;">
-                <label style="display: flex; gap: 0.5rem; align-items: center; cursor: pointer; font-weight: normal; margin-bottom: 0;">
-                    <input type="checkbox" required> Confirmo la eliminación definitiva de este usuario.
+                <label style="display: flex; gap: 0.75rem; align-items: center; cursor: pointer; font-weight: normal; margin-bottom: 0; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; background: white;">
+                    <div class="toggle-switch">
+                        <input type="checkbox" required>
+                        <span class="slider"></span>
+                    </div>
+                    <span>Confirmo la eliminación definitiva de este usuario.</span>
                 </label>
             </div>
             
-            <button type="submit" class="btn btn-danger" style="width:100%; padding: 0.75rem; font-size: 1rem;"><i class="ri-delete-bin-line"></i> Sí, Ejecutar Acción</button>
+            <button type="submit" class="btn btn-danger btn-save" style="width:100%; justify-content:center; background:linear-gradient(135deg, #ef4444, #dc2626); box-shadow:0 4px 14px rgba(239, 68, 68, 0.3);"><i class="ri-delete-bin-line"></i> Sí, Ejecutar Acción</button>
         </form>
     </div>
 </div>

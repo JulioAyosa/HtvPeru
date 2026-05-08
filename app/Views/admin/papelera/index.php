@@ -63,10 +63,11 @@ function timeLeft($timestamp, $purge_days) {
     <button class="tab-btn" onclick="openTab('paginas')">Páginas <span class="badge"><?=count($paginas)?></span></button>
 </div>
 
-<div style="margin-bottom: 1.5rem; position:relative; width: 100%; max-width: 400px;">
-    <i class="ri-search-line" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:#9ca3af;"></i>
-    <input type="text" id="searchInput" placeholder="Buscar en la pestaña actual..." style="padding:0.75rem 1rem 0.75rem 2.5rem; border:1px solid #d1d5db; border-radius:6px; font-family:var(--font-sans); width:100%; box-sizing: border-box;" onkeyup="filterPapelera()">
-</div>
+<div class="cfg-panel" style="padding: 2rem;">
+    <div style="margin-bottom: 1.5rem; position:relative; width: 100%; max-width: 400px;">
+        <i class="ri-search-line" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:#9ca3af;"></i>
+        <input type="text" id="searchInput" placeholder="Buscar en la pestaña actual..." style="padding:0.75rem 1rem 0.75rem 2.5rem; border:1.5px solid #e2e8f0; border-radius:8px; font-family:var(--font-sans); width:100%; box-sizing: border-box; background:#f8fafc; transition:all 0.2s;" onkeyup="filterPapelera()" onfocus="this.style.background='white'; this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.1)';">
+    </div>
 
 <!-- TABS GENERIC GENERATOR -->
 <?php 
@@ -104,12 +105,17 @@ foreach ($tabData as $t):
                 <td style="color:#ef4444; font-weight:600;"><i class="ri-time-line"></i> <?=timeLeft(strtotime($row['deleted_at']), $purge_days)?></td>
                 <td style="text-align:right; min-width: 220px;">
                     <a href="/piura_noticias_php/admin/papelera/action?action_type=restore&type=<?=$t['type']?>&id=<?=$row['id']?>&csrf_token=<?=csrf_token()?>" class="btn-primary" style="background:#10b981; margin-right:4px;"><i class="ri-refresh-line"></i> Restaurar</a>
-                    <a href="/piura_noticias_php/admin/papelera/action?action_type=delete&type=<?=$t['type']?>&id=<?=$row['id']?>&csrf_token=<?=csrf_token()?>" class="btn-danger" onclick="return confirm('¿Seguro que deseas eliminar definitivamente esto?')"><i class="ri-delete-bin-fill"></i> Borrar</a>
+                    <a href="/piura_noticias_php/admin/papelera/action?action_type=delete&type=<?=$t['type']?>&id=<?=$row['id']?>&csrf_token=<?=csrf_token()?>" class="btn-danger" onclick="return confirmDelete(event, '¿Seguro que deseas eliminar definitivamente esto?')"><i class="ri-delete-bin-fill"></i> Borrar</a>
                 </td>
             </tr>
             <?php endforeach; ?>
             <?php if (empty($dataList)): ?>
-            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">La papelera está vacía para este módulo.</td></tr>
+            <tr><td colspan="4">
+                <div style="text-align: center; padding: 3rem; background: #f8fafc; border-radius: 8px; border: 1px dashed var(--border-color); color: #64748b; margin: 1rem 0;">
+                    <i class="ri-delete-bin-line" style="font-size: 3rem; display: block; margin-bottom: 1rem; color: #cbd5e1;"></i>
+                    <h3 style="margin: 0; font-size: 1.1rem;">La papelera está vacía para este módulo.</h3>
+                </div>
+            </td></tr>
             <?php endif; ?>
         </tbody>
     </table>
@@ -129,16 +135,21 @@ foreach ($tabData as $t):
                 <div style="color:#ef4444; font-weight:600; font-size:0.75rem; margin-bottom:12px;"><i class="ri-time-line"></i> <?=timeLeft($f['time'], $purge_days)?></div>
                 <div style="display:flex; gap:4px;">
                     <a href="/piura_noticias_php/admin/papelera/action?action_type=restore&type=media&id=<?=urlencode($f['name'])?>&csrf_token=<?=csrf_token()?>" class="btn-primary" style="background:#10b981; padding:4px; width:100%; justify-content:center;" title="Restaurar"><i class="ri-refresh-line"></i></a>
-                    <a href="/piura_noticias_php/admin/papelera/action?action_type=delete&type=media&id=<?=urlencode($f['name'])?>&csrf_token=<?=csrf_token()?>" class="btn-danger" style="padding:4px; width:100%; justify-content:center;" title="Borrar Físicamente" onclick="return confirm('¿Eliminar definitivamente este medio?')"><i class="ri-delete-bin-fill"></i></a>
+                    <a href="/piura_noticias_php/admin/papelera/action?action_type=delete&type=media&id=<?=urlencode($f['name'])?>&csrf_token=<?=csrf_token()?>" class="btn-danger" style="padding:4px; width:100%; justify-content:center;" title="Borrar Físicamente" onclick="return confirmDelete(event, '¿Eliminar definitivamente este medio?')"><i class="ri-delete-bin-fill"></i></a>
                 </div>
             </div>
         </div>
         <?php endforeach; ?>
     </div>
     <?php if (empty($media_files)): ?>
-    <p style="text-align:center; color:var(--text-muted); width:100%;">No hay medios en la papelera.</p>
+    <div style="text-align: center; padding: 3rem; background: #f8fafc; border-radius: 8px; border: 1px dashed var(--border-color); color: #64748b; margin: 1rem 0; width: 100%; box-sizing: border-box;">
+        <i class="ri-folder-image-line" style="font-size: 3rem; display: block; margin-bottom: 1rem; color: #cbd5e1;"></i>
+        <h3 style="margin: 0; font-size: 1.1rem;">No hay medios en la papelera.</h3>
+    </div>
     <?php endif; ?>
 </div>
+
+</div> <!-- End cfg-panel -->
 
 <script>
     function openTab(tabName) {

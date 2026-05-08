@@ -79,4 +79,37 @@ class AdminCommentController extends Controller {
         header("Location: /piura_noticias_php/admin/comentarios");
         exit;
     }
+
+    public function bulkAction() {
+        require_permission('manage_comments');
+        
+        $action = $_POST['bulk_action'] ?? '';
+        $ids = $_POST['comment_ids'] ?? [];
+        $msg = '';
+
+        if (!empty($ids) && is_array($ids)) {
+            $placeholders = str_repeat('?,', count($ids) - 1) . '?';
+            
+            if ($action === 'aprobar') {
+                $stmt = $this->pdo->prepare("UPDATE comentarios SET estado = 'Aprobado' WHERE id IN ($placeholders)");
+                $stmt->execute($ids);
+                $msg = count($ids) . " comentarios aprobados.";
+            } elseif ($action === 'rechazar') {
+                $stmt = $this->pdo->prepare("UPDATE comentarios SET estado = 'Rechazado' WHERE id IN ($placeholders)");
+                $stmt->execute($ids);
+                $msg = count($ids) . " comentarios rechazados.";
+            } elseif ($action === 'eliminar') {
+                if (($_SESSION['user_role'] ?? '') === 'admin') {
+                    $stmt = $this->pdo->prepare("UPDATE comentarios SET deleted_at = NOW() WHERE id IN ($placeholders)");
+                    $stmt->execute($ids);
+                    $msg = count($ids) . " comentarios enviados a la papelera.";
+                } else {
+                    $msg = "No tienes permisos para eliminar comentarios.";
+                }
+            }
+        }
+        
+        header("Location: /piura_noticias_php/admin/comentarios?msg=" . urlencode($msg));
+        exit;
+    }
 }

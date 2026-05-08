@@ -37,6 +37,14 @@ class AdminDashboardController {
     public function index() {
         global $pdo;
         
+        // Ensure columns exist for quotas (in case they haven't visited settings yet)
+        try {
+            $pdo->exec("ALTER TABLE roles ADD COLUMN cuota_diaria_default INT DEFAULT 0");
+        } catch (\Exception $e) {}
+        try {
+            $pdo->exec("ALTER TABLE usuarios ADD COLUMN cuota_diaria_personal INT NULL DEFAULT NULL");
+        } catch (\Exception $e) {}
+        
         $msg = isset($_GET['msg']) ? htmlspecialchars(urldecode($_GET['msg'])) : '';
         $user_role = $_SESSION['user_role'] ?? 'editor';
 
@@ -76,6 +84,25 @@ class AdminDashboardController {
             'total' => $pending_comments + $scheduled_news + $new_users
         ];
 
+        // Cuotas de Productividad
+        $user_id_q = $_SESSION['user_id'];
+        $stmt_quota = $pdo->prepare("SELECT u.cuota_diaria_personal, r.cuota_diaria_default FROM usuarios u LEFT JOIN roles r ON u.rol COLLATE utf8mb4_unicode_ci = r.nombre COLLATE utf8mb4_unicode_ci WHERE u.id = ?");
+        $stmt_quota->execute([$user_id_q]);
+        $quota_data = $stmt_quota->fetch();
+        
+        $cuota_diaria = 0;
+        if ($quota_data) {
+            $cuota_diaria = $quota_data['cuota_diaria_personal'] !== null ? (int)$quota_data['cuota_diaria_personal'] : (int)$quota_data['cuota_diaria_default'];
+        }
+
+        $noticias_hoy = 0;
+        if ($cuota_diaria > 0) {
+            // Count published and scheduled news created today by the current user
+            $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM noticias WHERE autor_id = ? AND DATE(fecha_publicacion) = CURDATE() AND deleted_at IS NULL");
+            $stmt_count->execute([$user_id_q]);
+            $noticias_hoy = (int)$stmt_count->fetchColumn();
+        }
+
         $stats_row = $pdo->query("
             SELECT 
                 SUM(CASE WHEN estado_publicacion != 'papelera' THEN 1 ELSE 0 END) AS not_total,
@@ -105,6 +132,54 @@ class AdminDashboardController {
         // Top 5 Noticias más leídas
         $top_noticias_stmt = $pdo->query("SELECT id, titulo, vistas, fecha_publicacion FROM noticias WHERE deleted_at IS NULL ORDER BY vistas DESC LIMIT 5");
         $top_noticias = $top_noticias_stmt->fetchAll();
+
+        // Leaderboard Productividad (Ranking de Hoy)
+        $stmt_staff = $pdo->query("
+            SELECT u.id, u.nombre_completo as nombre, u.email, r.nombre as rol_nombre, 
+                   u.cuota_diaria_personal, r.cuota_diaria_default 
+            FROM usuarios u 
+            LEFT JOIN roles r ON u.rol COLLATE utf8mb4_unicode_ci = r.nombre COLLATE utf8mb4_unicode_ci
+            WHERE u.deleted_at IS NULL
+        ");
+        $all_staff = $stmt_staff->fetchAll();
+        $leaderboard = [];
+
+        $stmt_news_today = $pdo->prepare("
+            SELECT COUNT(*) FROM noticias 
+            WHERE autor_id = ? AND DATE(fecha_publicacion) = CURDATE() AND deleted_at IS NULL
+        ");
+
+        foreach ($all_staff as $staff) {
+            $cuota = $staff['cuota_diaria_personal'] !== null ? (int)$staff['cuota_diaria_personal'] : (int)$staff['cuota_diaria_default'];
+            if ($cuota > 0) {
+                $stmt_news_today->execute([$staff['id']]);
+                $hoy = (int)$stmt_news_today->fetchColumn();
+                $pct = min(100, round(($hoy / $cuota) * 100));
+                
+                // Puntuación para ordenamiento: Primero los que pasaron su cuota, luego los que están cerca
+                $score = $hoy - $cuota; 
+                
+                $leaderboard[] = [
+                    'nombre' => $staff['nombre'],
+                    'rol' => $staff['rol_nombre'] ?? 'Sin Rol',
+                    'cuota' => $cuota,
+                    'hoy' => $hoy,
+                    'pct' => $pct,
+                    'score' => $score
+                ];
+            }
+        }
+        
+        // Ordenar por score descendente (los que sobrepasan arriba), luego por pct descendente
+        usort($leaderboard, function($a, $b) {
+            if ($a['score'] == $b['score']) {
+                return $b['pct'] <=> $a['pct'];
+            }
+            return $b['score'] <=> $a['score'];
+        });
+        
+        // Limitar a los Top 5 para el Dashboard
+        $leaderboard = array_slice($leaderboard, 0, 5);
 
         $page_title = 'Gestión de Entradas y Estadísticas';
         

@@ -2,10 +2,10 @@
 // app/Views/admin/control_contenidos/index.php
 // Variables asumidas: $user_role, $user_id, $user_name, $is_admin, $msg, $f_fecha_ini, $f_fecha_fin, $f_autor, $f_plataforma, $registros, $autores
 ?>
-<div class="header-rep">
+<div class="admin-header">
     <div>
-        <h1>Planificador de Contenidos</h1>
-        <p style="margin: 0; color: #64748b;">Registro de actividades y publicaciones diarias.</p>
+        <h1 style="margin:0;"><i class="ri-calendar-todo-line" style="color:var(--primary-color)"></i> Planificador de Contenidos</h1>
+        <p style="color: var(--text-muted); margin-top:0.5rem;">Registro de actividades y publicaciones diarias.</p>
     </div>
 </div>
 
@@ -36,51 +36,84 @@
 <?php endif; ?>
 
 <!-- Filtros Superiores -->
-<div class="filters">
-    <form method="GET" style="display: contents;" action="/piura_noticias_php/admin/contenidos">
-        <div class="filter-group">
-            <label>Desde Fecha</label>
-            <input type="date" name="fecha_ini" value="<?php echo htmlspecialchars($f_fecha_ini); ?>">
+<div style="background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+    <form method="GET" action="/piura_noticias_php/admin/contenidos">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.6rem 0.85rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:26px; height:26px; border-radius:6px; background:#3b82f6; color:white; display:flex; align-items:center; justify-content:center; font-size:0.8rem;"><i class="ri-calendar-line"></i></div>
+                    <div>
+                        <h4 style="margin:0; font-size:0.8rem; font-weight:700; color:#334155;">Desde Fecha</h4>
+                    </div>
+                </div>
+                <div style="padding: 0.5rem 0.85rem; background: white;">
+                    <input type="date" name="fecha_ini" value="<?php echo htmlspecialchars($f_fecha_ini); ?>" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.4rem 0.5rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.6rem 0.85rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:26px; height:26px; border-radius:6px; background:#10b981; color:white; display:flex; align-items:center; justify-content:center; font-size:0.8rem;"><i class="ri-calendar-check-line"></i></div>
+                    <div>
+                        <h4 style="margin:0; font-size:0.8rem; font-weight:700; color:#334155;">Hasta Fecha</h4>
+                    </div>
+                </div>
+                <div style="padding: 0.5rem 0.85rem; background: white;">
+                    <input type="date" name="fecha_fin" value="<?php echo htmlspecialchars($f_fecha_fin); ?>" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.4rem 0.5rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            <?php if ($is_admin): ?>
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.6rem 0.85rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:26px; height:26px; border-radius:6px; background:#8b5cf6; color:white; display:flex; align-items:center; justify-content:center; font-size:0.8rem;"><i class="ri-user-star-line"></i></div>
+                    <div>
+                        <h4 style="margin:0; font-size:0.8rem; font-weight:700; color:#334155;">Redactor</h4>
+                    </div>
+                </div>
+                <div style="padding: 0.5rem 0.85rem; background: white;">
+                    <select name="autor" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.4rem 0.5rem; font-family:inherit; font-size:0.85rem; background:white;">
+                        <option value="">-- Todos --</option>
+                        <?php foreach($autores as $a): ?>
+                            <option value="<?php echo $a['id']; ?>" <?php if($f_autor == $a['id']) echo 'selected'; ?>><?php echo htmlspecialchars($a['nombre_completo']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <?php endif; ?>
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.6rem 0.85rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:26px; height:26px; border-radius:6px; background:#f59e0b; color:white; display:flex; align-items:center; justify-content:center; font-size:0.8rem;"><i class="ri-smartphone-line"></i></div>
+                    <div>
+                        <h4 style="margin:0; font-size:0.8rem; font-weight:700; color:#334155;">Plataforma</h4>
+                    </div>
+                </div>
+                <div style="padding: 0.5rem 0.85rem; background: white;">
+                    <select name="plataforma" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.4rem 0.5rem; font-family:inherit; font-size:0.85rem; background:white;">
+                        <option value="">-- Todas --</option>
+                        <option value="Web" <?php if($f_plataforma=='Web') echo 'selected';?>>Web / Portal</option>
+                        <option value="Facebook" <?php if($f_plataforma=='Facebook') echo 'selected';?>>Facebook</option>
+                        <option value="Youtube" <?php if($f_plataforma=='Youtube') echo 'selected';?>>Youtube</option>
+                        <option value="Instagram" <?php if($f_plataforma=='Instagram') echo 'selected';?>>Instagram</option>
+                        <option value="TikTok" <?php if($f_plataforma=='TikTok') echo 'selected';?>>TikTok</option>
+                        <option value="Twitter" <?php if($f_plataforma=='Twitter') echo 'selected';?>>Twitter / X</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="filter-group">
-            <label>Hasta Fecha</label>
-            <input type="date" name="fecha_fin" value="<?php echo htmlspecialchars($f_fecha_fin); ?>">
+        <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" style="background: linear-gradient(135deg, var(--primary-color), #1d4ed8); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(37,99,235,0.3);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'"><i class="ri-filter-3-line"></i> Filtrar</button>
+                <a href="/piura_noticias_php/admin/contenidos" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 0.6rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.9rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'" title="Limpiar"><i class="ri-refresh-line"></i></a>
+            </div>
+            <div>
+                <?php 
+                $qs = $_GET;
+                $qs['download_csv'] = 1;
+                $csv_url = '?' . http_build_query($qs);
+                ?>
+                <a href="<?php echo htmlspecialchars($csv_url); ?>" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 8px rgba(16,185,129,0.3);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'"><i class="ri-file-excel-2-line"></i> Exportar a Excel</a>
+            </div>
         </div>
-        <?php if ($is_admin): ?>
-        <div class="filter-group">
-            <label>Redactor</label>
-            <select name="autor">
-                <option value="">-- Todos --</option>
-                <?php foreach($autores as $a): ?>
-                    <option value="<?php echo $a['id']; ?>" <?php if($f_autor == $a['id']) echo 'selected'; ?>><?php echo htmlspecialchars($a['nombre_completo']); ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <?php endif; ?>
-        <div class="filter-group">
-            <label>Plataforma</label>
-            <select name="plataforma">
-                <option value="">-- Todas --</option>
-                <option value="Web" <?php if($f_plataforma=='Web') echo 'selected';?>>Web / Portal</option>
-                <option value="Facebook" <?php if($f_plataforma=='Facebook') echo 'selected';?>>Facebook</option>
-                <option value="Youtube" <?php if($f_plataforma=='Youtube') echo 'selected';?>>Youtube</option>
-                <option value="Instagram" <?php if($f_plataforma=='Instagram') echo 'selected';?>>Instagram</option>
-                <option value="TikTok" <?php if($f_plataforma=='TikTok') echo 'selected';?>>TikTok</option>
-                <option value="Twitter" <?php if($f_plataforma=='Twitter') echo 'selected';?>>Twitter / X</option>
-            </select>
-        </div>
-        <button type="submit" class="btn-rep"><i class="ri-filter-3-line"></i> Filtrar</button>
-        <a href="/piura_noticias_php/admin/contenidos" class="btn-rep out" title="Limpiar"><i class="ri-refresh-line"></i></a>
     </form>
-    
-    <div style="flex-grow: 1; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
-        <?php 
-        $qs = $_GET;
-        $qs['download_csv'] = 1;
-        $csv_url = '?' . http_build_query($qs);
-        ?>
-        <a href="<?php echo htmlspecialchars($csv_url); ?>" class="btn-rep sec"><i class="ri-file-excel-2-line"></i> Exportar a Excel</a>
-    </div>
 </div>
 
 <style>
@@ -131,50 +164,144 @@
 
 <!-- Formulario de Inserción Rápida -->
 <?php if ($user_role !== 'gerente'): ?>
-<div class="insert-card">
-    <h3 style="margin-top:0; margin-bottom: 1rem; color: var(--primary-color);"><i class="ri-add-circle-fill"></i> Nueva Publicación</h3>
-    <form method="POST" action="/piura_noticias_php/admin/contenidos/store" class="insert-grid">
+<div style="background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px solid #eff6ff;">
+        <div style="width:36px; height:36px; border-radius:10px; background: linear-gradient(135deg, var(--primary-color), #3b82f6); color:white; display:flex; align-items:center; justify-content:center; font-size:1.1rem; box-shadow: 0 2px 8px rgba(37,99,235,0.3);"><i class="ri-add-circle-fill"></i></div>
+        <div>
+            <h3 style="margin:0; font-size: 1.1rem; font-weight: 800; color: #0f172a;">Nueva Publicación</h3>
+            <p style="margin:0; font-size: 0.75rem; color: #94a3b8;">Registra una nueva entrada en el planificador</p>
+        </div>
+    </div>
+    <form method="POST" action="/piura_noticias_php/admin/contenidos/store">
         <input type="hidden" name="action" value="add">
         <?php echo csrf_field(); ?>
         
-        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Fecha</label><input type="date" name="fecha" class="input-excel" value="<?php echo date('Y-m-d'); ?>" required style="width:100%;"></div>
-        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Hora</label><input type="time" name="hora" class="input-excel" value="<?php echo date('H:i'); ?>" required style="width:100%;"></div>
-        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">H. Prog.</label><input type="time" name="hora_publicacion" class="input-excel" title="Hora Programada" style="width:100%;"></div>
-        <div style="grid-column: span 2;"><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Titular</label><input type="text" name="titular" class="input-excel" placeholder="Escribe el titular..." required style="width:100%;"></div>
-        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Enlace</label><input type="text" name="enlace" class="input-excel" placeholder="URL cortada..." style="width:100%;"></div>
-        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Fuente</label><input type="url" name="fuente_url" class="input-excel" placeholder="URL original..." style="width:100%;"></div>
-        
-        <?php if ($is_admin): ?>
-            <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Redactor</label>
-            <select name="usuario_id" class="input-excel" style="width:100%;">
-                <?php foreach($autores as $a): ?>
-                    <option value="<?php echo $a['id']; ?>" <?php if($user_id == $a['id']) echo 'selected'; ?>><?php echo htmlspecialchars($a['nombre_completo']); ?></option>
-                <?php endforeach; ?>
-            </select></div>
-        <?php endif; ?>
-        
-        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Sección</label><select name="seccion" class="input-excel" style="width:100%;">
-            <option value="Actualidad">Actualidad</option>
-            <option value="Deportes">Deportes</option>
-            <option value="Entretenimiento">Entretenimiento</option>
-            <option value="Politica">Politica</option>
-            <option value="Publicidad">Publicidad (C)</option>
-            <option value="Flyer">Flyer (A)</option>
-            <option value="Shorts">Shorts</option>
-        </select></div>
-        <div><label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Plat.</label><select name="plataforma" class="input-excel" style="width:100%;">
-            <option value="Web">Web</option>
-            <option value="Facebook">Facebook</option>
-            <option value="Youtube">Youtube</option>
-            <option value="Instagram">Instagram</option>
-            <option value="TikTok">TikTok</option>
-            <option value="Twitter">Twitter / X</option>
-        </select></div>
-        <div>
-            <label style="font-size:0.8rem; font-weight:bold; color:#64748b;">Listo</label>
-            <div style="display:flex; align-items:center; gap: 10px;">
-                <input type="checkbox" name="completado" class="chk-excel" checked style="margin:0;">
-                <button type="submit" style="background:var(--primary-color); display:inline-flex; align-items:center; justify-content:center; color:white; border:none; padding: 0.35rem; border-radius:4px; font-size:1.1rem; cursor:pointer; width:100%; height:32px; transition: background 0.2s;" title="Guardar"><i class="ri-save-line"></i> Guardar</button>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <!-- Fecha -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#3b82f6; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-calendar-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Fecha</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <input type="date" name="fecha" value="<?php echo date('Y-m-d'); ?>" required style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.4rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            <!-- Hora -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#10b981; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-time-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Hora</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <input type="time" name="hora" value="<?php echo date('H:i'); ?>" required style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.4rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            <!-- Hora Programada -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#8b5cf6; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-timer-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">H. Prog.</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <input type="time" name="hora_publicacion" title="Hora Programada" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.4rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            <!-- Titular (span 2) -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden; grid-column: span 2;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#0ea5e9; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-edit-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Titular</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <input type="text" name="titular" placeholder="Escribe el titular de la publicación..." required style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.5rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            <!-- Enlace -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#f59e0b; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-link"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Enlace</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <input type="text" name="enlace" placeholder="URL cortada..." style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.5rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            <!-- Fuente -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#ec4899; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-global-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Fuente</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <input type="url" name="fuente_url" placeholder="URL original..." style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.5rem; font-family:inherit; font-size:0.85rem;">
+                </div>
+            </div>
+            
+            <?php if ($is_admin): ?>
+            <!-- Redactor -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#6366f1; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-user-star-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Redactor</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <select name="usuario_id" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.4rem; font-family:inherit; font-size:0.85rem; background:white;">
+                        <?php foreach($autores as $a): ?>
+                            <option value="<?php echo $a['id']; ?>" <?php if($user_id == $a['id']) echo 'selected'; ?>><?php echo htmlspecialchars($a['nombre_completo']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <?php endif; ?>
+            
+            <!-- Sección -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#14b8a6; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-folder-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Sección</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <select name="seccion" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.4rem; font-family:inherit; font-size:0.85rem; background:white;">
+                        <option value="Actualidad">Actualidad</option>
+                        <option value="Deportes">Deportes</option>
+                        <option value="Entretenimiento">Entretenimiento</option>
+                        <option value="Politica">Politica</option>
+                        <option value="Publicidad">Publicidad (C)</option>
+                        <option value="Flyer">Flyer (A)</option>
+                        <option value="Shorts">Shorts</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Plataforma -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#f97316; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-smartphone-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Plat.</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <select name="plataforma" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.35rem 0.4rem; font-family:inherit; font-size:0.85rem; background:white;">
+                        <option value="Web">Web</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="Youtube">Youtube</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="TikTok">TikTok</option>
+                        <option value="Twitter">Twitter / X</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Guardar -->
+            <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                <div style="padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid #e2e8f0;">
+                    <div style="width:22px; height:22px; border-radius:5px; background:#22c55e; color:white; display:flex; align-items:center; justify-content:center; font-size:0.7rem;"><i class="ri-checkbox-circle-line"></i></div>
+                    <span style="font-size:0.75rem; font-weight:700; color:#334155;">Listo</span>
+                </div>
+                <div style="padding: 0.4rem 0.75rem; background: white;">
+                    <div style="display:flex; align-items:center; gap: 8px;">
+                        <input type="checkbox" name="completado" checked style="margin:0; width:18px; height:18px; accent-color: var(--primary-color); cursor:pointer;">
+                        <button type="submit" style="background: linear-gradient(135deg, var(--primary-color), #1d4ed8); color:white; border:none; padding: 0.4rem 1rem; border-radius:6px; font-size:0.85rem; font-weight:700; cursor:pointer; width:100%; display:inline-flex; align-items:center; justify-content:center; gap:0.3rem; transition: all 0.2s; box-shadow: 0 2px 6px rgba(37,99,235,0.3);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'" title="Guardar"><i class="ri-save-line"></i> Guardar</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>

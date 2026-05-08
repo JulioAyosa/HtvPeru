@@ -19,9 +19,20 @@ class AdminSettingsController extends Controller {
     public function index() {
         require_permission('manage_settings');
 
+        // Ensure columns exist for quotas
+        try {
+            $this->pdo->exec("ALTER TABLE roles ADD COLUMN cuota_diaria_default INT DEFAULT 0");
+        } catch (\PDOException $e) {}
+        try {
+            $this->pdo->exec("ALTER TABLE usuarios ADD COLUMN cuota_diaria_personal INT NULL DEFAULT NULL");
+        } catch (\PDOException $e) {}
+
         $msg = '';
         if (isset($_GET['exito']) && $_GET['exito'] == '1') {
             $msg = "Configuraciones guardadas exitosamente.";
+        }
+        if (isset($_GET['exito']) && $_GET['exito'] == 'cuotas') {
+            $msg = "Cuotas de publicación guardadas exitosamente.";
         }
 
         $configs = [];
@@ -31,11 +42,16 @@ class AdminSettingsController extends Controller {
         }
         
         $categorias_select = $this->pdo->query("SELECT nombre, slug FROM categorias WHERE estado='activo' ORDER BY orden ASC")->fetchAll();
+        
+        $roles_list = $this->pdo->query("SELECT id, nombre, cuota_diaria_default FROM roles ORDER BY nombre ASC")->fetchAll();
+        $usuarios_list = $this->pdo->query("SELECT u.id, u.nombre_completo, u.email, u.rol, r.nombre as rol_nombre, u.cuota_diaria_personal FROM usuarios u LEFT JOIN roles r ON u.rol COLLATE utf8mb4_unicode_ci = r.nombre COLLATE utf8mb4_unicode_ci ORDER BY u.nombre_completo ASC")->fetchAll();
 
         $this->render('admin/configuracion/index', [
             'msg' => $msg,
             'configs' => $configs,
-            'categorias_select' => $categorias_select
+            'categorias_select' => $categorias_select,
+            'roles_list' => $roles_list,
+            'usuarios_list' => $usuarios_list
         ], 'admin');
     }
 
@@ -142,6 +158,26 @@ class AdminSettingsController extends Controller {
             } else {
                 $log_stmt = $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
                 $log_stmt->execute([$_SESSION['user_id'], 'Actualización', 'Ingresó y guardó panel de ajustes sin modificar valores']);
+            }
+            
+            $stmt_roles = $this->pdo->prepare("UPDATE roles SET cuota_diaria_default = ? WHERE id = ?");
+            if (isset($_POST['roles']) && is_array($_POST['roles'])) {
+                foreach ($_POST['roles'] as $role_id => $data) {
+                    $cuota = (int)($data['cuota'] ?? 0);
+                    $stmt_roles->execute([$cuota, $role_id]);
+                }
+            }
+
+            $stmt_users = $this->pdo->prepare("UPDATE usuarios SET cuota_diaria_personal = ? WHERE id = ?");
+            if (isset($_POST['usuarios']) && is_array($_POST['usuarios'])) {
+                foreach ($_POST['usuarios'] as $user_id => $data) {
+                    if (isset($data['usar_rol'])) {
+                        $stmt_users->execute([null, $user_id]); // NULL means it uses the role default
+                    } else {
+                        $cuota_personal = (int)($data['cuota_personal'] ?? 0);
+                        $stmt_users->execute([$cuota_personal, $user_id]);
+                    }
+                }
             }
             
             require_once __DIR__ . '/../Helpers/view_helper.php';

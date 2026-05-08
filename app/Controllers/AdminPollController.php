@@ -112,6 +112,13 @@ class AdminPollController {
             exit;
         }
 
+        if ($action === 'pause') {
+            $stmt = $pdo->prepare("UPDATE encuestas SET estado = 'inactivo' WHERE id = ?");
+            $stmt->execute([$id]);
+            header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("Encuesta pausada/retirada de la portada"));
+            exit;
+        }
+
         if ($action === 'delete') {
             if ($_SESSION['user_role'] === 'admin') {
                 $pdo->prepare("UPDATE encuestas SET deleted_at = NOW() WHERE id = ?")->execute([$id]);

@@ -120,8 +120,21 @@ class AdminPageController {
             $stmt_del->execute([$id]);
             $pag_name = $stmt_del->fetchColumn() ?: 'Desconocida';
             
-            $pdo->prepare("UPDATE paginas SET deleted_at = NOW() WHERE id = ?")->execute([$id]);
-            $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$_SESSION['user_id'], 'Eliminación', 'Borró de forma permanente la página ID #' . $id . ' (' . $pag_name . ')']);
+            try {
+                // Try soft delete first
+                $pdo->prepare("UPDATE paginas SET deleted_at = NOW() WHERE id = ?")->execute([$id]);
+            } catch (\Exception $e) {
+                // Fallback to hard delete if column doesn't exist
+                $pdo->prepare("DELETE FROM paginas WHERE id = ?")->execute([$id]);
+            }
+            
+            try {
+                $user_id = $_SESSION['user_id'] ?? $_SESSION['usuario_id'] ?? 1;
+                $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Eliminación', 'Borró de forma permanente la página ID #' . $id . ' (' . $pag_name . ')']);
+            } catch (\Exception $e) {
+                // Ignore activity log errors to prevent crashing the delete flow
+            }
+            
             header("Location: /piura_noticias_php/admin/paginas?msg=eliminado");
             exit;
         }

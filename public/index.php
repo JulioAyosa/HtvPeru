@@ -123,6 +123,7 @@ $router->add('POST', '/admin/respaldos/action', 'AdminBackupsController@action',
 
 $router->add('GET', '/admin/comentarios', 'AdminCommentController@index', ['AuthMiddleware', 'AdminMiddleware']);
 $router->add('GET', '/admin/comentarios/action', 'AdminCommentController@action', ['AuthMiddleware', 'AdminMiddleware']);
+$router->add('POST', '/admin/comentarios/bulk', 'AdminCommentController@bulkAction', ['AuthMiddleware', 'AdminMiddleware', 'CsrfMiddleware']);
 
 $router->add('GET', '/admin/boletines', 'AdminNewsletterController@index', ['AuthMiddleware', 'AdminMiddleware']);
 $router->add('POST', '/admin/boletines/action', 'AdminNewsletterController@action', ['AuthMiddleware', 'AdminMiddleware', 'CsrfMiddleware']);

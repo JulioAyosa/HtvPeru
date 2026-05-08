@@ -14,7 +14,9 @@
     <button class="btn btn-primary" onclick="openModal('create')"><i class="ri-add-circle-fill"></i> Crear Nuevo Rol</button>
 </div>
 
-<table>
+<div class="cfg-panel" style="padding: 2rem;">
+    <h3 style="margin-top:0; margin-bottom:1.5rem; font-size:1.1rem; color:#1e293b; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem;"><i class="ri-shield-keyhole-line" style="color:var(--primary-color);"></i> Listado de Roles Activos</h3>
+    <table>
     <thead>
         <tr>
             <th>ID</th>
@@ -51,16 +53,17 @@
         </tr>
         <?php endforeach; ?>
     </tbody>
-</table>
+    </table>
+</div>
 
 <!-- Modal Formulario de Rol -->
-<div id="modal-rol" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 2rem 0;">
-    <div style="background: white; padding: 2rem; border-radius: var(--radius-lg); width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; margin: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
-        <div style="display:flex; justify-content:space-between; margin-bottom:1rem; position: sticky; top: -2rem; background: white; padding-top: 2rem; padding-bottom: 1rem; z-index: 10;">
-            <h2 id="modal-title" style="margin:0;"><i class="ri-shield-keyhole-line"></i> Nuevo Rol</h2>
-            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('modal-rol').style.display='none'"></i>
+<div id="modal-rol" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 2rem 0;">
+    <div class="cfg-panel" style="width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; margin: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.2); padding: 0;">
+        <div style="display:flex; justify-content:space-between; align-items: center; position: sticky; top: 0; background: white; padding: 2rem 2.5rem 1.5rem 2.5rem; border-bottom: 1px solid #e2e8f0; z-index: 10; margin-bottom: 1.5rem;">
+            <h2 id="modal-title" style="margin:0; font-size: 1.25rem; display:flex; align-items:center; gap:0.5rem;"><i class="ri-shield-keyhole-line" style="color:var(--primary-color);"></i> Nuevo Rol</h2>
+            <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; color:#64748b;" onclick="document.getElementById('modal-rol').style.display='none'"></i>
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/roles/action" id="role-form">
+        <form method="POST" action="/piura_noticias_php/admin/roles/action" id="role-form" style="padding: 0 2.5rem 0 2.5rem;">
             <input type="hidden" name="action" id="form-action" value="create_role">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="rol_id" id="form-id" value="">
@@ -82,10 +85,13 @@
                     <div class="modulo-card">
                         <div class="modulo-title"><?php echo htmlspecialchars($modulo); ?></div>
                         <?php foreach ($permisos as $p): ?>
-                            <label class="permiso-item">
-                                <input type="checkbox" name="permisos[]" value="<?php echo $p['id']; ?>" class="permiso-checkbox" id="perm-<?php echo $p['id']; ?>">
+                            <label class="permiso-item" style="display:flex; justify-content:space-between; align-items:center; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 0.5rem; cursor:pointer; background: white; transition: all 0.2s;">
                                 <div class="permiso-info">
-                                    <span class="permiso-nombre"><?php echo htmlspecialchars($p['descripcion']); ?></span>
+                                    <span class="permiso-nombre" style="font-weight: 500; color: #1e293b;"><?php echo htmlspecialchars($p['descripcion']); ?></span>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" name="permisos[]" value="<?php echo $p['id']; ?>" class="permiso-checkbox" id="perm-<?php echo $p['id']; ?>">
+                                    <span class="slider"></span>
                                 </div>
                             </label>
                         <?php endforeach; ?>
@@ -93,16 +99,16 @@
                 <?php endforeach; ?>
             </div>
             
-            <div style="position: sticky; bottom: -2rem; background: white; padding-top: 1.5rem; padding-bottom: 2rem; margin-top: 1.5rem; border-top: 1px solid #e2e8f0;">
-                <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center; padding: 0.75rem; font-size: 1.05rem;"><i class="ri-save-3-line"></i> Guardar Configuración de Rol</button>
+            <div style="position: sticky; bottom: 0; background: white; padding-top: 1.5rem; padding-bottom: 2rem; margin-top: 1.5rem; border-top: 1px solid #e2e8f0; z-index: 10;">
+                <button type="submit" class="btn btn-primary btn-save" style="width:100%; justify-content: center; padding: 0.75rem; font-size: 1.05rem;"><i class="ri-save-3-line"></i> Guardar Configuración de Rol</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Modal Eliminar -->
-<div id="modal-delete" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+<div id="modal-delete" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="cfg-panel" style="width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin: 0;">
         <i class="ri-alert-line" style="font-size: 3.5rem; color: var(--danger); margin-bottom: 1rem; display: block;"></i>
         <h2 style="margin-bottom: 0.5rem; color: #1e293b;">¿Eliminar este Rol?</h2>
         <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Estás a punto de eliminar el rol <strong id="delete-rol-name"></strong>. Esta acción no se puede deshacer.</p>

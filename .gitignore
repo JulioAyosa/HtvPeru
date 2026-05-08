@@ -27,6 +27,13 @@ desktop.ini
 /dist/
 home_cache.json
 global_cache.json
+*_cache.json
+uploads/papelera/.purge_lock
+
+# === SCRIPTS TEMPORALES DE DESARROLLO ===
+scratch_db.php
+test_encoding.php
+update_db.php
 
 # === BACKUPS (pesan demasiado para GitHub) ===
 /backups_automaticos/

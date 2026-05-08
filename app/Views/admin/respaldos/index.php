@@ -55,12 +55,18 @@
             <?php echo csrf_field(); ?>
             
             <div style="display:flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap:wrap;">
-                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; color:#991b1b; font-weight:600; font-size:0.9rem;">
-                    <input type="checkbox" name="inc_media" id="chk_media" checked>
+                <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer; color:#991b1b; font-weight:600; font-size:0.9rem; padding: 0.75rem 1rem; border: 1px solid #fecaca; border-radius: 8px; background: white;">
+                    <div class="toggle-switch">
+                        <input type="checkbox" name="inc_media" id="chk_media" checked>
+                        <span class="slider"></span>
+                    </div>
                     Incluir Galería Multimedia (/capturas)
                 </label>
-                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; color:#991b1b; font-weight:600; font-size:0.9rem;">
-                    <input type="checkbox" name="inc_uploads" id="chk_uploads">
+                <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer; color:#991b1b; font-weight:600; font-size:0.9rem; padding: 0.75rem 1rem; border: 1px solid #fecaca; border-radius: 8px; background: white;">
+                    <div class="toggle-switch">
+                        <input type="checkbox" name="inc_uploads" id="chk_uploads">
+                        <span class="slider"></span>
+                    </div>
                     Incluir Documentos (/uploads)
                 </label>
             </div>
@@ -120,38 +126,68 @@
             <input type="hidden" name="action" value="export">
             <?php echo csrf_field(); ?>
             
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div class="form-group">
-                    <label>Desde Fecha (Opcional)</label>
-                    <input type="date" name="fecha_inicio" class="form-control">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem; margin-bottom: 1.25rem;">
+                <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                    <div style="padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width:28px; height:28px; border-radius:6px; background:#3b82f6; color:white; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="ri-calendar-line"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#334155;">Desde Fecha</h4>
+                            <p style="margin:0; font-size:0.7rem; color:#94a3b8;">Fecha de inicio (opcional)</p>
+                        </div>
+                    </div>
+                    <div style="padding: 0.75rem 1rem; background: white;">
+                        <input type="date" name="fecha_inicio" class="modern-input" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem; font-family:inherit;">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Hasta Fecha (Opcional)</label>
-                    <input type="date" name="fecha_fin" class="form-control">
+                <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                    <div style="padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width:28px; height:28px; border-radius:6px; background:#10b981; color:white; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="ri-calendar-check-line"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#334155;">Hasta Fecha</h4>
+                            <p style="margin:0; font-size:0.7rem; color:#94a3b8;">Fecha de fin (opcional)</p>
+                        </div>
+                    </div>
+                    <div style="padding: 0.75rem 1rem; background: white;">
+                        <input type="date" name="fecha_fin" class="modern-input" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem; font-family:inherit;">
+                    </div>
+                </div>
+                <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                    <div style="padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width:28px; height:28px; border-radius:6px; background:#f59e0b; color:white; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="ri-filter-2-line"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#334155;">Estado</h4>
+                            <p style="margin:0; font-size:0.7rem; color:#94a3b8;">Filtrar por publicación</p>
+                        </div>
+                    </div>
+                    <div style="padding: 0.75rem 1rem; background: white;">
+                        <select name="estado" class="modern-input" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem; font-family:inherit; background:#f8fafc;">
+                            <option value="todos">Todos los Estados</option>
+                            <option value="publicado">Publicados</option>
+                            <option value="borrador">Borradores</option>
+                            <option value="programado">Programados</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                    <div style="padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width:28px; height:28px; border-radius:6px; background:#8b5cf6; color:white; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="ri-folder-line"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#334155;">Categoría</h4>
+                            <p style="margin:0; font-size:0.7rem; color:#94a3b8;">Filtrar por sección</p>
+                        </div>
+                    </div>
+                    <div style="padding: 0.75rem 1rem; background: white;">
+                        <select name="categoria" class="modern-input" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem; font-family:inherit; background:#f8fafc;">
+                            <option value="todas">Todas las Categorías</option>
+                            <?php foreach ($categorias_export as $cat): ?>
+                                <option value="<?php echo htmlspecialchars($cat); ?>"><?php echo htmlspecialchars($cat); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Estado de Publicación</label>
-                <select name="estado" class="form-control">
-                    <option value="todos">Todos los Estados</option>
-                    <option value="publicado">Publicados</option>
-                    <option value="borrador">Borradores</option>
-                    <option value="programado">Programados</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Filtrar por Categoría</label>
-                <select name="categoria" class="form-control">
-                    <option value="todas">Todas las Categorías</option>
-                    <?php foreach ($categorias_export as $cat): ?>
-                        <option value="<?php echo htmlspecialchars($cat); ?>"><?php echo htmlspecialchars($cat); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div style="margin-top:2rem;">
+            <div style="margin-top:1.5rem;">
                 <button type="submit" class="btn btn-primary"><i class="ri-file-download-fill"></i> Generar y Descargar JSON</button>
                 <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:0.75rem;">El servidor forzará una descarga directa del archivo que podrás almacenar de manera segura.</p>
             </div>
@@ -167,25 +203,43 @@
             <input type="hidden" name="action" value="import">
             <?php echo csrf_field(); ?>
 
-            <div class="form-group">
-                <label>Seleccionar Archivo de Respaldo (.json)</label>
-                <div class="file-drop" id="drop-zone">
-                    <i class="ri-file-upload-line" style="font-size:3rem; color:#9ca3af; display:block; margin-bottom:1rem;"></i>
-                    <span style="font-weight:600; color:#374151;">Haz clic o arrastra un archivo .json aquí</span><br>
-                    <span style="font-size:0.75rem; color:#9ca3af;" id="file-name-display">El documento debe haber sido exportado desde HTVPERU CMS.</span>
-                    <input type="file" name="backup_file" id="backup_file" accept=".json" required>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom: 1.25rem;">
+                <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                    <div style="padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width:28px; height:28px; border-radius:6px; background:#10b981; color:white; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="ri-file-upload-line"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#334155;">Archivo de Respaldo</h4>
+                            <p style="margin:0; font-size:0.7rem; color:#94a3b8;">Archivo .json exportado</p>
+                        </div>
+                    </div>
+                    <div style="padding: 0.75rem 1rem; background: white;">
+                        <div class="file-drop" id="drop-zone">
+                            <i class="ri-file-upload-line" style="font-size:3rem; color:#9ca3af; display:block; margin-bottom:1rem;"></i>
+                            <span style="font-weight:600; color:#374151;">Haz clic o arrastra un archivo .json aquí</span><br>
+                            <span style="font-size:0.75rem; color:#9ca3af;" id="file-name-display">El documento debe haber sido exportado desde HTVPERU CMS.</span>
+                            <input type="file" name="backup_file" id="backup_file" accept=".json" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
+                    <div style="padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width:28px; height:28px; border-radius:6px; background:#f59e0b; color:white; display:flex; align-items:center; justify-content:center; font-size:0.85rem;"><i class="ri-git-merge-line"></i></div>
+                        <div>
+                            <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#334155;">Modo de Conflicto</h4>
+                            <p style="margin:0; font-size:0.7rem; color:#94a3b8;">¿Qué hacer si ya existe?</p>
+                        </div>
+                    </div>
+                    <div style="padding: 0.75rem 1rem; background: white;">
+                        <select name="modo" class="modern-input" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem; font-family:inherit; background:#f8fafc;">
+                            <option value="omitir">Ignorarla (Mantener versión actual)</option>
+                            <option value="reemplazar">Reemplazarla (Sobrescribir con Backup)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>¿Qué hacer si una Noticia ya existe?</label>
-                <select name="modo" class="form-control">
-                    <option value="omitir">Ignorarla (Mantener versión actual de la BD)</option>
-                    <option value="reemplazar">Reemplazarla (Sobrescribir con la versión del Backup)</option>
-                </select>
-            </div>
-
-            <div style="margin-top:2rem;">
+            <div style="margin-top:1.5rem;">
                 <button type="submit" class="btn btn-success" onclick="if(document.getElementById('backup_file').files.length===0) { alert('Debes seleccionar un archivo'); return false; } return confirm('¿Deseas iniciar la importación masiva ahora?');">
                     <i class="ri-save-3-fill"></i> Procesar Importación
                 </button>

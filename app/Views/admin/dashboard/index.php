@@ -23,48 +23,103 @@
 </div>
 
 <!-- Dashboard Stats -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary-color);">
-        <h3 style="margin: 0; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Total Noticias</h3>
-        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; color: #111827;"><?php echo $stats['not']; ?></p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:0.5rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <h3 style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight:700; text-transform: uppercase;">Total Noticias</h3>
+            <div style="background:#eff6ff; color:var(--primary-color); padding:8px; border-radius:8px;"><i class="ri-article-fill"></i></div>
+        </div>
+        <p style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;"><?php echo $stats['not']; ?></p>
     </div>
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #10b981;">
-        <h3 style="margin: 0; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Publicadas</h3>
-        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; color: #111827;"><?php echo $stats['pub']; ?></p>
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:0.5rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <h3 style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight:700; text-transform: uppercase;">Publicadas</h3>
+            <div style="background:#ecfdf5; color:#10b981; padding:8px; border-radius:8px;"><i class="ri-checkbox-circle-fill"></i></div>
+        </div>
+        <p style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;"><?php echo $stats['pub']; ?></p>
     </div>
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #f59e0b;">
-        <h3 style="margin: 0; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Borradores</h3>
-        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; color: #111827;"><?php echo $stats['bor']; ?></p>
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:0.5rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <h3 style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight:700; text-transform: uppercase;">Borradores</h3>
+            <div style="background:#fffbeb; color:#f59e0b; padding:8px; border-radius:8px;"><i class="ri-draft-fill"></i></div>
+        </div>
+        <p style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;"><?php echo $stats['bor']; ?></p>
     </div>
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #8b5cf6;">
-        <h3 style="margin: 0; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Programadas</h3>
-        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; color: #111827;"><?php echo $stats['prg']; ?></p>
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:0.5rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <h3 style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight:700; text-transform: uppercase;">Programadas</h3>
+            <div style="background:#f3e8ff; color:#9333ea; padding:8px; border-radius:8px;"><i class="ri-timer-fill"></i></div>
+        </div>
+        <p style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;"><?php echo $stats['prg']; ?></p>
     </div>
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #ef4444;">
-        <h3 style="margin: 0; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Usuarios</h3>
-        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; color: #111827;"><?php echo $stats['usu']; ?></p>
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:0.5rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <h3 style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight:700; text-transform: uppercase;">Usuarios</h3>
+            <div style="background:#fef2f2; color:#ef4444; padding:8px; border-radius:8px;"><i class="ri-team-fill"></i></div>
+        </div>
+        <p style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;"><?php echo $stats['usu']; ?></p>
     </div>
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #94a3b8;">
-        <h3 style="margin: 0; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Papelera</h3>
-        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; color: #111827;"><?php echo $stats['pap']; ?></p>
+    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:0.5rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <h3 style="margin: 0; color: #64748b; font-size: 0.85rem; font-weight:700; text-transform: uppercase;">Papelera</h3>
+            <div style="background:#f1f5f9; color:#64748b; padding:8px; border-radius:8px;"><i class="ri-delete-bin-fill"></i></div>
+        </div>
+        <p style="margin: 0; font-size: 2.2rem; font-weight: 800; color: #0f172a;"><?php echo $stats['pap']; ?></p>
     </div>
 </div>
+
+<?php if (isset($cuota_diaria) && $cuota_diaria > 0): ?>
+    <?php 
+        $progress_pct = min(100, round(($noticias_hoy / $cuota_diaria) * 100));
+        $is_overachiever = $noticias_hoy > $cuota_diaria;
+        $is_completed = $noticias_hoy == $cuota_diaria;
+        
+        $bar_color = "linear-gradient(90deg, var(--primary-color), #3b82f6)";
+        $icon = "ri-focus-3-line";
+        $status_msg = "Avanzando. ¡Sigue así!";
+        
+        if ($is_overachiever) {
+            $bar_color = "linear-gradient(90deg, #f59e0b, #fbbf24)";
+            $icon = "ri-fire-fill";
+            $status_msg = "¡Sobresaliente! Has superado tu meta de hoy. 🔥";
+        } elseif ($is_completed) {
+            $bar_color = "linear-gradient(90deg, #10b981, #34d399)";
+            $icon = "ri-medal-fill";
+            $status_msg = "¡Felicidades! Has alcanzado tu meta diaria. 🏆";
+        }
+    ?>
+    <div style="background: white; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+                <h3 style="margin: 0; font-size: 1.1rem; color: #0f172a; display: flex; align-items: center; gap: 0.5rem;"><i class="<?php echo $icon; ?>" style="color: <?php echo $is_overachiever ? '#f59e0b' : ($is_completed ? '#10b981' : 'var(--primary-color)'); ?>;"></i> Tu Meta de Productividad Hoy</h3>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.85rem; color: #64748b;"><?php echo $status_msg; ?></p>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-size: 1.5rem; font-weight: 800; color: #0f172a;"><?php echo $noticias_hoy; ?></span>
+                <span style="font-size: 0.9rem; color: #64748b; font-weight: 600;">/ <?php echo $cuota_diaria; ?> Noticias</span>
+            </div>
+        </div>
+        <div style="width: 100%; height: 12px; background: #f1f5f9; border-radius: 10px; overflow: hidden;">
+            <div style="height: 100%; width: <?php echo $progress_pct; ?>%; background: <?php echo $bar_color; ?>; border-radius: 10px; transition: width 1s ease-out;"></div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <!-- =========================================
      PHASE 4: DASHBOARD ANALYTICS (Charts & Top)
      ========================================= -->
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+<div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
     <!-- Gráfico de Visitas -->
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);" class="card">
-        <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem;"><i class="ri-line-chart-line" style="color: var(--primary-color);"></i> Visitas últimos 7 días</h3>
-        <div style="position: relative; height: 250px; width: 100%;">
+    <div class="cfg-panel" style="padding: 1.5rem; margin-bottom: 0; display: flex; flex-direction: column;">
+        <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 1rem;"><i class="ri-line-chart-line" style="color: var(--primary-color);"></i> Visitas últimos 7 días</h3>
+        <div style="position: relative; flex: 1; min-height: 250px; width: 100%;">
             <canvas id="viewsChart"></canvas>
         </div>
     </div>
 
     <!-- Top Noticias -->
-    <div style="background: white; padding: 1.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);" class="card">
-        <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem;"><i class="ri-trophy-line" style="color: #f59e0b;"></i> Top 5 Noticias</h3>
+    <div class="cfg-panel" style="padding: 1.5rem; margin-bottom: 0;">
+        <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 1rem;"><i class="ri-trophy-line" style="color: #f59e0b;"></i> Top 5 Noticias</h3>
         <ul style="list-style: none; padding: 0; margin: 0;">
             <?php if(isset($top_noticias) && count($top_noticias) > 0): ?>
                 <?php foreach($top_noticias as $i => $tn): ?>
@@ -77,7 +132,45 @@
                 </li>
                 <?php endforeach; ?>
             <?php else: ?>
-                <li style="padding: 1rem 0; text-align: center; color: #94a3b8; font-size: 0.85rem;">No hay datos disponibles.</li>
+                <li style="padding: 2rem 0; text-align: center;">
+                    <i class="ri-trophy-line" style="font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.5rem;"></i>
+                    <span style="color: #64748b; font-size: 0.9rem;">Aún no hay datos suficientes.</span>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+    <!-- Leaderboard Productividad -->
+    <div class="cfg-panel" style="padding: 1.5rem; margin-bottom: 0; background: linear-gradient(to bottom, #ffffff, #f8fafc);">
+        <h3 style="margin-top: 0; color: #1e293b; font-size: 1.1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ri-medal-2-fill" style="color: #3b82f6;"></i> Ranking Productividad
+        </h3>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            <?php if(isset($leaderboard) && count($leaderboard) > 0): ?>
+                <?php foreach($leaderboard as $i => $lb): ?>
+                <?php 
+                    $color = '#3b82f6'; // Azul base
+                    if ($lb['score'] > 0) $color = '#f59e0b'; // Naranja/Dorado si superó cuota
+                    elseif ($lb['score'] == 0) $color = '#10b981'; // Verde si llegó justo
+                ?>
+                <li style="padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 0;">
+                        <span style="background: <?php echo $i===0?'#3b82f6':($i===1?'#60a5fa':($i===2?'#93c5fd':'#e2e8f0')); ?>; color: <?php echo $i<=2?'white':'#475569'; ?>; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; flex-shrink: 0;"><?php echo $i+1; ?></span>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 700; font-size: 0.85rem; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo htmlspecialchars($lb['nombre']); ?></div>
+                            <div style="font-size: 0.75rem; color: #94a3b8;"><?php echo htmlspecialchars($lb['rol']); ?></div>
+                        </div>
+                    </div>
+                    <div style="text-align: right; background: <?php echo $color; ?>15; padding: 4px 8px; border-radius: 6px; border: 1px solid <?php echo $color; ?>40;">
+                        <span style="font-weight: 800; font-size: 0.9rem; color: <?php echo $color; ?>;"><?php echo $lb['hoy']; ?></span><span style="font-size: 0.75rem; color: <?php echo $color; ?>; font-weight: 600;">/<?php echo $lb['cuota']; ?></span>
+                    </div>
+                </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li style="padding: 2rem 0; text-align: center;">
+                    <i class="ri-zzz-line" style="font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.5rem;"></i>
+                    <span style="color: #64748b; font-size: 0.9rem;">Nadie tiene cuota activa.</span>
+                </li>
             <?php endif; ?>
         </ul>
     </div>
@@ -129,39 +222,42 @@ document.addEventListener("DOMContentLoaded", function() {
 <form id="bulkForm" method="POST" action="/piura_noticias_php/admin/dashboard/bulk">
     <?php echo csrf_field(); ?>
     
-    <?php if ($user_role !== 'gerente'): ?>
-    <div style="display:flex; justify-content:space-between; margin-bottom: 1rem; align-items:center; background: white; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap:wrap; gap:1rem;">
-        <div style="display:flex; gap:0.5rem; align-items:center;">
-            <input type="checkbox" id="selectAllTop" onclick="toggleAll(this)" style="width:1.25rem; height:1.25rem; cursor:pointer;" title="Seleccionar Todas las Visibles">
-            <span style="font-weight:600; font-size:0.85rem; color:var(--text-muted); margin-right:1rem;">Seleccionar Todas</span>
-            
-            <select name="bulk_action" id="bulkSelect" style="padding:0.5rem; border:1px solid #cbd5e1; border-radius:4px; font-family:var(--font-sans); background:white;">
-                <option value="">-- Acción por lotes --</option>
-                <option value="publicado">Poner como Públicas</option>
-                <option value="borrador">Mover a Borradores</option>
-                <?php if ($user_role === 'admin'): ?>
-                <option value="papelera">Mover a Papelera</option>
-                <?php endif; ?>
-            </select>
-            <button type="button" onclick="if(document.getElementById('bulkSelect').value !== '') document.getElementById('bulkForm').submit(); else alert('Elige una acción por lote válida.');" class="btn btn-secondary" style="padding:0.5rem 1rem;"><i class="ri-check-line"></i> Aplicar a las marcadas</button>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- Buscador y Filtros -->
-    <div style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; gap:1rem; flex-wrap:wrap; background: white; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
-        <div style="display:flex; gap:1rem; flex:1; align-items: center;">
-            <div style="position:relative; width:100%; max-width:400px;">
-                <i class="ri-search-line" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:#9ca3af;"></i>
-                <input type="text" id="searchTable" placeholder="Buscar noticia por título, categoría o autor..." style="padding:0.75rem 1rem 0.75rem 2.5rem; border:1px solid #d1d5db; border-radius:6px; font-family:var(--font-sans); width:100%; box-sizing: border-box;" onkeyup="filterAdminTable()">
+    <div class="cfg-panel" style="padding: 2rem;">
+        <h3 style="margin-top:0; margin-bottom:1.5rem; font-size:1.1rem; color:#1e293b; border-bottom:1px solid #e2e8f0; padding-bottom:0.75rem;"><i class="ri-article-fill" style="color:var(--primary-color);"></i> Directorio de Entradas</h3>
+        
+        <?php if ($user_role !== 'gerente'): ?>
+        <div style="display:flex; justify-content:space-between; margin-bottom: 1rem; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="checkbox" id="selectAllTop" onclick="toggleAll(this)" style="width:1.25rem; height:1.25rem; cursor:pointer;" title="Seleccionar Todas las Visibles">
+                <span style="font-weight:600; font-size:0.85rem; color:var(--text-muted); margin-right:1rem;">Seleccionar Todas</span>
+                
+                <select name="bulk_action" id="bulkSelect" style="padding:0.5rem; border:1px solid #cbd5e1; border-radius:4px; font-family:var(--font-sans); background:white;">
+                    <option value="">-- Acción por lotes --</option>
+                    <option value="publicado">Poner como Públicas</option>
+                    <option value="borrador">Mover a Borradores</option>
+                    <?php if ($user_role === 'admin'): ?>
+                    <option value="papelera">Mover a Papelera</option>
+                    <?php endif; ?>
+                </select>
+                <button type="button" onclick="if(document.getElementById('bulkSelect').value !== '') document.getElementById('bulkForm').submit(); else alert('Elige una acción por lote válida.');" class="btn btn-secondary" style="padding:0.5rem 1rem;"><i class="ri-check-line"></i> Aplicar a las marcadas</button>
             </div>
-            <input type="date" id="dateFilter" style="padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-family:var(--font-sans); color:var(--text-muted);" onchange="filterAdminTable()">
-            <button type="button" onclick="document.getElementById('searchTable').value=''; document.getElementById('dateFilter').value=''; filterAdminTable();" class="btn btn-secondary"><i class="ri-refresh-line"></i> Limpiar Filtros</button>
         </div>
-        <span style="font-size:0.85rem; color:var(--text-muted); align-self:center;"><i class="ri-information-line"></i> Haz clic en las columnas para ordenar asc/desc.</span>
-    </div>
+        <?php endif; ?>
 
-    <table id="mainNewsTable" style="margin-bottom: 2rem;">
+        <!-- Buscador y Filtros -->
+        <div style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; gap:1rem; flex-wrap:wrap;">
+            <div style="display:flex; gap:1rem; flex:1; align-items: center; flex-wrap:wrap;">
+                <div style="position:relative; width:100%; max-width:400px;">
+                    <i class="ri-search-line" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:#9ca3af;"></i>
+                    <input type="text" id="searchTable" placeholder="Buscar noticia por título, categoría o autor..." style="padding:0.75rem 1rem 0.75rem 2.5rem; border:1px solid #d1d5db; border-radius:6px; font-family:var(--font-sans); width:100%; box-sizing: border-box;" onkeyup="filterAdminTable()" onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.1)';" onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none';">
+                </div>
+                <input type="date" id="dateFilter" style="padding:0.75rem; border:1px solid #d1d5db; border-radius:6px; font-family:var(--font-sans); color:var(--text-muted);" onchange="filterAdminTable()">
+                <button type="button" onclick="document.getElementById('searchTable').value=''; document.getElementById('dateFilter').value=''; filterAdminTable();" class="btn btn-secondary"><i class="ri-refresh-line"></i> Limpiar Filtros</button>
+            </div>
+            <span style="font-size:0.85rem; color:var(--text-muted); align-self:center;"><i class="ri-information-line"></i> Haz clic en las columnas para ordenar asc/desc.</span>
+        </div>
+
+        <table id="mainNewsTable" style="margin-bottom: 2rem;">
         <thead>
             <tr>
                 <?php if ($user_role !== 'gerente'): ?>
@@ -208,7 +304,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <?php if ($n['estado_publicacion'] === 'papelera'): ?>
                         <?php if ($user_role === 'admin'): ?>
                             <a href="/piura_noticias_php/admin/dashboard/action?action=restore&id=<?php echo $n['id']; ?>" class="btn btn-success" style="padding:4px 8px; font-size:0.75rem;"><i class="ri-refresh-line"></i> Restaurar</a>
-                            <a href="/piura_noticias_php/admin/dashboard/action?action=hard_delete&id=<?php echo $n['id']; ?>" class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="return confirm('¿Seguro que deseas eliminar esta noticia PERMANENTEMENTE?')"><i class="ri-close-circle-line"></i> Hard Delete</a>
+                            <a href="/piura_noticias_php/admin/dashboard/action?action=hard_delete&id=<?php echo $n['id']; ?>" class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="return confirmDelete(event, '¿Seguro que deseas eliminar esta noticia PERMANENTEMENTE?')"><i class="ri-close-circle-line"></i> Hard Delete</a>
                         <?php else: ?>
                             <span style="font-size:0.75rem; color:#9ca3af;">En Papelera</span>
                         <?php endif; ?>
@@ -218,13 +314,22 @@ document.addEventListener("DOMContentLoaded", function() {
                         <a href="/piura_noticias_php/admin?action=edit&id=<?php echo $n['id']; ?>" style="background:#fef08a; color:#b45309; border:1px solid #fde047; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Editar"><i class="ri-edit-2-line"></i></a>
                         <a href="/piura_noticias_php/admin/dashboard/action?action=duplicate&id=<?php echo $n['id']; ?>" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Duplicar"><i class="ri-file-copy-line"></i></a>
                         <?php if ($user_role === 'admin'): ?>
-                            <a href="/piura_noticias_php/admin/dashboard/action?action=delete&id=<?php echo $n['id']; ?>" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none;" onclick="return confirm('¿Enviar esta noticia a la Papelera?')" title="Borrar a Papelera"><i class="ri-delete-bin-line"></i></a>
+                            <a href="/piura_noticias_php/admin/dashboard/action?action=delete&id=<?php echo $n['id']; ?>" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none;" onclick="return confirmDelete(event, '¿Enviar esta noticia a la Papelera?')" title="Borrar a Papelera"><i class="ri-delete-bin-line"></i></a>
                         <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>
                 </td>
             </tr>
             <?php endforeach; ?>
+            <?php if(empty($noticias)): ?>
+            <tr><td colspan="8">
+                <div style="text-align: center; padding: 3rem; background: #f8fafc; border-radius: 8px; border: 1px dashed var(--border-color); color: #64748b; margin: 1rem 0;">
+                    <i class="ri-article-line" style="font-size: 3rem; display: block; margin-bottom: 1rem; color: #cbd5e1;"></i>
+                    <h3 style="margin: 0; font-size: 1.1rem;">No se encontraron noticias.</h3>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Crea tu primera entrada pulsando en "Escribir Noticia" o cambia los filtros de búsqueda.</p>
+                </div>
+            </td></tr>
+            <?php endif; ?>
         </tbody>
     </table>
     
@@ -249,6 +354,7 @@ document.addEventListener("DOMContentLoaded", function() {
         </div>
     </div>
     <?php endif; ?>
+    </div>
 </form>
 
 
@@ -262,11 +368,11 @@ document.addEventListener("DOMContentLoaded", function() {
 </style>
 
 <!-- Modal Formulario Extendido -->
-<div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; box-sizing: border-box;">
-    <div style="background: white; border-radius: var(--radius-lg); width: 100%; max-width: 1000px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2); box-sizing: border-box; overflow: hidden;" class="modal-wrapper">
+<div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; box-sizing: border-box;">
+    <div class="cfg-panel" style="width: 100%; max-width: 1000px; height: 90vh; display: flex; flex-direction: column; padding: 0; margin: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2);" class="modal-wrapper">
         
         <!-- Header Sticky -->
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding: 1.5rem 2.5rem; background: white; z-index: 10;" class="modal-sticky-header">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding: 1.5rem 2.5rem; background: white; z-index: 10; margin-top: 4px;" class="modal-sticky-header">
             <h2 id="modal-title" style="margin:0; font-size: 1.5rem;"><i class="ri-quill-pen-line" style="color:var(--primary-color);"></i> <?php echo $edit_data ? 'Editar Noticia #'.$edit_data['id'] : 'Añadir entrada (Editor Interactivo)'; ?></h2>
             <i class="ri-close-line" style="cursor:pointer; font-size:1.8rem; background:#f1f5f9; color: #475569; border-radius:50%; padding:0.4rem; transition: background 0.2s;" onclick="closeEditorModal()" onmouseover="this.style.background='#e2e8f0'; this.style.color='#ef4444';" onmouseout="this.style.background='#f1f5f9'; this.style.color='#475569';"></i>
         </div>
@@ -346,13 +452,13 @@ document.addEventListener("DOMContentLoaded", function() {
                         <h3 style="margin-top: 0; font-size: 1.1rem; color: #334155; display:flex; align-items:center; gap:0.5rem; border-bottom: 2px solid #cbd5e1; padding-bottom:0.5rem; margin-bottom:1rem;"><i class="ri-image-add-fill"></i> Archivos Multimedia Nativo</h3>
                         <div class="form-row">
                             <label>Imagen o Video Principal (.mp4, .jpg, .png)</label>
-                            <input type="file" name="media_upload" accept="image/*,video/mp4,video/webm" style="background:white;" <?php echo $edit_data ? '' : 'required'; ?>>
-                            <?php if($edit_data): ?><span style="font-size:0.75rem; color:var(--primary-color);">* Archivo actual: <?php echo basename($edit_data['imagen_url']); ?> (Sube uno nuevo solo si deseas reemplazarlo)</span><?php endif; ?>
+                            <input type="file" name="media_upload" accept="image/*,video/mp4,video/webm" style="background:white; padding: 0.6rem; border: 1px dashed #94a3b8; border-radius: 8px; width: 100%; cursor: pointer; box-sizing:border-box;" <?php echo $edit_data ? '' : 'required'; ?>>
+                            <?php if($edit_data): ?><span style="font-size:0.75rem; color:var(--primary-color); display:block; margin-top:0.4rem;"><i class="ri-attachment-line"></i> Archivo actual: <?php echo basename($edit_data['imagen_url']); ?> (Sube uno nuevo solo para reemplazarlo)</span><?php endif; ?>
                         </div>
                         <div class="form-row" style="margin-bottom:0;">
                             <label>Poster para Video (Opcional, miniatura si subiste MP4)</label>
-                            <input type="file" name="poster_upload" accept="image/*" style="background:white;">
-                            <span style="font-size:0.75rem; color:#64748b;">* Reemplaza el recuadro negro del video con una portada visible.</span>
+                            <input type="file" name="poster_upload" accept="image/*" style="background:white; padding: 0.6rem; border: 1px dashed #94a3b8; border-radius: 8px; width: 100%; cursor: pointer; box-sizing:border-box;">
+                            <span style="font-size:0.75rem; color:#64748b; display:block; margin-top:0.4rem;">* Reemplaza el recuadro negro del video con una portada visible.</span>
                         </div>
                     </div>
                 </div>
@@ -410,10 +516,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="m-pane" id="m-publicar">
                     <?php if ($user_role === 'admin'): ?>
                     <div style="background:#fff7ed; padding: 1.5rem; border-radius: 8px; border: 1px solid #fed7aa; margin-bottom: 1.5rem;">
-                        <label style="display:inline-flex; align-items:center; gap:0.5rem; font-weight:800; color:#c2410c;">
-                            <input type="checkbox" name="es_destacada" value="1" style="width:1.25rem; height:1.25rem;" <?php echo (!empty($edit_data['es_destacada'])) ? 'checked' : ''; ?>> 
-                            Fijar como MEGA HERO Inicial en Portada
-                        </label>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                                <span style="font-weight:800; color:#c2410c; font-size:1.05rem;"><i class="ri-star-smile-fill"></i> Fijar como MEGA HERO Inicial en Portada</span>
+                                <span style="font-size:0.85rem; color:#d97706;">Destaca esta noticia en lo más alto de la página principal.</span>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" name="es_destacada" value="1" <?php echo (!empty($edit_data['es_destacada'])) ? 'checked' : ''; ?>>
+                                <span class="slider"></span>
+                            </div>
+                        </div>
                     </div>
                     <?php endif; ?>
 

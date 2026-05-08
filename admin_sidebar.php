@@ -22,7 +22,7 @@
             </div>
             <nav class="admin-nav">
                 <ul>
-                    <li><a href="/piura_noticias_php/admin" <?php echo ($_SERVER['REQUEST_URI']==='/piura_noticias_php/admin'||$_SERVER['REQUEST_URI']==='/piura_noticias_php/admin/'||strpos($_SERVER['REQUEST_URI'],'/admin/dashboard')!==false)?'class="active"':''; ?>><i class="ri-article-line"></i> Noticias</a></li>
+                    <li><a href="/piura_noticias_php/admin" <?php $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH); echo ($path==='/piura_noticias_php/admin'||$path==='/piura_noticias_php/admin/'||strpos($_SERVER['REQUEST_URI'],'/admin/dashboard')!==false)?'class="active"':''; ?>><i class="ri-article-line"></i> Noticias</a></li>
                     
                     <?php if (has_permission('manage_media')): ?>
                     <li><a href="/piura_noticias_php/admin/multimedia" <?php echo (strpos($_SERVER['REQUEST_URI'],'/admin/multimedia')!==false)?'class="active"':''; ?>><i class="ri-folder-image-line"></i> Multimedia</a></li>
@@ -144,4 +144,60 @@
                     .then(d => { if(d.status === 'expired') window.location.reload(); })
                     .catch(e => console.error('Heartbeat falló', e));
             }, 900000); // 15 minutos
+
+            // Lógica Global para selección de filas en tablas (Bulk Actions)
+            document.addEventListener('DOMContentLoaded', function() {
+                // Inyectar CSS dinámico para filas seleccionadas si no existe
+                if (!document.getElementById('row-selection-css')) {
+                    const style = document.createElement('style');
+                    style.id = 'row-selection-css';
+                    style.textContent = `
+                        tr.row-selected { background-color: #eff6ff !important; transition: background-color 0.2s; }
+                        tr.row-selected td { border-bottom-color: #bfdbfe !important; }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                document.querySelectorAll('table tbody tr').forEach(function(row) {
+                    const checkbox = row.querySelector('input[type="checkbox"]');
+                    if (!checkbox) return; // Si la fila no tiene checkbox, no hacer nada
+
+                    // Sincronizar estado inicial (por si se recarga la página)
+                    if (checkbox.checked) row.classList.add('row-selected');
+
+                    // Click en cualquier parte de la fila
+                    row.addEventListener('click', function(e) {
+                        // Ignorar si se hizo click en un enlace, botón, input de texto, o la propia casilla
+                        const tag = e.target.tagName.toLowerCase();
+                        if (tag === 'a' || tag === 'button' || e.target.closest('a') || e.target.closest('button')) return;
+                        if (tag === 'input' && e.target.type !== 'checkbox') return;
+                        if (tag === 'label') return;
+
+                        // Si el click NO fue directamente en el checkbox, lo invertimos
+                        if (e.target.type !== 'checkbox') {
+                            checkbox.checked = !checkbox.checked;
+                        }
+
+                        // Aplicar clase
+                        if (checkbox.checked) {
+                            this.classList.add('row-selected');
+                        } else {
+                            this.classList.remove('row-selected');
+                        }
+
+                        // Disparar evento para Select All si existe lógica acoplada
+                        const event = new Event('change', { bubbles: true });
+                        checkbox.dispatchEvent(event);
+                    });
+
+                    // Escuchar si el checkbox cambia desde afuera (ej: Select All)
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            row.classList.add('row-selected');
+                        } else {
+                            row.classList.remove('row-selected');
+                        }
+                    });
+                });
+            });
         </script>

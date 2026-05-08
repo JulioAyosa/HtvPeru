@@ -38,6 +38,9 @@ if (!isset($notifications)) {
     
     <!-- Admin CSS Pipeline -->
     <?= \App\Services\AssetManager::css('css/admin.css') ?>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="admin-layout">
@@ -90,5 +93,73 @@ if (!isset($notifications)) {
             ?>
         </main>
     </div>
+
+    <!-- Global UI Scripts -->
+    <script>
+        // 1. SweetAlert2 Toast Global Config
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+
+        // 2. Auto-convert native alerts to Toasts
+        document.addEventListener("DOMContentLoaded", () => {
+            const alerts = document.querySelectorAll('.alert, .alert-success, .alert-error, .alert-info');
+            alerts.forEach(alert => {
+                // Ignore alerts that are inside a modal or specifically marked to keep
+                if(alert.closest('.modal-wrapper') || alert.dataset.keep) return;
+                
+                alert.style.display = 'none'; // Hide native alert
+                let type = 'success';
+                let text = alert.innerText.trim();
+                if(alert.classList.contains('alert-error') || text.toLowerCase().includes('error')) type = 'error';
+                else if(alert.classList.contains('alert-info')) type = 'info';
+                
+                Toast.fire({
+                    icon: type,
+                    title: text
+                });
+            });
+        });
+
+        // 3. Global function for Confirm Dialogs (SweetAlert2)
+        window.confirmDelete = function(event, message, urlOrFormId) {
+            event.preventDefault();
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: message || "Esta acción es destructiva y no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'Sí, continuar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'cfg-panel'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (urlOrFormId && (urlOrFormId.startsWith('http') || urlOrFormId.startsWith('/'))) {
+                        window.location.href = urlOrFormId;
+                    } else if (urlOrFormId) {
+                        document.getElementById(urlOrFormId).submit();
+                    } else {
+                        // Fallback: use event target href if available
+                        const targetUrl = event.currentTarget.getAttribute('href');
+                        if (targetUrl && targetUrl !== '#') window.location.href = targetUrl;
+                        else if (event.currentTarget.closest('form')) event.currentTarget.closest('form').submit();
+                    }
+                }
+            });
+            return false;
+        }
+    </script>
 </body>
 </html>

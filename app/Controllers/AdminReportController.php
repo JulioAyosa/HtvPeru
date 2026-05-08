@@ -99,6 +99,38 @@ class AdminReportController extends Controller {
         $autores = $this->pdo->query("SELECT id, nombre_completo FROM usuarios ORDER BY nombre_completo ASC")->fetchAll();
         $categorias_disponibles = $this->pdo->query("SELECT DISTINCT(categoria) FROM noticias WHERE categoria IS NOT NULL ORDER BY categoria")->fetchAll();
 
+        // Monitor de Productividad en Vivo
+        $staff_productivity = [];
+        $stmt_staff = $this->pdo->query("
+            SELECT u.id, u.nombre_completo, u.email, r.nombre as rol_nombre, 
+                   u.cuota_diaria_personal, r.cuota_diaria_default 
+            FROM usuarios u 
+            LEFT JOIN roles r ON u.rol COLLATE utf8mb4_unicode_ci = r.nombre COLLATE utf8mb4_unicode_ci
+            WHERE u.deleted_at IS NULL
+        ");
+        $all_staff = $stmt_staff->fetchAll();
+        
+        $stmt_news_today = $this->pdo->prepare("
+            SELECT COUNT(*) FROM noticias 
+            WHERE autor_id = ? AND DATE(fecha_publicacion) = CURDATE() AND deleted_at IS NULL
+        ");
+
+        foreach ($all_staff as $staff) {
+            $cuota = $staff['cuota_diaria_personal'] !== null ? (int)$staff['cuota_diaria_personal'] : (int)$staff['cuota_diaria_default'];
+            if ($cuota > 0) {
+                $stmt_news_today->execute([$staff['id']]);
+                $count_today = (int)$stmt_news_today->fetchColumn();
+                $staff_productivity[] = [
+                    'nombre' => $staff['nombre_completo'],
+                    'rol' => $staff['rol_nombre'],
+                    'cuota' => $cuota,
+                    'is_custom' => $staff['cuota_diaria_personal'] !== null,
+                    'hoy' => $count_today,
+                    'pct' => min(100, round(($count_today / $cuota) * 100))
+                ];
+            }
+        }
+
         $this->render('admin/reportes/index', [
             'f_fecha_ini' => $f_fecha_ini,
             'f_fecha_fin' => $f_fecha_fin,
@@ -113,7 +145,8 @@ class AdminReportController extends Controller {
             'lbl_top' => $lbl_top,
             'val_top' => $val_top,
             'autores' => $autores,
-            'categorias_disponibles' => $categorias_disponibles
+            'categorias_disponibles' => $categorias_disponibles,
+            'staff_productivity' => $staff_productivity
         ], 'admin');
     }
 }

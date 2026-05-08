@@ -129,6 +129,66 @@
         </div>
     </div>
 
+    <!-- Monitor de Productividad en Vivo -->
+    <div class="report-card" style="margin-bottom: 2rem;">
+        <h2><i class="ri-focus-3-line" style="color: var(--primary-color);"></i> Monitor de Productividad en Vivo (Hoy)</h2>
+        <div style="overflow-x:auto;">
+            <table class="rep-table">
+                <thead>
+                    <tr>
+                        <th>Redactor / Staff</th>
+                        <th>Rol / Regla</th>
+                        <th style="text-align: center;">Progreso de Cuota</th>
+                        <th style="text-align: center;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if(!empty($staff_productivity)): ?>
+                        <?php foreach($staff_productivity as $staff): ?>
+                        <tr>
+                            <td>
+                                <strong><?php echo htmlspecialchars($staff['nombre']); ?></strong>
+                            </td>
+                            <td>
+                                <span style="background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;"><?php echo htmlspecialchars($staff['rol']); ?></span>
+                                <br><span style="font-size: 0.75rem; color: #94a3b8;"><?php echo $staff['is_custom'] ? 'Cuota Personal' : 'Cuota de Rol'; ?>: <?php echo $staff['cuota']; ?></span>
+                            </td>
+                            <td style="width: 40%; vertical-align: middle;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.25rem;">
+                                    <span><?php echo $staff['hoy']; ?> / <?php echo $staff['cuota']; ?> noticias</span>
+                                    <span><?php echo $staff['pct']; ?>%</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                                    <?php 
+                                        $barColor = '#3b82f6';
+                                        if ($staff['hoy'] > $staff['cuota']) $barColor = '#f59e0b';
+                                        elseif ($staff['hoy'] == $staff['cuota']) $barColor = '#10b981';
+                                        elseif ($staff['pct'] < 50) $barColor = '#ef4444';
+                                    ?>
+                                    <div style="height: 100%; width: <?php echo $staff['pct']; ?>%; background: <?php echo $barColor; ?>; border-radius: 4px;"></div>
+                                </div>
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;">
+                                <?php if ($staff['hoy'] > $staff['cuota']): ?>
+                                    <span style="display: inline-block; background: #fef3c7; color: #d97706; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;"><i class="ri-fire-fill"></i> ¡Sobresaliente!</span>
+                                <?php elseif ($staff['hoy'] == $staff['cuota']): ?>
+                                    <span style="display: inline-block; background: #d1fae5; color: #059669; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;"><i class="ri-check-double-line"></i> Meta Cumplida</span>
+                                <?php elseif ($staff['pct'] >= 50): ?>
+                                    <span style="display: inline-block; background: #dbeafe; color: #1d4ed8; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;"><i class="ri-loader-4-line"></i> Avanzando</span>
+                                <?php else: ?>
+                                    <span style="display: inline-block; background: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;"><i class="ri-alert-line"></i> En Peligro</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr><td colspan="4" style="text-align: center; padding: 2rem;">No hay personal con cuotas activas actualmente.</td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="report-card">
         <h2>Muestra de Datos (Últimos 100 Registros)</h2>
         <div style="overflow-x:auto;">

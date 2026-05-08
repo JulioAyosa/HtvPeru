@@ -21,57 +21,151 @@ if (!function_exists('formatDetalles')) {
 ?>
 
 <style>
-    .badge-creacion { background: #dcfce7; color: #166534; }
-    .badge-actualizacion { background: #e0f2fe; color: #0369a1; }
-    .badge-eliminacion { background: #fee2e2; color: #991b1b; }
-    .badge-ot { background: #f3f4f6; color: #374151; }
+    .log-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .log-item {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s;
+    }
+    .log-item:hover {
+        box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        border-color: #cbd5e1;
+        transform: translateY(-2px);
+    }
+    .log-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    .log-icon.creacion { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2); }
+    .log-icon.actualizacion { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); }
+    .log-icon.eliminacion { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2); }
+    .log-icon.login { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2); }
+    .log-icon.ot { background: linear-gradient(135deg, #94a3b8, #64748b); color: white; box-shadow: 0 4px 10px rgba(100, 116, 139, 0.2); }
+    
+    .log-content { flex-grow: 1; }
+    .log-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .log-title {
+        font-weight: 800;
+        color: #1e293b;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .log-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+    .log-user {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: #f1f5f9;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        font-weight: 700;
+        color: #334155;
+        font-size: 0.8rem;
+    }
+    .log-user i { color: var(--primary-color); }
+    
+    .log-details {
+        color: #475569;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px dashed #cbd5e1;
+    }
+    .log-id {
+        font-family: monospace;
+        color: #94a3b8;
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+    }
 </style>
 
-<div class="admin-header">
-    <div>
-        <h1 style="margin:0;"><i class="ri-history-line" style="color:var(--primary-color)"></i> Registro de Actividad (Log)</h1>
-        <p style="color: var(--text-muted); margin-top:0.5rem;">Auditoría de las últimas acciones realizadas por los usuarios en el CMS.</p>
-    </div>
+<div class="log-timeline">
+    <?php if(empty($actividades)): ?>
+        <div style="text-align:center; padding: 3rem; background: white; border-radius: var(--radius-md); border: 1px dashed #cbd5e1; color: var(--text-muted);">
+            <i class="ri-history-line" style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1rem; display: block;"></i>
+            No hay actividad registrada aún en el sistema.
+        </div>
+    <?php else: ?>
+        <?php foreach ($actividades as $a): 
+            $clase = 'ot';
+            $icon = 'ri-record-circle-line';
+            
+            if (stripos($a['accion'], 'Creación') !== false) {
+                $clase = 'creacion'; $icon = 'ri-add-circle-fill';
+            } elseif (stripos($a['accion'], 'Actualización') !== false || stripos($a['accion'], 'Edición') !== false) {
+                $clase = 'actualizacion'; $icon = 'ri-edit-2-fill';
+            } elseif (stripos($a['accion'], 'Eliminación') !== false || stripos($a['accion'], 'Bloqueo') !== false || stripos($a['accion'], 'Borrador') !== false) {
+                $clase = 'eliminacion'; $icon = 'ri-delete-bin-fill';
+            } elseif (stripos($a['accion'], 'Login') !== false || stripos($a['accion'], 'Sesión') !== false) {
+                $clase = 'login'; $icon = 'ri-login-circle-fill';
+            }
+        ?>
+        <div class="log-item">
+            <div class="log-icon <?php echo $clase; ?>">
+                <i class="<?php echo $icon; ?>"></i>
+            </div>
+            <div class="log-content">
+                <div class="log-header">
+                    <div class="log-title">
+                        <?php echo htmlspecialchars(ucfirst($a['accion'])); ?>
+                        <span class="log-id">#<?php echo str_pad($a['id'], 5, '0', STR_PAD_LEFT); ?></span>
+                    </div>
+                    <div class="log-meta">
+                        <span class="log-user">
+                            <i class="ri-user-smile-fill"></i>
+                            <?php echo htmlspecialchars($a['usuario']); ?>
+                            <?php if(!empty($a['rol_usuario'])): ?>
+                                <span style="opacity: 0.5; margin-left: 4px;">(<?php echo htmlspecialchars($a['rol_usuario']); ?>)</span>
+                            <?php endif; ?>
+                        </span>
+                        <span style="display: flex; align-items: center; gap: 0.3rem;">
+                            <i class="ri-time-line"></i>
+                            <?php echo date('d M Y, H:i', strtotime($a['fecha_registro'])); ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="log-details">
+                    <?php echo formatDetalles($a['detalles'] ?? ''); ?>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
-
-<div style="margin-bottom: 1.5rem; background: white; padding: 1rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #6366f1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-    <p style="margin:0; font-size:0.9rem; color:var(--text-muted);"><i class="ri-information-line"></i> Mostrando registros <?php echo $offset + 1; ?>–<?php echo min($offset + $per_page, $total_rows); ?> de <?php echo number_format($total_rows); ?> totales. Página <?php echo $page; ?>/<?php echo $total_pages; ?>.</p>
-</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Fecha y Hora</th>
-            <th>Usuario</th>
-            <th>Acción</th>
-            <th>Detalles</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if(empty($actividades)): ?>
-            <tr><td colspan="5" style="text-align:center;">No hay actividad registrada aún.</td></tr>
-        <?php else: ?>
-            <?php foreach ($actividades as $a): 
-                $clase = 'badge-ot';
-                if ($a['accion'] === 'Creación') $clase = 'badge-creacion';
-                elseif ($a['accion'] === 'Actualización') $clase = 'badge-actualizacion';
-                elseif ($a['accion'] === 'Eliminación' || $a['accion'] === 'Bloqueo') $clase = 'badge-eliminacion';
-            ?>
-            <tr>
-                <td><?php echo $a['id']; ?></td>
-                <td style="white-space:nowrap;"><?php echo date('d/m/Y H:i', strtotime($a['fecha_registro'])); ?></td>
-                <td>
-                    <strong><?php echo htmlspecialchars($a['usuario']); ?></strong><br>
-                    <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;"><?php echo htmlspecialchars($a['rol_usuario'] ?? 'N/A'); ?></span>
-                </td>
-                <td><span class="badge <?php echo $clase; ?>" style="padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;"><?php echo htmlspecialchars($a['accion']); ?></span></td>
-                <td><?php echo formatDetalles($a['detalles'] ?? ''); ?></td>
-            </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </tbody>
-</table>
 
 <?php if ($total_pages > 1): ?>
 <div style="display:flex; justify-content:center; gap:0.5rem; margin-top:2rem; flex-wrap:wrap; align-items:center;">
