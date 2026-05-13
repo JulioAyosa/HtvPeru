@@ -134,7 +134,7 @@ class AdminSettingsController extends Controller {
                         
                         $unique_name = $db_key . '_' . time() . '.' . $ext;
                         $relative_path = $uploadDir . $unique_name;
-                        $target = __DIR__ . '/../../' . $relative_path;
+                        $target = __DIR__ . '/../../public/' . $relative_path;
                         
                         if (move_uploaded_file($tmp, $target)) {
                             $cambios[] = $db_key;
