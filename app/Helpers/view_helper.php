@@ -96,3 +96,16 @@ function renderMedia($fileUrl, $cssClass = '', $posterUrl = '', $autoplay = true
         return '<img' . $loadingAttr . ' src="' . htmlspecialchars($finalUrl) . '" class="' . htmlspecialchars($cssClass) . '" alt="Media"' . $styleAttr . '>';
     }
 }
+
+// NUEVO: Helper para fecha en español sin funciones obsoletas (PHP 8.1+)
+function formatear_fecha_espanol() {
+    $dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    $meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    
+    $w = (int)date('w');
+    $n = (int)date('n');
+    $d = date('d');
+    $Y = date('Y');
+    
+    return $dias[$w] . " " . $d . " de " . $meses[$n - 1] . " del " . $Y;
+}

@@ -9,9 +9,7 @@ class HomeController {
         global $pdo;
 
 date_default_timezone_set('America/Lima');
-$dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-$meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-$fecha_espanol = @$dias[date('w')] . ", " . date('d') . " de " . @$meses[date('n') - 1] . " de " . date('Y');
+$fecha_espanol = formatear_fecha_espanol();
 
 // Configuraciones Dinámicas (NUEVO SISTEMA PREMIUM + CACHE)
 $global_configs = [];

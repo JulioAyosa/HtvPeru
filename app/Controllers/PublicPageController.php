@@ -462,8 +462,8 @@ class PublicPageController {
         $site_title = ($global_configs['site_title'] ?? 'HTVPERU') . ' - ' . htmlspecialchars($pagina['titulo']);
         $color_primario = $global_configs['color_primario'] ?? '#2563eb';
         $color_secundario = $global_configs['color_secundario'] ?? '#1e40af';
-        setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'esp');
-        $fecha_espanol = utf8_encode(strftime("%A %d de %B del %Y"));
+        
+        $fecha_espanol = formatear_fecha_espanol();
 
         chdir(__DIR__ . '/../../');
         require __DIR__ . '/../Views/public/page.php';
