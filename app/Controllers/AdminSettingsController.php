@@ -182,11 +182,11 @@ class AdminSettingsController extends Controller {
             
             require_once __DIR__ . '/../Helpers/view_helper.php';
             build_global_cache($this->pdo);
-            header("Location: " . APP_BASE . "admin/configuracion?exito=1");
+            header("Location: " . APP_BASE . "/admin/configuracion?exito=1");
             exit;
         }
 
-        header('Location: " . APP_BASE . "admin/configuracion');
+        header('Location: ' . APP_BASE . '/admin/configuracion');
         exit;
     }
 }

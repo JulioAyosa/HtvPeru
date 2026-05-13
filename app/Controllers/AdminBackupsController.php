@@ -79,7 +79,7 @@ class AdminBackupsController extends Controller {
                 rename($file_path, $papelera_dir . $file_name);
                 $stmt_log = $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
                 $stmt_log->execute([$_SESSION['user_id'], 'Backup Eliminado', "Movió el backup $file_name a la papelera (Retención 15 días)."]);
-                header('Location: ' . APP_BASE . 'admin/respaldos?msg=trash_ok');
+                header('Location: ' . APP_BASE . '/admin/respaldos?msg=trash_ok');
                 exit;
             }
         }
@@ -177,7 +177,7 @@ class AdminBackupsController extends Controller {
                         exit;
                     } else {
                         ob_end_clean();
-                        header('Location: ' . APP_BASE . 'admin/respaldos?err=' . urlencode("No se pudo crear el archivo ZIP. Permisos denegados en la carpeta."));
+                        header('Location: ' . APP_BASE . '/admin/respaldos?err=' . urlencode("No se pudo crear el archivo ZIP. Permisos denegados en la carpeta."));
                         exit;
                     }
                 } catch (\Throwable $ex) {
@@ -205,7 +205,7 @@ class AdminBackupsController extends Controller {
                 $noticias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 if (empty($noticias)) {
-                    header('Location: ' . APP_BASE . 'admin/respaldos?err=' . urlencode("No se encontraron noticias con los filtros seleccionados para exportar."));
+                    header('Location: ' . APP_BASE . '/admin/respaldos?err=' . urlencode("No se encontraron noticias con los filtros seleccionados para exportar."));
                     exit;
                 } else {
                     $backup_data = [
@@ -228,7 +228,7 @@ class AdminBackupsController extends Controller {
                         echo $json;
                         exit;
                     } else {
-                        header('Location: ' . APP_BASE . 'admin/respaldos?err=' . urlencode("Error del sistema al generar el archivo JSON."));
+                        header('Location: ' . APP_BASE . '/admin/respaldos?err=' . urlencode("Error del sistema al generar el archivo JSON."));
                         exit;
                     }
                 }
@@ -269,20 +269,20 @@ class AdminBackupsController extends Controller {
                         }
                         $stmt_log = $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
                         $stmt_log->execute([$_SESSION['user_id'], 'Importación', "Restauró/Importó de JSON. Nuevas: $imported | Reemplazadas: $updated | Omitidas: $skipped."]);
-                        header('Location: ' . APP_BASE . 'admin/respaldos?msg=import_ok&n=' . $imported . '&u=' . $updated . '&s=' . $skipped);
+                        header('Location: ' . APP_BASE . '/admin/respaldos?msg=import_ok&n=' . $imported . '&u=' . $updated . '&s=' . $skipped);
                         exit;
                     } else {
-                        header('Location: ' . APP_BASE . 'admin/respaldos?err=' . urlencode("El archivo cargado no es un JSON válido o fue generado por otro sistema distinto a HTVPERU CMS."));
+                        header('Location: ' . APP_BASE . '/admin/respaldos?err=' . urlencode("El archivo cargado no es un JSON válido o fue generado por otro sistema distinto a HTVPERU CMS."));
                         exit;
                     }
                 } else {
-                    header('Location: ' . APP_BASE . 'admin/respaldos?err=' . urlencode("Debes seleccionar un archivo JSON válido para importar."));
+                    header('Location: ' . APP_BASE . '/admin/respaldos?err=' . urlencode("Debes seleccionar un archivo JSON válido para importar."));
                     exit;
                 }
             }
         }
 
-        header('Location: ' . APP_BASE . 'admin/respaldos');
+        header('Location: ' . APP_BASE . '/admin/respaldos');
         exit;
     }
 }

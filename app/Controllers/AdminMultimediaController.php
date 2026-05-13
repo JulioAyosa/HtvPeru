@@ -165,7 +165,7 @@ class AdminMultimediaController extends Controller {
             }
             
             $msg = $result['msg'];
-            header('Location: " . APP_BASE . "admin/multimedia?msg=' . urlencode($msg));
+            header('Location: ' . APP_BASE . '/admin/multimedia?msg=' . urlencode($msg));
             exit;
         }
 
@@ -208,7 +208,7 @@ class AdminMultimediaController extends Controller {
                     $stmt_log = $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
                     $stmt_log->execute([$_SESSION['user_id'], 'Papelera', "Movió $success archivo(s) multimedia a la papelera simultáneamente en lote."]);
                     $msg = "$success archivo(s) movidos a la papelera." . ($failed > 0 ? " ($failed fallaron)" : "");
-                    header('Location: ' . APP_BASE . 'admin/multimedia?msg=' . urlencode($msg));
+                    header('Location: ' . APP_BASE . '/admin/multimedia?msg=' . urlencode($msg));
                     exit;
                 } else {
                     $redirect_msg = 'ok_1';
@@ -216,7 +216,7 @@ class AdminMultimediaController extends Controller {
             } else {
                 $redirect_msg = 'ok_2';
             }
-            header('Location: ' . APP_BASE . 'admin/multimedia?msg=' . urlencode($redirect_msg ?? 'ok_1'));
+            header('Location: ' . APP_BASE . '/admin/multimedia?msg=' . urlencode($redirect_msg ?? 'ok_1'));
             exit;
         }
 
@@ -250,7 +250,7 @@ class AdminMultimediaController extends Controller {
         }
         
         // Redirección por defecto si no hay acción válida
-        header('Location: ' . APP_BASE . 'admin/multimedia');
+        header('Location: ' . APP_BASE . '/admin/multimedia');
         exit;
     }
 }

@@ -85,7 +85,7 @@ class AdminRoleController {
                 }
                 
                 $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Creación de Rol', "Creó el rol: $nombre"]);
-                header('Location: ' . APP_BASE . 'admin/roles?msg=created');
+                header('Location: ' . APP_BASE . '/admin/roles?msg=created');
                 exit;
             }
         } elseif ($action === 'edit_role') {
@@ -95,7 +95,7 @@ class AdminRoleController {
             $permisos_seleccionados = $_POST['permisos'] ?? [];
 
             if ($rol_id === 1 && $_SESSION['rol_id'] != 1) {
-                 header('Location: ' . APP_BASE . 'admin/roles?msg=protected');
+                 header('Location: ' . APP_BASE . '/admin/roles?msg=protected');
                  exit;
             }
 
@@ -114,7 +114,7 @@ class AdminRoleController {
                 }
                 
                 $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Actualización de Rol', "Actualizó el rol ID: $rol_id"]);
-                header('Location: ' . APP_BASE . 'admin/roles?msg=updated');
+                header('Location: ' . APP_BASE . '/admin/roles?msg=updated');
                 exit;
             }
         } elseif ($action === 'delete_role') {
@@ -125,7 +125,7 @@ class AdminRoleController {
             $rol = $stmt_check->fetch();
 
             if ($rol && $rol['is_system'] == 1) {
-                header('Location: ' . APP_BASE . 'admin/roles?msg=system_protected');
+                header('Location: ' . APP_BASE . '/admin/roles?msg=system_protected');
                 exit;
             }
 
@@ -134,18 +134,18 @@ class AdminRoleController {
             $count = $stmt_users->fetchColumn();
 
             if ($count > 0) {
-                header('Location: ' . APP_BASE . 'admin/roles?msg=has_users');
+                header('Location: ' . APP_BASE . '/admin/roles?msg=has_users');
                 exit;
             }
 
             $pdo->prepare("DELETE FROM roles WHERE id = ?")->execute([$rol_id]);
             $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Eliminación de Rol', "Eliminó el rol ID: $rol_id"]);
             
-            header('Location: ' . APP_BASE . 'admin/roles?msg=deleted');
+            header('Location: ' . APP_BASE . '/admin/roles?msg=deleted');
             exit;
         }
 
-        header('Location: ' . APP_BASE . 'admin/roles');
+        header('Location: ' . APP_BASE . '/admin/roles');
         exit;
     }
 }

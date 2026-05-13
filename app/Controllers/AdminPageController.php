@@ -106,7 +106,7 @@ class AdminPageController {
             }
         }
         
-        header('Location: ' . APP_BASE . 'admin/paginas?msg=' . urlencode($redirect_msg));
+        header('Location: ' . APP_BASE . '/admin/paginas?msg=' . urlencode($redirect_msg));
         exit;
     }
     

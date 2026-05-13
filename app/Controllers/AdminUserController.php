@@ -66,7 +66,7 @@ class AdminUserController {
             $stmt = $pdo->prepare("UPDATE usuarios SET estado = 'activo', motivo_bloqueo = NULL WHERE id = ?");
             $stmt->execute([$id_unblock]);
             $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Actualización', 'Desbloqueó al usuario ID #' . $id_unblock]);
-            header('Location: ' . APP_BASE . 'admin/usuarios?msg=unblocked');
+            header('Location: ' . APP_BASE . '/admin/usuarios?msg=unblocked');
             exit;
         }
 
@@ -75,13 +75,13 @@ class AdminUserController {
             $motivo = trim($_POST['motivo_bloqueo']);
             
             if ($id_block === $user_id) {
-                header('Location: ' . APP_BASE . 'admin/usuarios?msg=block_self');
+                header('Location: ' . APP_BASE . '/admin/usuarios?msg=block_self');
                 exit;
             } else {
                 $stmt = $pdo->prepare("UPDATE usuarios SET estado = 'bloqueado', motivo_bloqueo = ? WHERE id = ?");
                 $stmt->execute([$motivo, $id_block]);
                 $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Bloqueo', 'Bloqueó al usuario ID #' . $id_block . ' por: ' . $motivo]);
-                header('Location: ' . APP_BASE . 'admin/usuarios?msg=blocked');
+                header('Location: ' . APP_BASE . '/admin/usuarios?msg=blocked');
                 exit;
             }
         }
@@ -91,7 +91,7 @@ class AdminUserController {
             $id_reassign = (int)$_POST['reassign_user_id'];
             
             if ($id_del === $user_id) {
-                header('Location: ' . APP_BASE . 'admin/usuarios?msg=delete_self');
+                header('Location: ' . APP_BASE . '/admin/usuarios?msg=delete_self');
                 exit;
             } else {
                 if ($id_reassign > 0) {
@@ -103,7 +103,7 @@ class AdminUserController {
                 
                 $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Eliminación', 'Envió al usuario ID #' . $id_del . ' a la papelera.']);
                 
-                header('Location: ' . APP_BASE . 'admin/usuarios?msg=deleted');
+                header('Location: ' . APP_BASE . '/admin/usuarios?msg=deleted');
                 exit;
             }
         }
@@ -140,7 +140,7 @@ class AdminUserController {
                 }
             } elseif ($action === 'edit' && $id) {
                 if ($id == 1 && $user_id != 1) {
-                    header('Location: ' . APP_BASE . 'admin/usuarios?msg=edit_protected');
+                    header('Location: ' . APP_BASE . '/admin/usuarios?msg=edit_protected');
                     exit;
                 }
 
@@ -175,11 +175,11 @@ class AdminUserController {
                 $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$user_id, 'Actualización', $detalles_msg]);
                 $redirect_msg = 'ok_3';
             }
-            header('Location: ' . APP_BASE . 'admin/usuarios?msg=' . urlencode($redirect_msg));
+            header('Location: ' . APP_BASE . '/admin/usuarios?msg=' . urlencode($redirect_msg));
             exit;
         }
 
-        header('Location: ' . APP_BASE . 'admin/usuarios');
+        header('Location: ' . APP_BASE . '/admin/usuarios');
         exit;
     }
 }

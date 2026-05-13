@@ -25,13 +25,13 @@ if (function_exists('mb_internal_encoding')) {
 // En producción (raíz del dominio): APP_BASE = ''
 // En desarrollo (subdirectorio):    APP_BASE = '/piura_noticias_php'
 if (!defined('APP_BASE')) {
-    $script_dir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
-    // Detectar si estamos en un subdirectorio conocido
-    if (stripos($script_dir, '/piura_noticias_php') !== false) {
-        define('APP_BASE', '/piura_noticias_php');
-    } else {
-        define('APP_BASE', '');
-    }
+    // Detectar automáticamente el subdirectorio del proyecto (si existe)
+    $script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+    $script_dir = dirname($script_name);
+    // Limpiar barras invertidas de Windows y asegurar que no termine en /
+    $base = str_replace('\\', '/', $script_dir);
+    $base = rtrim($base, '/');
+    define('APP_BASE', $base);
 }
 
 // DEFINICIÓN DE RUTAS FÍSICAS (FileSystem)

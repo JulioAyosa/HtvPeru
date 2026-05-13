@@ -131,6 +131,11 @@ ServerSignature Off
     RewriteRule ^sitemap-static\.xml$ public/sitemap-static.xml [L]
     RewriteRule ^sitemap-news-static\.xml$ public/sitemap-news-static.xml [L]
 
+    # Redirigir recursos estáticos (img, uploads, css, js) al directorio public/ si no existen en el raíz
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(img|uploads|css|js|assets|vendor)/(.*)$ public/$1/$2 [L]
+
     # Enviar todo el resto a public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
 
