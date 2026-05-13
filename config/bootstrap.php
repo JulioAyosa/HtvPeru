@@ -25,12 +25,15 @@ if (function_exists('mb_internal_encoding')) {
 // En producción (raíz del dominio): APP_BASE = ''
 // En desarrollo (subdirectorio):    APP_BASE = '/piura_noticias_php'
 if (!defined('APP_BASE')) {
-    // Detectar automáticamente el subdirectorio del proyecto (si existe)
     $script_name = $_SERVER['SCRIPT_NAME'] ?? '';
-    $script_dir = dirname($script_name);
-    // Limpiar barras invertidas de Windows y asegurar que no termine en /
-    $base = str_replace('\\', '/', $script_dir);
-    $base = rtrim($base, '/');
+    $base = str_replace('\\', '/', dirname($script_name));
+    
+    // Normalizar: si es solo una barra, dejar vacío. Si termina en /public, quitarlo.
+    if ($base === '/') $base = '';
+    if (str_ends_with($base, '/public')) {
+        $base = substr($base, 0, -7);
+    }
+    
     define('APP_BASE', $base);
 }
 
@@ -59,9 +62,12 @@ if ($app_debug === false || $app_env === 'production') {
 }
 
 // PRE-PRODUCCION: Forzar HTTPS si estamos en producción y no es localhost
+// Soporte para Proxies (Cloudflare, Load Balancers) mediante X-Forwarded-Proto
+$is_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || 
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+
 if ($app_env === 'production' && php_sapi_name() !== 'cli') {
-    if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
-        // Redirigir a HTTPS
+    if (!$is_https) {
         $host = $_SERVER['HTTP_HOST'] ?? '';
         $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
         if ($host !== 'localhost' && $host !== '127.0.0.1') {

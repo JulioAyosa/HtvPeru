@@ -97,13 +97,7 @@ ServerSignature Off
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Redirección Forzada a HTTPS (Producción)
-    # NOTA: En localhost/desarrollo esto podría causar problemas si no hay certificado local, 
-    # por lo que debe descomentarse en producción o usarse con precaución.
-    RewriteCond %{HTTPS} off
-    RewriteCond %{HTTP_HOST} !^localhost$
-    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1$
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # Redirección Forzada a HTTPS (Gestionada por bootstrap.php para mayor compatibilidad con Proxies)
     
     RewriteRule ^vendor/ - [F,L]
     RewriteRule ^app/ - [F,L]
@@ -136,6 +130,8 @@ ServerSignature Off
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(img|uploads|css|js|assets|vendor)/(.*)$ public/$1/$2 [L]
 
+    # Evitar que archivos estáticos faltantes pasen por el Front Controller (Mejora de rendimiento)
+    RewriteCond %{REQUEST_URI} !\.(css|js|jpg|jpeg|png|gif|webp|svg|ico|pdf|mp4|webm|woff2?|ttf|eot)$ [NC]
     # Enviar todo el resto a public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
 

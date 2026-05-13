@@ -40,7 +40,7 @@ function build_global_cache($pdo) {
             $data['publicidad'][$a['ubicacion']][] = $a;
         }
         
-        file_put_contents(__DIR__ . '/../../global_cache.json', json_encode($data));
+        file_put_contents(__DIR__ . '/../../storage/cache/global_cache.json', json_encode($data));
         return $data;
     } catch(Exception $e) {
         return null;
