@@ -58,7 +58,7 @@ class AdminProfileController {
                 $fw_result = media_firewall_check($_FILES['avatar']['tmp_name'], $_FILES['avatar']['name']);
                 if (!$fw_result['ok']) {
                     $redirect_msg = 'avatar_error';
-                    header('Location: " . APP_BASE . "admin/perfil?msg=' . urlencode($redirect_msg));
+                    header('Location: ' . APP_BASE . 'admin/perfil?msg=' . urlencode($redirect_msg));
                     exit;
                 }
                 $ext = strtolower(pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION));
@@ -91,7 +91,7 @@ class AdminProfileController {
                 if ($password !== '') {
                     if (mb_strlen($password) < 8) {
                         $redirect_msg = 'pass_short';
-                        header('Location: " . APP_BASE . "admin/perfil?msg=' . urlencode($redirect_msg));
+                        header('Location: ' . APP_BASE . 'admin/perfil?msg=' . urlencode($redirect_msg));
                         exit;
                     }
                     $current_pass = $_POST['current_password'] ?? '';
@@ -100,7 +100,7 @@ class AdminProfileController {
                     $pw_row = $stmt_pw->fetch();
                     if (!$pw_row || !password_verify($current_pass, $pw_row['password_hash'])) {
                         $redirect_msg = 'pass_wrong';
-                        header('Location: " . APP_BASE . "admin/perfil?msg=' . urlencode($redirect_msg));
+                        header('Location: ' . APP_BASE . 'admin/perfil?msg=' . urlencode($redirect_msg));
                         exit;
                     }
                     $hash = password_hash($password, PASSWORD_DEFAULT);

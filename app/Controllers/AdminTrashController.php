@@ -171,7 +171,7 @@ class AdminTrashController extends Controller {
             exit;
         }
 
-        header('Location: " . APP_BASE . "admin/papelera');
+        header('Location: ' . APP_BASE . 'admin/papelera');
         exit;
     }
 }
