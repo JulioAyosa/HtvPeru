@@ -5,7 +5,7 @@ use Config\Database;
 
 class AdminContentController {
     
-    public function __construct() { require_once __DIR__ . '/../../conexion.php'; }
+    public function __construct() { require_once __DIR__ . '/../../config/bootstrap.php'; }
 
     public function index() {
         global $pdo;
@@ -345,7 +345,7 @@ class AdminContentController {
             $stmt = $pdo->prepare("INSERT INTO registro_contenidos (fecha, hora, hora_publicacion, titular, enlace, fuente_url, usuario_id, seccion, plataforma, rebote, completado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$fecha, $hora, $hora_publicacion, $titular, $enlace, $fuente_url, $insert_user, $seccion, $plataforma, $rebote, $completado]);
             
-            header("Location: /piura_noticias_php/admin/contenidos?msg=Registrado");
+            header("Location: " . APP_BASE . "admin/contenidos?msg=Registrado");
             exit;
         }
 
@@ -357,7 +357,7 @@ class AdminContentController {
                     $check = $pdo->prepare("SELECT id FROM registro_contenidos WHERE id = ? AND usuario_id = ?");
                     $check->execute([$id, $user_id]);
                     if ($check->rowCount() === 0) {
-                        header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Sin permisos"));
+                        header("Location: " . APP_BASE . "admin/contenidos?msg=" . urlencode("Sin permisos"));
                         exit;
                     }
                 }
@@ -373,7 +373,7 @@ class AdminContentController {
                     isset($_POST['completado']) ? 1 : 0,
                     $id
                 ]);
-                header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Publicación actualizada"));
+                header("Location: " . APP_BASE . "admin/contenidos?msg=" . urlencode("Publicación actualizada"));
                 exit;
             }
         }
@@ -388,18 +388,18 @@ class AdminContentController {
                 if ($row) {
                     // Verify ownership if not admin
                     if (!$is_admin && $row['usuario_id'] != $user_id) {
-                        header("Location: /piura_noticias_php/admin/contenidos");
+                        header("Location: " . APP_BASE . "admin/contenidos");
                         exit;
                     }
                     $stmt = $pdo->prepare("INSERT INTO registro_contenidos (fecha, hora, hora_publicacion, titular, enlace, fuente_url, usuario_id, seccion, plataforma, rebote, completado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                     $stmt->execute([$row['fecha'], $row['hora'], $row['hora_publicacion'], $row['titular'], $row['enlace'], $row['fuente_url'], $row['usuario_id'], $row['seccion'], $new_plat, $row['rebote'], $row['completado']]);
-                    header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Duplicado en " . $new_plat));
+                    header("Location: " . APP_BASE . "admin/contenidos?msg=" . urlencode("Duplicado en " . $new_plat));
                     exit;
                 }
             }
         }
         
-        header("Location: /piura_noticias_php/admin/contenidos");
+        header("Location: " . APP_BASE . "admin/contenidos");
         exit;
     }
 
@@ -418,7 +418,7 @@ class AdminContentController {
 
         if ($delete_id && $is_admin) {
             $pdo->prepare("DELETE FROM registro_contenidos WHERE id = ?")->execute([(int)$delete_id]);
-            header("Location: /piura_noticias_php/admin/contenidos?msg=" . urlencode("Registro eliminado permanentemente."));
+            header("Location: " . APP_BASE . "admin/contenidos?msg=" . urlencode("Registro eliminado permanentemente."));
             exit;
         }
 
@@ -435,11 +435,11 @@ class AdminContentController {
             } else {
                 $pdo->prepare("UPDATE registro_contenidos SET completado = ? WHERE id = ?")->execute([$val, $tid]);
             }
-            header("Location: /piura_noticias_php/admin/contenidos");
+            header("Location: " . APP_BASE . "admin/contenidos");
             exit;
         }
 
-        header("Location: /piura_noticias_php/admin/contenidos");
+        header("Location: " . APP_BASE . "admin/contenidos");
         exit;
     }
 }

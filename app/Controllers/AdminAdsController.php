@@ -61,7 +61,7 @@ class AdminAdsController extends Controller {
                 
                 // Subida de imagen
                 if ($tipo === 'imagen' && isset($_FILES['banner_upload']) && $_FILES['banner_upload']['error'] === UPLOAD_ERR_OK) {
-                    require_once __DIR__ . '/../../media_firewall.php';
+                    
                     
                     $tmp = $_FILES['banner_upload']['tmp_name'];
                     $name = basename($_FILES['banner_upload']['name']);
@@ -129,9 +129,9 @@ class AdminAdsController extends Controller {
                 }
             }
             
-            require_once __DIR__ . '/../../core/cache_helper.php';
+            
             build_global_cache($this->pdo);
-            header('Location: /piura_noticias_php/admin/publicidad?msg=' . urlencode($redirect_msg));
+            header('Location: " . APP_BASE . "admin/publicidad?msg=' . urlencode($redirect_msg));
             exit;
         }
 
@@ -151,14 +151,14 @@ class AdminAdsController extends Controller {
             $this->pdo->prepare("UPDATE publicidad SET deleted_at = NOW() WHERE id = ?")->execute([$id]);
             $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$_SESSION['user_id'], 'Eliminación', 'Borró definitivamente el anuncio ID #' . $id . ' (' . $ad_name . ')']);
             
-            require_once __DIR__ . '/../../core/cache_helper.php';
+            
             build_global_cache($this->pdo);
             
-            header("Location: /piura_noticias_php/admin/publicidad?msg=eliminado");
+            header("Location: " . APP_BASE . "admin/publicidad?msg=eliminado");
             exit;
         }
 
-        header('Location: /piura_noticias_php/admin/publicidad');
+        header('Location: " . APP_BASE . "admin/publicidad');
         exit;
     }
 }

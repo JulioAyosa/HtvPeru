@@ -126,7 +126,7 @@
                 <li style="padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 0.5rem;">
                     <span style="background: <?php echo $i===0?'#f59e0b':($i===1?'#94a3b8':($i===2?'#b45309':'#e2e8f0')); ?>; color: <?php echo $i<=2?'white':'#475569'; ?>; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; flex-shrink: 0;"><?php echo $i+1; ?></span>
                     <div style="flex: 1; min-width: 0;">
-                        <div style="font-weight: 600; font-size: 0.85rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><a href="/piura_noticias_php/admin?action=edit&id=<?php echo $tn['id']; ?>" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($tn['titulo']); ?></a></div>
+                        <div style="font-weight: 600; font-size: 0.85rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><a href="<?php echo APP_BASE; ?>/admin?action=edit&id=<?php echo $tn['id']; ?>" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($tn['titulo']); ?></a></div>
                         <div style="font-size: 0.75rem; color: #94a3b8;"><i class="ri-eye-line"></i> <?php echo number_format($tn['vistas']); ?> visitas</div>
                     </div>
                 </li>
@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <!-- Controles y Buscador -->
-<form id="bulkForm" method="POST" action="/piura_noticias_php/admin/dashboard/bulk">
+<form id="bulkForm" method="POST" action="<?php echo APP_BASE; ?>/admin/dashboard/bulk">
     <?php echo csrf_field(); ?>
     
     <div class="cfg-panel" style="padding: 2rem;">
@@ -303,18 +303,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 <td style="text-align:right; white-space:nowrap;">
                     <?php if ($n['estado_publicacion'] === 'papelera'): ?>
                         <?php if ($user_role === 'admin'): ?>
-                            <a href="/piura_noticias_php/admin/dashboard/action?action=restore&id=<?php echo $n['id']; ?>" class="btn btn-success" style="padding:4px 8px; font-size:0.75rem;"><i class="ri-refresh-line"></i> Restaurar</a>
-                            <a href="/piura_noticias_php/admin/dashboard/action?action=hard_delete&id=<?php echo $n['id']; ?>" class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="return confirmDelete(event, '¿Seguro que deseas eliminar esta noticia PERMANENTEMENTE?')"><i class="ri-close-circle-line"></i> Hard Delete</a>
+                            <a href="<?php echo APP_BASE; ?>/admin/dashboard/action?action=restore&id=<?php echo $n['id']; ?>" class="btn btn-success" style="padding:4px 8px; font-size:0.75rem;"><i class="ri-refresh-line"></i> Restaurar</a>
+                            <a href="<?php echo APP_BASE; ?>/admin/dashboard/action?action=hard_delete&id=<?php echo $n['id']; ?>" class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="return confirmDelete(event, '¿Seguro que deseas eliminar esta noticia PERMANENTEMENTE?')"><i class="ri-close-circle-line"></i> Hard Delete</a>
                         <?php else: ?>
                             <span style="font-size:0.75rem; color:#9ca3af;">En Papelera</span>
                         <?php endif; ?>
                     <?php else: ?>
-                        <a href="/piura_noticias_php/<?php echo urlencode($n['slug']); ?>" style="background:var(--primary-color); color:white; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" target="_blank" title="Ver"><i class="ri-eye-line"></i></a>
+                        <a href="<?php echo APP_BASE; ?>/<?php echo urlencode($n['slug']); ?>" style="background:var(--primary-color); color:white; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" target="_blank" title="Ver"><i class="ri-eye-line"></i></a>
                         <?php if ($user_role !== 'gerente'): ?>
-                        <a href="/piura_noticias_php/admin?action=edit&id=<?php echo $n['id']; ?>" style="background:#fef08a; color:#b45309; border:1px solid #fde047; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Editar"><i class="ri-edit-2-line"></i></a>
-                        <a href="/piura_noticias_php/admin/dashboard/action?action=duplicate&id=<?php echo $n['id']; ?>" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Duplicar"><i class="ri-file-copy-line"></i></a>
+                        <a href="<?php echo APP_BASE; ?>/admin?action=edit&id=<?php echo $n['id']; ?>" style="background:#fef08a; color:#b45309; border:1px solid #fde047; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Editar"><i class="ri-edit-2-line"></i></a>
+                        <a href="<?php echo APP_BASE; ?>/admin/dashboard/action?action=duplicate&id=<?php echo $n['id']; ?>" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none; margin-right:4px;" title="Duplicar"><i class="ri-file-copy-line"></i></a>
                         <?php if ($user_role === 'admin'): ?>
-                            <a href="/piura_noticias_php/admin/dashboard/action?action=delete&id=<?php echo $n['id']; ?>" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none;" onclick="return confirmDelete(event, '¿Enviar esta noticia a la Papelera?')" title="Borrar a Papelera"><i class="ri-delete-bin-line"></i></a>
+                            <a href="<?php echo APP_BASE; ?>/admin/dashboard/action?action=delete&id=<?php echo $n['id']; ?>" style="background:#fee2e2; color:#dc2626; border:1px solid #fecaca; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:4px; font-size:0.9rem; text-decoration:none;" onclick="return confirmDelete(event, '¿Enviar esta noticia a la Papelera?')" title="Borrar a Papelera"><i class="ri-delete-bin-line"></i></a>
                         <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -390,7 +390,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             <!-- Contenido Scrollable -->
             <div style="padding: 2.5rem; overflow-y: auto; flex-grow: 1; position: relative;" class="modal-scroll-body">
-                <form method="POST" action="/piura_noticias_php/admin/dashboard/store" enctype="multipart/form-data">
+                <form method="POST" action="<?php echo APP_BASE; ?>/admin/dashboard/store" enctype="multipart/form-data">
                 <?php echo csrf_field(); ?>
                 <input type="hidden" name="action_type" value="<?php echo $edit_data ? 'update' : 'create'; ?>">
                 <?php if ($edit_data): ?>
@@ -564,7 +564,7 @@ document.addEventListener("DOMContentLoaded", function() {
     </div> <!-- Close Modal Wrapper -->
 </div>
 
-<script src="/piura_noticias_php/js/ckeditor/ckeditor.js"></script>
+<script src="<?php echo APP_BASE; ?>/js/ckeditor/ckeditor.js"></script>
 <script>
     function toggleDistrito() {
         const cat = document.getElementById('categoria_select').value;
@@ -613,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("Error al inicializar CKEditor: " + e.message);
             }
         } else {
-            alert("CKEditor no se cargó correctamente desde el CDN. Revisa tu conexión o bloqueador de anuncios.");
+            console.error("CKEditor no se cargó correctamente.");
         }
     }
 
@@ -624,7 +624,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function closeEditorModal() {
         document.getElementById('modal').style.display='none';
-        if(window.location.search.includes('action=edit')) window.location='/piura_noticias_php/admin';
+        if(window.location.search.includes('action=edit')) window.location='<?php echo APP_BASE; ?>/admin';
     }
 
     document.addEventListener("DOMContentLoaded", function() {

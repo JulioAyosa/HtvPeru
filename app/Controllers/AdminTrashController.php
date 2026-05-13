@@ -22,7 +22,7 @@ class AdminTrashController extends Controller {
     }
 
     private function runAutoPurge() {
-        $purge_lock = __DIR__ . '/../../uploads/papelera/.purge_lock';
+        $purge_lock = PUBLIC_PATH . 'uploads/papelera/.purge_lock';
         $should_purge = !file_exists($purge_lock) || (time() - filemtime($purge_lock)) > 3600;
 
         if ($should_purge) {
@@ -36,7 +36,7 @@ class AdminTrashController extends Controller {
                 $this->pdo->query("DELETE FROM paginas WHERE deleted_at IS NOT NULL AND deleted_at < NOW() - INTERVAL {$this->purge_days} DAY");
             } catch (\Exception $e) { /* Silenciar errores */ }
 
-            $trash_dir = 'uploads/papelera/';
+            $trash_dir = PUBLIC_PATH . 'uploads/papelera/';
             if (is_dir($trash_dir)) {
                 $now = time();
                 $files = glob($trash_dir . '*.*');
@@ -68,7 +68,7 @@ class AdminTrashController extends Controller {
         $publicidad = $this->pdo->query("SELECT id, nombre as titulo, deleted_at FROM publicidad WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC")->fetchAll();
         $paginas = $this->pdo->query("SELECT id, titulo, deleted_at FROM paginas WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC")->fetchAll();
 
-        $trash_dir = 'uploads/papelera/';
+        $trash_dir = PUBLIC_PATH . 'uploads/papelera/';
         $media_files = [];
         if (is_dir($trash_dir)) {
             $all_files = glob($trash_dir . '*.*');
@@ -128,8 +128,8 @@ class AdminTrashController extends Controller {
                     $stmt_fetch->execute([$id]);
                     $row_hd = $stmt_fetch->fetch();
                     if ($row_hd) {
-                        if (!empty($row_hd['imagen_url']) && file_exists($row_hd['imagen_url'])) @unlink($row_hd['imagen_url']);
-                        if (!empty($row_hd['video_poster_url']) && file_exists($row_hd['video_poster_url'])) @unlink($row_hd['video_poster_url']);
+                        if (!empty($row_hd['imagen_url']) && file_exists(PUBLIC_PATH . $row_hd['imagen_url'])) @unlink(PUBLIC_PATH . $row_hd['imagen_url']);
+                        if (!empty($row_hd['video_poster_url']) && file_exists(PUBLIC_PATH . $row_hd['video_poster_url'])) @unlink(PUBLIC_PATH . $row_hd['video_poster_url']);
                     }
                     $this->pdo->prepare("DELETE FROM noticias WHERE id = ?")->execute([$id]);
                     $this->logTrashActivity($user_id, 'Eliminación', "Borró físicamente la noticia ID #$id");
@@ -147,7 +147,7 @@ class AdminTrashController extends Controller {
                         $stmt_fetch = $this->pdo->prepare("SELECT imagen_url FROM publicidad WHERE id = ?");
                         $stmt_fetch->execute([$id]);
                         $row_hd = $stmt_fetch->fetch();
-                        if ($row_hd && !empty($row_hd['imagen_url']) && file_exists($row_hd['imagen_url'])) @unlink($row_hd['imagen_url']);
+                        if ($row_hd && !empty($row_hd['imagen_url']) && file_exists(PUBLIC_PATH . $row_hd['imagen_url'])) @unlink(PUBLIC_PATH . $row_hd['imagen_url']);
                     }
                     $this->pdo->prepare("DELETE FROM $tbl WHERE id = ?")->execute([$id]);
                     $this->logTrashActivity($user_id, 'Eliminación', "Borró físicamente $nme ID #$id");
@@ -155,10 +155,10 @@ class AdminTrashController extends Controller {
                 }
             } elseif ($type === 'media') {
                 $file = urldecode($_GET['id']);
-                $trash_dir = 'uploads/papelera/';
+                $trash_dir = PUBLIC_PATH . 'uploads/papelera/';
                 $path = $trash_dir . basename($file);
                 if ($action === 'restore' && file_exists($path)) {
-                    rename($path, 'uploads/' . basename($file));
+                    rename($path, PUBLIC_PATH . 'uploads/' . basename($file));
                     $this->logTrashActivity($user_id, 'Actualización', 'Restauró multimedia: ' . basename($file));
                     $msg = "Multimedia restaurado.";
                 } elseif ($action === 'delete' && file_exists($path)) {
@@ -167,11 +167,11 @@ class AdminTrashController extends Controller {
                     $msg = "Multimedia eliminado definitivamente.";
                 }
             }
-            header("Location: /piura_noticias_php/admin/papelera?msg=" . urlencode($msg));
+            header("Location: " . APP_BASE . "admin/papelera?msg=" . urlencode($msg));
             exit;
         }
 
-        header('Location: /piura_noticias_php/admin/papelera');
+        header('Location: " . APP_BASE . "admin/papelera');
         exit;
     }
 }

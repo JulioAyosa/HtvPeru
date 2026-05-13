@@ -93,7 +93,7 @@
         </div>
     </div>
 
-    <form id="optimizeForm" action="/piura_noticias_php/admin/optimizador/action" method="POST">
+    <form id="optimizeForm" action="<?= APP_BASE ?>/admin/optimizador/action" method="POST">
         <input type="hidden" name="optimize_files" value="1">
         <?php echo csrf_field(); ?>
         <input type="hidden" name="webp_quality" id="hiddenQuality" value="80">
@@ -145,7 +145,7 @@
         </div>
     </div>
 
-    <form id="ghostForm" action="/piura_noticias_php/admin/optimizador/action" method="POST">
+    <form id="ghostForm" action="<?= APP_BASE ?>/admin/optimizador/action" method="POST">
         <input type="hidden" name="delete_ghosts" value="1">
         <?php echo csrf_field(); ?>
         <div class="table-container">

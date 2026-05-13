@@ -24,7 +24,7 @@ if (!$is_cli && !$valid_token) {
 date_default_timezone_set('America/Lima');
 
 // === TAREAS AUTOMÁTICAS PESADAS ===
-require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/../../config/bootstrap.php';
 
 try {
     $now_db = date('Y-m-d H:i:s');
@@ -39,6 +39,11 @@ try {
         $pdo->prepare("DELETE FROM noticias WHERE id = ?")->execute([$p['id']]);
     }
     echo "Papelera purgada: " . count($to_purge) . " noticias eliminadas\n";
+    
+    // Mantenimiento de archivos basura (ULTRA CODER CORE LOGIC)
+    require_once __DIR__ . '/app/Helpers/MaintenanceHelper.php';
+    $maint_stats = \App\Helpers\MaintenanceHelper::cleanJunk();
+    echo "Limpieza de mantenimiento: Caché({$maint_stats['cache_cleaned']}), Logs({$maint_stats['logs_cleaned']})\n";
     
 } catch (\PDOException $e) {
     echo "Error en tareas automáticas pesadas: " . $e->getMessage() . "\n";

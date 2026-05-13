@@ -109,7 +109,7 @@ class AdminOptimizerController extends Controller {
                             $orphaned[] = [
                                 'name' => $filename,
                                 'rel_path' => $rel_dir,
-                                'path' => '/piura_noticias_php/' . $rel_dir,
+                                'path' => APP_BASE . '/' . $rel_dir,
                                 'ext' => $ext,
                                 'size' => $size
                             ];
@@ -124,7 +124,7 @@ class AdminOptimizerController extends Controller {
                         $unoptimized[] = [
                             'name' => basename($f),
                             'rel_path' => $rel_dir,
-                            'path' => '/piura_noticias_php/' . $rel_dir,
+                            'path' => APP_BASE . '/' . $rel_dir,
                             'ext' => $ext,
                             'size' => $file->getSize(),
                             'est_savings' => $savings
@@ -175,7 +175,7 @@ class AdminOptimizerController extends Controller {
                         $stmt_log->execute([$_SESSION['user_id'], 'Limpieza', "Fulminó $del_count archivos fantasma liberando $mb de espacio."]);
                         $msg = "Se eliminaron $del_count archivos huérfanos permanentemente. Espacio liberado: $mb.";
                     }
-                    header("Location: /piura_noticias_php/admin/optimizador?tab=ghosts&msg=" . urlencode($msg ?? ''));
+                    header("Location: " . APP_BASE . "admin/optimizador?tab=ghosts&msg=" . urlencode($msg ?? ''));
                     exit;
                 }
             }
@@ -184,7 +184,7 @@ class AdminOptimizerController extends Controller {
                 $gd_installed = function_exists('imagecreatefromjpeg') && function_exists('imagewebp');
                 if (!$gd_installed) {
                     $msg = "Error: Módulo GD inactivo. Activa 'extension=gd' en tu php.ini.";
-                    header("Location: /piura_noticias_php/admin/optimizador?msg=" . urlencode($msg));
+                    header("Location: " . APP_BASE . "admin/optimizador?msg=" . urlencode($msg));
                     exit;
                 }
 
@@ -256,22 +256,22 @@ class AdminOptimizerController extends Controller {
                         $stmt_log = $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
                         $stmt_log->execute([$_SESSION['user_id'], 'Optimización', "Convirtió $success imágenes a WebP ($quality%). Ahorro: $saved_mb MB."]);
                         $msg = "$success archivos convertidos a WebP exitosamente al $quality%. Recuperaste {$saved_mb} MB." . ($failed > 0 ? " ($failed fallaron)" : "");
-                        header("Location: /piura_noticias_php/admin/optimizador?msg=" . urlencode($msg));
+                        header("Location: " . APP_BASE . "admin/optimizador?msg=" . urlencode($msg));
                         exit;
                     } else {
                         $msg = "Error: No se lograron optimizar los archivos.";
-                        header("Location: /piura_noticias_php/admin/optimizador?msg=" . urlencode($msg));
+                        header("Location: " . APP_BASE . "admin/optimizador?msg=" . urlencode($msg));
                         exit;
                     }
                 } else {
                     $msg = "No seleccionaste ningún archivo para optimizar.";
-                    header("Location: /piura_noticias_php/admin/optimizador?msg=" . urlencode($msg));
+                    header("Location: " . APP_BASE . "admin/optimizador?msg=" . urlencode($msg));
                     exit;
                 }
             }
         }
         
-        header("Location: /piura_noticias_php/admin/optimizador");
+        header("Location: " . APP_BASE . "admin/optimizador");
         exit;
     }
 

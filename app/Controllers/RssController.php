@@ -5,7 +5,7 @@ use Config\Database;
 
 class RssController {
     public function index() {
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";

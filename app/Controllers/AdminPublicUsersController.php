@@ -3,12 +3,12 @@ namespace App\Controllers;
 
 class AdminPublicUsersController {
     public function __construct() {
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         
         // Verificar que sea admin o gerente
         $role = $_SESSION['user_role'] ?? '';
         if ($role !== 'admin' && $role !== 'gerente') {
-            header("Location: /piura_noticias_php/admin?msg=" . urlencode("No tienes permiso para acceder a este módulo."));
+            header("Location: " . APP_BASE . "admin?msg=" . urlencode("No tienes permiso para acceder a este módulo."));
             exit;
         }
     }
@@ -65,7 +65,7 @@ class AdminPublicUsersController {
         global $pdo;
         
         if ($_SESSION['user_role'] !== 'admin') {
-            header("Location: /piura_noticias_php/admin/usuarios-publicos?msg=" . urlencode("No tienes permisos para bloquear usuarios."));
+            header("Location: " . APP_BASE . "admin/usuarios-publicos?msg=" . urlencode("No tienes permisos para bloquear usuarios."));
             exit;
         }
 
@@ -82,11 +82,11 @@ class AdminPublicUsersController {
             $stmt_log = $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
             $stmt_log->execute([$_SESSION['user_id'], 'Moderación OAuth', "Cambió estado de usuario público #$id a $new_status"]);
             
-            header("Location: /piura_noticias_php/admin/usuarios-publicos?msg=" . urlencode("Estado del usuario actualizado a $new_status."));
+            header("Location: " . APP_BASE . "admin/usuarios-publicos?msg=" . urlencode("Estado del usuario actualizado a $new_status."));
             exit;
         }
 
-        header("Location: /piura_noticias_php/admin/usuarios-publicos?msg=" . urlencode("Usuario no encontrado."));
+        header("Location: " . APP_BASE . "admin/usuarios-publicos?msg=" . urlencode("Usuario no encontrado."));
         exit;
     }
 }

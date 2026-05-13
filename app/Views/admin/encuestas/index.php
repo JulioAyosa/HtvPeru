@@ -7,7 +7,7 @@
 
 <div class="card">
     <h3><i class="ri-add-box-line" style="color: var(--primary-color);"></i> Construir Nueva Encuesta</h3>
-    <form method="POST" action="/piura_noticias_php/admin/encuestas/create">
+    <form method="POST" action="<?= APP_BASE ?>/admin/encuestas/create">
         <?php if(function_exists('csrf_field')) echo csrf_field(); ?>
         <div class="form-row">
             <label>Pregunta Principal</label>
@@ -126,13 +126,13 @@
                         <h4 style="margin-top:0; margin-bottom: 1rem; color: #475569; font-size: 0.9rem; text-transform: uppercase;"><i class="ri-settings-4-line"></i> Opciones de Encuesta</h4>
                         
                         <?php if($e['estado']!='activo'): ?>
-                            <form method="POST" action="/piura_noticias_php/admin/encuestas/action" style="margin-bottom: 0.75rem;">
+                            <form method="POST" action="<?= APP_BASE ?>/admin/encuestas/action" style="margin-bottom: 0.75rem;">
                                 <?php if(function_exists('csrf_field')) echo csrf_field(); ?>
                                 <input type="hidden" name="type" value="activate">
                                 <input type="hidden" name="id" value="<?=$e['id']?>">
                                 <button type="submit" class="btn btn-success" style="width: 100%; justify-content: center; background: #10b981; border: none; color: white; padding: 0.6rem; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;"><i class="ri-check-line"></i> Habilitar en Web</button>
                             </form>
-                            <form method="POST" action="/piura_noticias_php/admin/encuestas/action" onsubmit="return confirmDelete(event, '¿Reactivar encuesta reiniciando todos los votos a 0?');" style="margin-bottom: 0.75rem;">
+                            <form method="POST" action="<?= APP_BASE ?>/admin/encuestas/action" onsubmit="return confirmDelete(event, '¿Reactivar encuesta reiniciando todos los votos a 0?');" style="margin-bottom: 0.75rem;">
                                 <?php if(function_exists('csrf_field')) echo csrf_field(); ?>
                                 <input type="hidden" name="type" value="relaunch">
                                 <input type="hidden" name="id" value="<?=$e['id']?>">
@@ -143,7 +143,7 @@
                                 <i class="ri-information-fill" style="font-size: 1.1rem; margin-top: -2px;"></i>
                                 Esta es la encuesta activa actualmente. Se muestra en la portada del sitio web.
                             </div>
-                            <form method="POST" action="/piura_noticias_php/admin/encuestas/action" style="margin-bottom: 0.75rem;">
+                            <form method="POST" action="<?= APP_BASE ?>/admin/encuestas/action" style="margin-bottom: 0.75rem;">
                                 <?php if(function_exists('csrf_field')) echo csrf_field(); ?>
                                 <input type="hidden" name="type" value="pause">
                                 <input type="hidden" name="id" value="<?=$e['id']?>">
@@ -152,7 +152,7 @@
                         <?php endif; ?>
                         
                         <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                            <form method="POST" action="/piura_noticias_php/admin/encuestas/action" onsubmit="return confirmDelete(event, '¿Enviar esta encuesta a la papelera? Podrás recuperarla luego.');">
+                            <form method="POST" action="<?= APP_BASE ?>/admin/encuestas/action" onsubmit="return confirmDelete(event, '¿Enviar esta encuesta a la papelera? Podrás recuperarla luego.');">
                                 <?php if(function_exists('csrf_field')) echo csrf_field(); ?>
                                 <input type="hidden" name="type" value="delete">
                                 <input type="hidden" name="id" value="<?=$e['id']?>">

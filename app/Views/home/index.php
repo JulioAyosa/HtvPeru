@@ -974,7 +974,7 @@
                     loadMoreText.innerText = 'Cargando...';
 
                     try {
-                        const response = await fetch(`load_more_noticias.php?offset=${currentOffset}`);
+                        const response = await fetch(`<?= APP_BASE ?>/api/noticias/load-more?offset=${currentOffset}`);
                         if (response.ok) {
                             const html = await response.text();
                             if (html.trim() === '') {

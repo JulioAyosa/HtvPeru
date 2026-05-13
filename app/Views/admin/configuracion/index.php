@@ -722,7 +722,7 @@
     <div class="alert"><i class="ri-check-line"></i> <?php echo htmlspecialchars($msg); ?></div>
 <?php endif; ?>
 
-<form method="POST" action="/piura_noticias_php/admin/configuracion/action" enctype="multipart/form-data">
+<form method="POST" action="<?= APP_BASE ?>/admin/configuracion/action" enctype="multipart/form-data">
     <input type="hidden" name="action" value="save_config">
     <?php echo csrf_field(); ?>
 
@@ -784,7 +784,7 @@
                             </div>
                             <div class="module-body" style="background: white; display: flex; flex-direction: column; gap: 0.75rem;">
                                 <div class="img-preview" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
-                                    <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . ($configs['logo_url'] ?? 'img/logo.webp')); ?>" alt="Logo" style="max-height: 50px;">
+                                    <img src="<?php echo htmlspecialchars('<?= APP_BASE ?>/' . ($configs['logo_url'] ?? 'img/logo.webp')); ?>" alt="Logo" style="max-height: 50px;">
                                 </div>
                                 <input type="file" name="logo_upload" accept="image/*" style="width: 100%; font-size: 0.85rem;">
                             </div>
@@ -800,7 +800,7 @@
                             </div>
                             <div class="module-body" style="background: white; display: flex; flex-direction: column; gap: 0.75rem;">
                                 <div class="img-preview" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
-                                    <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . ($configs['favicon_url'] ?? 'img/logo.webp')); ?>" alt="Favicon" style="height:32px;">
+                                    <img src="<?php echo htmlspecialchars('<?= APP_BASE ?>/' . ($configs['favicon_url'] ?? 'img/logo.webp')); ?>" alt="Favicon" style="height:32px;">
                                 </div>
                                 <input type="file" name="favicon_upload" accept=".png,.ico,.svg" style="width: 100%; font-size: 0.85rem;">
                             </div>
@@ -819,7 +819,7 @@
                             <div class="module-body" style="background: white; display: flex; flex-direction: column; gap: 0.75rem;">
                                 <div class="img-preview" style="background: var(--bg-main); border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
                                     <?php if(!empty($configs['watermark_url'])): ?>
-                                    <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['watermark_url']); ?>" alt="Watermark" style="max-height: 40px;">
+                                    <img src="<?php echo htmlspecialchars('<?= APP_BASE ?>/' . $configs['watermark_url']); ?>" alt="Watermark" style="max-height: 40px;">
                                     <?php else: ?>
                                     <span style="font-size:0.75rem; color:var(--text-muted);">Sin marca de agua</span>
                                     <?php endif; ?>
@@ -839,7 +839,7 @@
                             <div class="module-body" style="background: white; display: flex; flex-direction: column; gap: 0.75rem;">
                                 <div class="img-preview" style="background: var(--bg-main); border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
                                     <?php if(!empty($configs['header_bg_url'])): ?>
-                                    <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['header_bg_url']); ?>" alt="Header BG" style="max-height: 40px; border-radius: 4px;">
+                                    <img src="<?php echo htmlspecialchars('<?= APP_BASE ?>/' . $configs['header_bg_url']); ?>" alt="Header BG" style="max-height: 40px; border-radius: 4px;">
                                     <?php else: ?>
                                     <span style="font-size:0.75rem; color:var(--text-muted);">Cabecera sólida (Sin fondo)</span>
                                     <?php endif; ?>
@@ -938,7 +938,7 @@
                             <div class="module-body" style="background: white; display: flex; flex-direction: column; gap: 0.75rem;">
                                 <div class="img-preview" style="background: var(--bg-main); border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; text-align: center;">
                                     <?php if(!empty($configs['seo_og_image'])): ?>
-                                    <img src="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['seo_og_image']); ?>" alt="og:image" style="max-height: 80px;">
+                                    <img src="<?php echo htmlspecialchars('<?= APP_BASE ?>/' . $configs['seo_og_image']); ?>" alt="og:image" style="max-height: 80px;">
                                     <?php else: ?>
                                     <span style="font-size:0.75rem; color:var(--text-muted);">Sin imagen general</span>
                                     <?php endif; ?>
@@ -1433,7 +1433,7 @@
                                 <div class="pdf-upload-zone" style="margin-bottom: 0;">
                                     <?php if(!empty($configs['privacy_policy_url'])): ?>
                                         <i class="ri-file-pdf-2-fill" style="color: #dc2626;"></i>
-                                        <a href="<?php echo htmlspecialchars('/piura_noticias_php/' . $configs['privacy_policy_url']); ?>" target="_blank" style="font-size:0.85rem; font-weight:700; color:var(--primary-color); display:inline-flex; align-items:center; gap:0.3rem; text-decoration:none;">
+                                        <a href="<?php echo htmlspecialchars('<?= APP_BASE ?>/' . $configs['privacy_policy_url']); ?>" target="_blank" style="font-size:0.85rem; font-weight:700; color:var(--primary-color); display:inline-flex; align-items:center; gap:0.3rem; text-decoration:none;">
                                             <i class="ri-external-link-line"></i> Ver Documento Actual
                                         </a>
                                     <?php else: ?>

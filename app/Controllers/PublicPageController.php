@@ -63,12 +63,11 @@ class PublicPageController {
     }
 
     public function article() {
-        require_once __DIR__ . '/../../session_config.php';
+        require_once __DIR__ . '/../../config/session.php';
         if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
             @session_start();
         }
-        require_once __DIR__ . '/../../conexion.php';
-        require_once __DIR__ . '/../../html_sanitizer.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         
         $pdo = \Config\Database::getInstance();
 
@@ -151,7 +150,13 @@ class PublicPageController {
             }
 
             if (!$articulo || ($articulo['estado_publicacion'] !== 'publicado')) {
-                header("Location: /");
+                header("HTTP/1.0 404 Not Found");
+                $error404 = __DIR__ . '/../../app/Views/errors/404.php';
+                if (file_exists($error404)) {
+                    require_once $error404;
+                } else {
+                    echo "404 Not Found";
+                }
                 exit;
             }
 
@@ -203,11 +208,11 @@ class PublicPageController {
     }
 
     public function category() {
-        require_once __DIR__ . '/../../session_config.php';
+        require_once __DIR__ . '/../../config/session.php';
         if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
             @session_start();
         }
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
@@ -262,11 +267,11 @@ class PublicPageController {
     }
 
     public function search() {
-        require_once __DIR__ . '/../../session_config.php';
+        require_once __DIR__ . '/../../config/session.php';
         if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
             @session_start();
         }
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
@@ -314,11 +319,11 @@ class PublicPageController {
     }
 
     public function ultimasNoticias() {
-        require_once __DIR__ . '/../../session_config.php';
+        require_once __DIR__ . '/../../config/session.php';
         if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
             @session_start();
         }
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
@@ -347,11 +352,11 @@ class PublicPageController {
     }
 
     public function tag() {
-        require_once __DIR__ . '/../../session_config.php';
+        require_once __DIR__ . '/../../config/session.php';
         if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
             @session_start();
         }
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
@@ -362,7 +367,7 @@ class PublicPageController {
         $offset = ($page - 1) * $limit;
 
         if(empty($slug)) {
-            header("Location: /piura_noticias_php/index.php");
+            header("Location: " . APP_BASE . "index.php");
             exit;
         }
 
@@ -393,11 +398,11 @@ class PublicPageController {
     }
 
     public function bookmarks() {
-        require_once __DIR__ . '/../../session_config.php';
+        require_once __DIR__ . '/../../config/session.php';
         if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
             @session_start();
         }
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
@@ -419,11 +424,11 @@ class PublicPageController {
     }
 
     public function page() {
-        require_once __DIR__ . '/../../session_config.php';
+        require_once __DIR__ . '/../../config/session.php';
         if (isset($_COOKIE[session_name()]) || $_SERVER['REQUEST_METHOD'] === 'POST') {
             @session_start();
         }
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         $g_data = $this->getGlobalData($pdo);
         $global_configs = $g_data['configs'] ?? [];
@@ -445,7 +450,12 @@ class PublicPageController {
 
         if (!$pagina) {
             header("HTTP/1.0 404 Not Found");
-            echo "Página no encontrada.";
+            $error404 = __DIR__ . '/../../app/Views/errors/404.php';
+            if (file_exists($error404)) {
+                require_once $error404;
+            } else {
+                echo "404 Not Found";
+            }
             exit;
         }
 

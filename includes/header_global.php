@@ -100,10 +100,11 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
 .logo .htv-text { color: white !important; }
 .logo .slogan-text { color: #cbd5e1 !important; text-shadow: 0 2px 5px rgba(0,0,0,0.95); }
 </style>
+<script>const APP_BASE = '<?= APP_BASE ?>';</script>
 <?php endif; ?>
     <header class="header">
         <div class="container header-inner" style="align-items: center; position: relative; z-index: 25;">
-            <div class="logo"><a href="/piura_noticias_php/" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
+            <div class="logo"><a href="<?= APP_BASE ?>/" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
                     <img src="<?php echo htmlspecialchars(base_url(!empty($global_configs['logo_url']) ? $global_configs['logo_url'] : 'img/logo.webp')); ?>" alt="Logo" style="height:55px; max-height:100%; width:auto; object-fit:contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
                     <div style="display: flex; flex-direction: column;">
                         <h1 class="logo-title" style="font-size: 2.2rem; margin:0; line-height: 1; font-family: 'Arial Black', 'Montserrat', Impact, var(--font-sans); font-weight: 900; letter-spacing: -1.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.15);"><span class="htv-text" style="color: var(--text-main, white);">HTV</span><span class="peru-text" style="color:var(--primary-color);">PERU</span></h1>
@@ -113,7 +114,7 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
 
             <div class="header-actions" style="display: flex; gap: 1rem; align-items: center;">
                 <div style="position:relative;" id="live-search-container">
-                    <form action="/piura_noticias_php/buscar" method="GET" class="search-bar-modern"
+                    <form action="<?= APP_BASE ?>/buscar" method="GET" class="search-bar-modern"
                         style="display:flex; align-items:center; background:var(--bg-body); border:1px solid var(--border-color); border-radius:50px; padding:0.25rem 0.5rem 0.25rem 1.25rem; transition:all 0.3s ease; width: 280px;">
                         <input type="text" name="q" id="live-search-input" autocomplete="off" placeholder="Buscar noticias..."
                             style="border:none; background:transparent; width:100%; color:var(--text-main); outline:none; font-family:var(--font-sans); font-size: 0.95rem;">
@@ -138,7 +139,7 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                     <span id="weather-temp">...</span>
                 </div>
                 
-                <a href="/piura_noticias_php/guardados" class="hover-circle" title="Mis Noticias Guardadas" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border-color); display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; text-decoration:none; transition:all 0.3s ease; position:relative; flex-shrink:0;">
+                <a href="<?= APP_BASE ?>/guardados" class="hover-circle" title="Mis Noticias Guardadas" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border-color); display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; text-decoration:none; transition:all 0.3s ease; position:relative; flex-shrink:0;">
                     <i class="ri-bookmark-line" style="font-size:1.2rem;"></i>
                     <span id="bookmark-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; font-size:0.65rem; width:18px; height:18px; border-radius:50%; align-items:flex-end; justify-content:center; font-weight:800;">0</span>
                 </a>
@@ -154,13 +155,13 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                         class="ri-menu-3-line"></i> MENÚ PRINCIPAL</button>
                 <ul class="nav-list mega-nav-list"
                     style="margin: 0; padding: 0; display:flex; font-weight:800; font-size:0.85rem; text-transform:uppercase; white-space:nowrap; justify-content:center; align-items:stretch;">
-                    <li style="display:flex;"><a href="/piura_noticias_php/" style="color:white; padding: 1rem 1.5rem; display:flex; align-items:center;">Inicio</a></li>
+                    <li style="display:flex;"><a href="<?= APP_BASE ?>/" style="color:white; padding: 1rem 1.5rem; display:flex; align-items:center;">Inicio</a></li>
                     
                     <?php if(($global_configs['tv_envivo_estado'] ?? 'inactivo') === 'activo' && !empty($global_configs['tv_envivo_url'])): ?>
                     <li style="display:flex;" class="mobile-only-nav-item"><a href="#" onclick="document.getElementById('pip-player-modal').style.display='flex'; return false;" style="color:white; padding: 1rem 1.5rem; background: #ef4444; display:flex; align-items:center; gap:5px; font-weight:800;"><i class="ri-tv-line"></i> TV EN VIVO</a></li>
                     <?php endif; ?>
 
-                    <li style="display:flex;"><a href="/piura_noticias_php/ultimas-noticias"
+                    <li style="display:flex;"><a href="<?= APP_BASE ?>/ultimas-noticias"
                             style="color:white; padding: 1rem 1.5rem; background: #dc2626; display:flex; align-items:center; gap:5px;">Lo Último <i class="ri-flashlight-fill"></i></a></li>
 
                     <?php
@@ -169,7 +170,7 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                         $slug = $cat_data['slug'];
                         ?>
                         <li class="nav-item has-dropdown" style="display:flex;">
-                            <a href="/piura_noticias_php/categoria/<?php echo urlencode($slug); ?>"
+                            <a href="<?= APP_BASE ?>/categoria/<?php echo urlencode($slug); ?>"
                                 style="color:white; opacity:0.9; padding: 1rem 1.5rem; display:flex; align-items:center; gap:0.25rem; white-space:nowrap;">
                                 <?php echo htmlspecialchars($cat); ?> <i class="ri-arrow-down-s-line"></i>
                             </a>
@@ -179,7 +180,7 @@ $actions_gap = isset($global_configs['header_actions_gap']) && is_numeric($globa
                                 <div class="mega-menu">
                                     <div class="container mega-menu-grid">
                                         <?php foreach ($noticias_por_categoria[$cat] as $mn): ?>
-                                            <a href="/piura_noticias_php/<?php echo urlencode($mn['slug'] ?? ''); ?>" class="news-card"
+                                            <a href="<?= APP_BASE ?>/<?php echo urlencode($mn['slug'] ?? ''); ?>" class="news-card"
                                                 style="height: 180px; border-radius: var(--radius-sm); border: none;">
                                                 <div class="card-img-wrap">
                                                     <?php echo renderMedia($mn['imagen_url'], 'card-img', $mn['video_poster_url'] ?? '', false); ?>

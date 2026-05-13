@@ -6,8 +6,7 @@ use Config\Database;
 class AdminPageController {
     
     public function __construct() {
-        require_once __DIR__ . '/../../conexion.php';
-        require_once __DIR__ . '/../../html_sanitizer.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         
         
         
@@ -107,7 +106,7 @@ class AdminPageController {
             }
         }
         
-        header('Location: /piura_noticias_php/admin/paginas?msg=' . urlencode($redirect_msg));
+        header('Location: " . APP_BASE . "admin/paginas?msg=' . urlencode($redirect_msg));
         exit;
     }
     
@@ -135,10 +134,10 @@ class AdminPageController {
                 // Ignore activity log errors to prevent crashing the delete flow
             }
             
-            header("Location: /piura_noticias_php/admin/paginas?msg=eliminado");
+            header("Location: " . APP_BASE . "admin/paginas?msg=eliminado");
             exit;
         }
-        header("Location: /piura_noticias_php/admin/paginas");
+        header("Location: " . APP_BASE . "admin/paginas");
         exit;
     }
     

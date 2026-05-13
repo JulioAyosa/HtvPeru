@@ -91,7 +91,7 @@ class AdminSettingsController extends Controller {
             $stmt_update = $this->pdo->prepare("UPDATE configuracion SET valor = ? WHERE clave = ? AND tipo = 'texto'");
             $stmt_insert = $this->pdo->prepare("INSERT INTO configuracion (clave, valor, tipo) VALUES (?, ?, 'texto')");
             
-            require_once __DIR__ . '/../../script_validator.php';
+            
 
             foreach ($text_keys as $key) {
                 if (isset($_POST[$key])) {
@@ -119,7 +119,7 @@ class AdminSettingsController extends Controller {
             
             foreach ($file_keys as $db_key => $input_name) {
                 if (isset($_FILES[$input_name]) && $_FILES[$input_name]['error'] === UPLOAD_ERR_OK) {
-                    require_once __DIR__ . '/../../media_firewall.php';
+                    
                     $tmp = $_FILES[$input_name]['tmp_name'];
                     $name = basename($_FILES[$input_name]['name']);
                     $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
@@ -182,11 +182,11 @@ class AdminSettingsController extends Controller {
             
             require_once __DIR__ . '/../Helpers/view_helper.php';
             build_global_cache($this->pdo);
-            header("Location: /piura_noticias_php/admin/configuracion?exito=1");
+            header("Location: " . APP_BASE . "admin/configuracion?exito=1");
             exit;
         }
 
-        header('Location: /piura_noticias_php/admin/configuracion');
+        header('Location: " . APP_BASE . "admin/configuracion');
         exit;
     }
 }

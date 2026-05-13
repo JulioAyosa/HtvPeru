@@ -7,6 +7,8 @@ Disallow: /api/
 Disallow: /backups/
 Disallow: /storage/
 Disallow: /vendor/
+Disallow: /admin/
+Disallow: /api/
 Disallow: /cron_backup.php
 
 # Assets permitidos

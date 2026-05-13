@@ -10,7 +10,7 @@ header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
 // =======================================
 
 // Configuración robusta de Sesiones (Antes de iniciar)
-require_once __DIR__ . '/../session_config.php';
+require_once __DIR__ . '/../config/session.php';
 // Inicio de sesión inteligente para habilitar Edge Caching perimetral
 $req_uri = $_SERVER['REQUEST_URI'] ?? '';
 $is_admin_or_auth = (strpos($req_uri, '/admin') !== false || strpos($req_uri, '/login') !== false || strpos($req_uri, '/auth') !== false);
@@ -28,7 +28,7 @@ if ($needs_session) {
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // Bootstrap global: conexión BD, helpers, sanitizers
-require_once __DIR__ . '/../conexion.php';
+require_once __DIR__ . '/../config/bootstrap.php';
 require_once __DIR__ . '/../app/Helpers/csrf_helper.php';
 require_once __DIR__ . '/../app/Helpers/auth_helper.php';
 require_once __DIR__ . '/../app/Helpers/rate_limiter.php';
@@ -56,6 +56,10 @@ $router->add('POST', '/api/suscriptores', 'ApiPublicController@subscribe', ['Csr
 // Mantenemos las URLs legacy por compatibilidad si es que algún script de frontend no se actualizó
 $router->add('POST', '/encuestas_api.php', 'ApiPublicController@pollVote', ['CsrfMiddleware']);
 $router->add('POST', '/suscriptores_api.php', 'ApiPublicController@subscribe', ['CsrfMiddleware']);
+
+// Rutas Load More (Modernizadas)
+$router->add('GET', '/api/noticias/load-more', 'ApiPublicController@loadMoreNoticias');
+$router->add('GET', '/api/ultimas/load-more', 'ApiPublicController@loadMoreUltimas');
 
 // Rutas API Admin
 $router->add('POST', '/api/admin/autosave', 'ApiAdminController@autosave');
@@ -178,7 +182,7 @@ $router->add('GET', '/guardados', 'PublicPageController@bookmarks');
 $router->add('GET', '/pagina/{slug}', 'PublicPageController@pageBySlug');
 
 // URLs LIMPIAS: Artículos por slug (CATCH-ALL, debe ir AL FINAL)
-// Esto permite URLs como /piura_noticias_php/mi-titulo-de-noticia
+// Esto permite URLs como [APP_BASE]/mi-titulo-de-noticia
 $router->add('GET', '/{slug}', 'PublicPageController@articleBySlug');
 $router->add('POST', '/{slug}', 'PublicPageController@articleBySlug', ['CsrfMiddleware']);
 
@@ -203,9 +207,9 @@ try {
     
     if ($dispatched === false) {
         header("HTTP/1.0 404 Not Found");
-        if (file_exists(__DIR__ . '/../404.php')) {
-            chdir(__DIR__ . '/..');
-            require __DIR__ . '/../404.php';
+        $error404 = __DIR__ . '/../app/Views/errors/404.php';
+        if (file_exists($error404)) {
+            require_once $error404;
         } else {
             echo "404 Not Found";
         }
@@ -233,9 +237,9 @@ try {
     }
     
     header("HTTP/1.0 500 Internal Server Error");
-    if (file_exists(__DIR__ . '/../500.php')) {
-        chdir(__DIR__ . '/..');
-        require __DIR__ . '/../500.php';
+    $error500 = __DIR__ . '/../app/Views/errors/500.php';
+    if (file_exists($error500)) {
+        require_once $error500;
     } else {
         echo '<h1>500 - Error Interno del Servidor</h1><p>Estamos trabajando para resolverlo.</p>';
     }

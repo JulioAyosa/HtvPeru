@@ -72,7 +72,7 @@
                 <td><strong><?php echo htmlspecialchars($s['email']); ?></strong></td>
                 <td><?php echo date('d M Y - H:i', strtotime($s['fecha_suscripcion'])); ?></td>
                 <td>
-                    <form method="POST" action="/piura_noticias_php/admin/boletines/action" style="display:inline;" onsubmit="return confirm('¿Eliminar este suscriptor permanentemente?')">
+                    <form method="POST" action="<?= APP_BASE ?>/admin/boletines/action" style="display:inline;" onsubmit="return confirm('¿Eliminar este suscriptor permanentemente?')">
                         <input type="hidden" name="action" value="delete_subscriber">
                         <input type="hidden" name="subscriber_id" value="<?php echo $s['id']; ?>">
                         <?php echo csrf_field(); ?>
@@ -134,7 +134,7 @@
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('modal').style.display='none'"></i>
         </div>
         
-        <form method="POST" action="/piura_noticias_php/admin/boletines/action">
+        <form method="POST" action="<?= APP_BASE ?>/admin/boletines/action">
             <input type="hidden" name="action" value="send_newsletter">
             <?php echo csrf_field(); ?>
             
@@ -199,7 +199,7 @@
         document.getElementById('modal-dest-content').innerHTML = '<div style="text-align:center; padding:2rem;"><i class="ri-loader-4-line ri-spin"></i> Cargando...</div>';
         
         try {
-            let response = await fetch('/piura_noticias_php/api/admin/boletin_destinatarios?id=' + historialId);
+            let response = await fetch('<?= APP_BASE ?>/api/admin/boletin_destinatarios?id=' + historialId);
             let html = await response.text();
             document.getElementById('modal-dest-content').innerHTML = html;
         } catch(e) {

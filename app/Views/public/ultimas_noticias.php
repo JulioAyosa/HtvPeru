@@ -177,7 +177,7 @@ if (!function_exists('time_elapsed_string')) {
                 
                 currentPage++;
                 
-                fetch('load_more_ultimas.php?page=' + currentPage)
+                fetch('<?= APP_BASE ?>/api/ultimas/load-more?page=' + currentPage)
                     .then(response => response.text())
                     .then(data => {
                         if (data.trim() === '') {

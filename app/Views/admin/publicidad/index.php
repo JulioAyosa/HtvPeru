@@ -51,7 +51,7 @@
             <td>
                 <strong><?php echo htmlspecialchars($a['nombre']); ?></strong><br>
                 <?php if($a['tipo']==='imagen' && !empty($a['imagen_url'])): ?>
-                    <img src="<?php echo '/piura_noticias_php/' . htmlspecialchars($a['imagen_url']); ?>" style="height:30px; object-fit:contain; border:1px solid #ccc; margin-top:4px;">
+                    <img src="<?php echo '<?= APP_BASE ?>/' . htmlspecialchars($a['imagen_url']); ?>" style="height:30px; object-fit:contain; border:1px solid #ccc; margin-top:4px;">
                 <?php else: ?>
                     <span style="font-size:0.7rem; color:#6b7280;">(&lt;script&gt; inyectado)</span>
                 <?php endif; ?>
@@ -73,7 +73,7 @@
             </td>
             <td>
                 <button onclick='editAd(<?php echo json_encode($a); ?>)' style="background:#e0f2fe; color:#0369a1; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" title="Editar"><i class="ri-edit-2-line"></i></button>
-                <a href="/piura_noticias_php/admin/publicidad/action?action_type=delete&id=<?php echo $a['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar anuncio definitivamente?')" style="background:#fee2e2; color:#b91c1c; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; text-decoration:none;"><i class="ri-delete-bin-line"></i></a>
+                <a href="<?= APP_BASE ?>/admin/publicidad/action?action_type=delete&id=<?php echo $a['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar anuncio definitivamente?')" style="background:#fee2e2; color:#b91c1c; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; text-decoration:none;"><i class="ri-delete-bin-line"></i></a>
             </td>
         </tr>
         <?php endforeach; ?>
@@ -91,7 +91,7 @@
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('modal').style.display='none'"></i>
         </div>
         
-        <form method="POST" action="/piura_noticias_php/admin/publicidad/action" enctype="multipart/form-data">
+        <form method="POST" action="<?= APP_BASE ?>/admin/publicidad/action" enctype="multipart/form-data">
             <?php csrf_field(); ?>
             <input type="hidden" name="action" id="form-action" value="create">
             <input type="hidden" name="id" id="form-id" value="">

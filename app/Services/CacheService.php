@@ -13,7 +13,7 @@ class CacheService {
                 $this->driver = $redisDriver;
             } else {
                 // Fallback a archivos si Redis no está disponible o instalado
-                $this->driver = new \Core\Cache\Drivers\FileCacheDriver(__DIR__ . '/../../');
+                $this->driver = new \Core\Cache\Drivers\FileCacheDriver(__DIR__ . '/../../storage/cache/');
             }
         } else {
             $this->driver = $driver;

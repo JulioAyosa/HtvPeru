@@ -67,7 +67,7 @@
                 
                 <?php if ($u['id'] !== $user_id && $u['id'] != 1): ?>
                     <?php if (isset($u['estado']) && $u['estado'] === 'bloqueado'): ?>
-                        <a href="/piura_noticias_php/admin/usuarios/action?unblock=<?php echo $u['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn btn-primary btn-sm" style="background:#10b981; border:none; padding: 0.25rem 0.5rem; font-size: 0.75rem;"><i class="ri-lock-unlock-line"></i> Desbloquear</a>
+                        <a href="<?= APP_BASE ?>/admin/usuarios/action?unblock=<?php echo $u['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" class="btn btn-primary btn-sm" style="background:#10b981; border:none; padding: 0.25rem 0.5rem; font-size: 0.75rem;"><i class="ri-lock-unlock-line"></i> Desbloquear</a>
                     <?php else: ?>
                         <button class="btn btn-danger btn-sm" style="background:#4b5563; padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="openBlockModal(<?php echo $u['id']; ?>, '<?php echo htmlspecialchars($u['nombre_completo'], ENT_QUOTES); ?>')"><i class="ri-lock-line"></i> Bloquear</button>
                     <?php endif; ?>
@@ -87,7 +87,7 @@
             <h2 id="modal-title" style="margin:0; display:flex; align-items:center; gap:0.5rem;"><i class="ri-user-add-line" style="color:var(--primary-color);"></i> Nuevo Usuario</h2>
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; color:#64748b;" onclick="document.getElementById('modal-usuario').style.display='none'"></i>
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/usuarios/action" id="user-form">
+        <form method="POST" action="<?= APP_BASE ?>/admin/usuarios/action" id="user-form">
             <input type="hidden" name="action" id="form-action" value="create">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="user_id" id="form-id" value="">
@@ -125,7 +125,7 @@
             <h2 id="modal-block-title" style="margin:0; color: #4b5563; display:flex; align-items:center; gap:0.5rem;"><i class="ri-lock-line" style="color:#ef4444;"></i> Bloquear Usuario</h2>
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; color:#64748b;" onclick="document.getElementById('modal-bloqueo').style.display='none'"></i>
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/usuarios/action">
+        <form method="POST" action="<?= APP_BASE ?>/admin/usuarios/action">
             <input type="hidden" name="action" value="block">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="block_user_id" id="form-block-id" value="">
@@ -161,7 +161,7 @@
             <h2 id="modal-delete-title" style="margin:0; color: var(--danger); display:flex; align-items:center; gap:0.5rem;"><i class="ri-delete-bin-line"></i> Eliminar Usuario</h2>
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; color:#64748b;" onclick="document.getElementById('modal-delete').style.display='none'"></i>
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/usuarios/action">
+        <form method="POST" action="<?= APP_BASE ?>/admin/usuarios/action">
             <input type="hidden" name="action" value="delete">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="delete_user_id" id="form-delete-id" value="">

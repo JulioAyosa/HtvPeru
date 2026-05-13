@@ -9,6 +9,10 @@ class ApiPublicController {
 
     public function __construct() {
         $this->pdo = Database::getInstance();
+        
+        // Incluir helpers necesarios para renderizar HTML en los endpoints AJAX
+        require_once __DIR__ . '/../Helpers/view_helper.php';
+        require_once __DIR__ . '/../Helpers/auth_helper.php';
     }
 
     public function heartbeat() {
@@ -228,6 +232,78 @@ class ApiPublicController {
             }
         } else {
             echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+        }
+    }
+
+    public function loadMoreNoticias() {
+        if (function_exists('check_rate_limit') && !check_rate_limit($this->pdo, 'load_more', 30, 1)) {
+            http_response_code(429);
+            die('Demasiadas solicitudes. Intenta de nuevo en un momento.');
+        }
+
+        $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 19;
+        $limit = 10;
+
+        $recientes_stmt = $this->pdo->prepare("SELECT id, slug, titulo, categoria, extracto, imagen_url, video_poster_url FROM noticias WHERE categoria != 'Publicidad' AND estado_publicacion = 'publicado' ORDER BY fecha_publicacion DESC LIMIT ? OFFSET ?");
+        $recientes_stmt->bindValue(1, $limit, PDO::PARAM_INT);
+        $recientes_stmt->bindValue(2, $offset, PDO::PARAM_INT);
+        $recientes_stmt->execute();
+        $recientes = $recientes_stmt->fetchAll();
+
+        if (count($recientes) === 0) exit;
+
+        foreach ($recientes as $r) {
+            $link = defined('APP_BASE') ? APP_BASE . '/' . urlencode($r['slug'] ?? '') : '/' . urlencode($r['slug'] ?? '');
+            echo '<a href="' . $link . '" class="news-card">';
+            echo '<div class="card-img-wrap">';
+            echo renderMedia($r['imagen_url'], 'card-img', $r['video_poster_url'] ?? '', false);
+            echo '</div>';
+            echo '<div class="card-content">';
+            echo '<span class="card-category">' . htmlspecialchars($r['categoria']) . '</span>';
+            echo '<h3 class="card-title">' . htmlspecialchars($r['titulo']) . '</h3>';
+            echo '</div></a>';
+        }
+    }
+
+    public function loadMoreUltimas() {
+        if (function_exists('check_rate_limit') && !check_rate_limit($this->pdo, 'load_more_ultimas', 30, 1)) {
+            http_response_code(429);
+            die('Demasiadas solicitudes. Intenta de nuevo en un momento.');
+        }
+
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = 15;
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->pdo->prepare("SELECT n.id, n.slug, n.titulo, n.categoria, n.extracto, n.imagen_url, n.video_poster_url, n.fecha_publicacion, u.nombre_completo AS autor FROM noticias n JOIN usuarios u ON n.autor_id = u.id WHERE n.estado_publicacion = 'publicado' ORDER BY n.fecha_publicacion DESC LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $noticias = $stmt->fetchAll();
+
+        if (count($noticias) === 0) exit;
+
+        foreach ($noticias as $n) {
+            $date = new \DateTime($n['fecha_publicacion']);
+            $time_display = $date->format('H:i');
+            $date_display = $date->format('d/m/Y');
+            
+            $now = new \DateTime;
+            $diff = $now->diff($date);
+            $weeks = floor($diff->d / 7);
+            $diff->d -= $weeks * 7;
+            $string = array('y' => $diff->y ? $diff->y . ' año' . ($diff->y > 1 ? 's' : '') : null, 'm' => $diff->m ? $diff->m . ' mes' . ($diff->m > 1 ? 'es' : '') : null, 'w' => $weeks ? $weeks . ' semana' . ($weeks > 1 ? 's' : '') : null, 'd' => $diff->d ? $diff->d . ' día' . ($diff->d > 1 ? 's' : '') : null, 'h' => $diff->h ? $diff->h . ' hora' . ($diff->h > 1 ? 's' : '') : null, 'i' => $diff->i ? $diff->i . ' minuto' . ($diff->i > 1 ? 's' : '') : null, 's' => $diff->s ? $diff->s . ' segundo' . ($diff->s > 1 ? 's' : '') : null);
+            $string = array_filter($string);
+            $time_ago = $string ? 'Hace ' . implode(', ', array_slice($string, 0, 1)) : 'justo ahora';
+
+            $link = defined('APP_BASE') ? APP_BASE . '/' . urlencode($n['slug'] ?? '') : '/' . urlencode($n['slug'] ?? '');
+            
+            echo '<a href="' . $link . '" class="timeline-item">';
+            echo '<div class="timeline-time"><span class="hour">' . $time_display . '</span><span>' . $date_display . '</span><span style="font-size:0.75rem; color:var(--primary-color); margin-top:5px; font-weight:800;">' . $time_ago . '</span></div>';
+            if (!empty($n['imagen_url']) || !empty($n['video_poster_url'])) {
+                echo '<div class="timeline-img-wrap">' . renderMedia($n['imagen_url'], 'card-img', $n['video_poster_url'] ?? '', false) . '</div>';
+            }
+            echo '<div class="timeline-content"><span class="timeline-cat">' . htmlspecialchars($n['categoria']) . '</span><h3 class="timeline-title">' . htmlspecialchars($n['titulo']) . '</h3><p class="timeline-excerpt">' . htmlspecialchars($n['extracto'] ?? '') . '</p><div style="font-size:0.85rem; color:var(--text-muted); font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span><i class="ri-user-line"></i> Por: ' . htmlspecialchars($n['autor']) . '</span><span style="color:var(--primary-color); font-weight:800; display:flex; align-items:center; gap:5px;">Leer más <i class="ri-arrow-right-line"></i></span></div></div></a>';
         }
     }
 }

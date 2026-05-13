@@ -7,7 +7,7 @@ class FileCacheDriver implements CacheInterface {
     private $cache_dir;
 
     public function __construct($cache_dir = null) {
-        $this->cache_dir = $cache_dir ?: __DIR__ . '/../../../'; // Raíz por defecto, idealmente 'storage/cache/'
+        $this->cache_dir = $cache_dir ?: __DIR__ . '/../../../storage/cache/'; 
     }
 
     public function set($key, $data, $ttl = 300) {

@@ -7,13 +7,11 @@ use App\Services\CacheService;
 class AdminDashboardController {
     
     public function __construct() {
-        require_once __DIR__ . '/../../conexion.php';
-        require_once __DIR__ . '/../../watermark.php';
-        require_once __DIR__ . '/../../media_firewall.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         
         if (isset($_GET['logout'])) {
             session_destroy();
-            header("Location: /piura_noticias_php/login.php");
+            header("Location: " . APP_BASE . "login.php");
             exit;
         }
         
@@ -206,11 +204,11 @@ class AdminDashboardController {
                 $stmt_del = $pdo->prepare("UPDATE noticias SET estado_publicacion = 'papelera', deleted_at = NOW() WHERE id = ?");
                 if ($stmt_del->execute([$id])) {
                     $this->logActividad($pdo, $_SESSION['user_id'] ?? 0, 'Papelera', "Envió noticia ID #$id ('$tit_del') a la papelera");
-                    header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia '$tit_del' enviada a la papelera. Se eliminará en 15 días."));
+                    header("Location: " . APP_BASE . "admin?msg=" . urlencode("Noticia '$tit_del' enviada a la papelera. Se eliminará en 15 días."));
                     exit;
                 }
             } else {
-                header("Location: /piura_noticias_php/admin?msg=" . urlencode("Error: No tienes permiso para eliminar noticias."));
+                header("Location: " . APP_BASE . "admin?msg=" . urlencode("Error: No tienes permiso para eliminar noticias."));
                 exit;
             }
         }
@@ -223,7 +221,7 @@ class AdminDashboardController {
             $stmt_res = $pdo->prepare("UPDATE noticias SET estado_publicacion = 'borrador', deleted_at = NULL WHERE id = ?");
             if ($stmt_res->execute([$id])) {
                 $this->logActividad($pdo, $_SESSION['user_id'] ?? 0, 'Restauración', "Restauró noticia ID #$id ('$tit_res')");
-                header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia '$tit_res' restaurada en Borradores."));
+                header("Location: " . APP_BASE . "admin?msg=" . urlencode("Noticia '$tit_res' restaurada en Borradores."));
                 exit;
             }
         }
@@ -241,12 +239,12 @@ class AdminDashboardController {
                     $stmt_del_hd = $pdo->prepare("DELETE FROM noticias WHERE id = ?");
                     if ($stmt_del_hd->execute([$id])) {
                         $this->logActividad($pdo, $_SESSION['user_id'] ?? 0, 'Eliminación', "Eliminó permanentemente noticia ID #$id ('{$row_hd['titulo']}')");
-                        header("Location: /piura_noticias_php/admin?msg=" . urlencode("La noticia y sus archivos fueron eliminados permanentemente."));
+                        header("Location: " . APP_BASE . "admin?msg=" . urlencode("La noticia y sus archivos fueron eliminados permanentemente."));
                         exit;
                     }
                 }
             } else {
-                header("Location: /piura_noticias_php/admin?msg=" . urlencode("Error: No tienes permisos administrativos para hacer limpiezas de la base de datos."));
+                header("Location: " . APP_BASE . "admin?msg=" . urlencode("Error: No tienes permisos administrativos para hacer limpiezas de la base de datos."));
                 exit;
             }
         }
@@ -271,12 +269,12 @@ class AdminDashboardController {
                 $nuevo_id = $pdo->lastInsertId();
                 $this->logActividad($pdo, $_SESSION['user_id'] ?? 0, 'Duplicación', "Duplicó noticia ID #$id ('{$original['titulo']}') como ID #$nuevo_id");
                 
-                header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia duplicada como Borrador."));
+                header("Location: " . APP_BASE . "admin?msg=" . urlencode("Noticia duplicada como Borrador."));
                 exit;
             }
         }
 
-        header("Location: /piura_noticias_php/admin");
+        header("Location: " . APP_BASE . "admin");
         exit;
     }
 
@@ -306,7 +304,7 @@ class AdminDashboardController {
             }
         }
         
-        header("Location: /piura_noticias_php/admin?msg=" . urlencode($msg));
+        header("Location: " . APP_BASE . "admin?msg=" . urlencode($msg));
         exit;
     }
 
@@ -351,7 +349,7 @@ class AdminDashboardController {
         
         $cat_folder = !empty($categoria) ? preg_replace('/[^a-zA-Z0-9\-_]/', '', $categoria) : 'Sin_Categoria';
         $uploadDir = 'uploads/' . $cat_folder . '/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
-        $fullUploadDir = __DIR__ . '/../../' . $uploadDir;
+        $fullUploadDir = PUBLIC_PATH . $uploadDir;
         if (!is_dir($fullUploadDir)) mkdir($fullUploadDir, 0755, true);
         
         if (isset($_FILES['media_upload']) && $_FILES['media_upload']['error'] === UPLOAD_ERR_OK && $_FILES['media_upload']['size'] <= 50 * 1024 * 1024) {
@@ -451,7 +449,7 @@ class AdminDashboardController {
                 if ($current_action === 'create') {
                     if (!$imagen_url && $estado_publicacion === 'publicado') { 
                         $pdo->rollBack();
-                        header("Location: /piura_noticias_php/admin?msg=" . urlencode("Error: Debes subir una imagen principal para nuevas noticias."));
+                        header("Location: " . APP_BASE . "admin?msg=" . urlencode("Error: Debes subir una imagen principal para nuevas noticias."));
                         exit;
                     } else {
                         $stmt = $pdo->prepare("INSERT INTO noticias (titulo, slug, extracto, contenido, categoria, distrito, imagen_url, autor_id, es_destacada, seo_titulo, seo_descripcion, tags, fuente_nombre, fuente_url, video_poster_url, estado_publicacion, fecha_programada) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -482,7 +480,7 @@ class AdminDashboardController {
 
                         $pdo->commit();
                         $cacheService->clearAll(); // Invalidación global para Último Minuto
-                        header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia guardada exitosamente y agregada al Planificador ($estado_publicacion)."));
+                        header("Location: " . APP_BASE . "admin?msg=" . urlencode("Noticia guardada exitosamente y agregada al Planificador ($estado_publicacion)."));
                         exit;
                     }
                 } elseif ($current_action === 'update' && $edit_item_id) {
@@ -493,7 +491,7 @@ class AdminDashboardController {
                         $db_updated_at = $stmt_check_lock->fetchColumn();
                         if ($db_updated_at && $db_updated_at !== $original_updated_at) {
                             $pdo->rollBack();
-                            header("Location: /piura_noticias_php/admin?msg=" . urlencode("Conflicto: Esta noticia ha sido modificada por otro usuario recientemente."));
+                            header("Location: " . APP_BASE . "admin?msg=" . urlencode("Conflicto: Esta noticia ha sido modificada por otro usuario recientemente."));
                             exit;
                         }
                     }
@@ -516,7 +514,7 @@ class AdminDashboardController {
                     $stmt = $pdo->prepare($sql);
                     if (!$stmt->execute($params)) {
                         $pdo->rollBack();
-                        header("Location: /piura_noticias_php/admin?msg=" . urlencode("Error al actualizar la base de datos."));
+                        header("Location: " . APP_BASE . "admin?msg=" . urlencode("Error al actualizar la base de datos."));
                         exit;
                     } else {
                         $extra_log = ($estado_publicacion === 'programado' && $fecha_programada) ? " para el " . date('d/m/Y H:i', strtotime($fecha_programada)) : '';
@@ -530,17 +528,17 @@ class AdminDashboardController {
 
                         $pdo->commit();
                         $cacheService->clearAll(); // Invalidación global para Último Minuto
-                        header("Location: /piura_noticias_php/admin?msg=" . urlencode("Noticia ID #$edit_item_id actualizada exitosamente a '$estado_publicacion'."));
+                        header("Location: " . APP_BASE . "admin?msg=" . urlencode("Noticia ID #$edit_item_id actualizada exitosamente a '$estado_publicacion'."));
                         exit;
                     }
                 }
             } catch(\Exception $ex) {
                 $pdo->rollBack();
-                header("Location: /piura_noticias_php/admin?msg=" . urlencode("Error DB: " . $ex->getMessage()));
+                header("Location: " . APP_BASE . "admin?msg=" . urlencode("Error DB: " . $ex->getMessage()));
                 exit;
             }
         } else {
-            header("Location: /piura_noticias_php/admin?msg=" . urlencode("Error: Faltan campos obligatorios principales."));
+            header("Location: " . APP_BASE . "admin?msg=" . urlencode("Error: Faltan campos obligatorios principales."));
             exit;
         }
     }

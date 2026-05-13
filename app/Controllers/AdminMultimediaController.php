@@ -24,12 +24,12 @@ class AdminMultimediaController extends Controller {
         require_permission('manage_media');
         
         if ($_SESSION['user_role'] === 'gerente') {
-            header("Location: /piura_noticias_php/admin/reportes"); // todo: fix route later
+            header("Location: " . APP_BASE . "admin/reportes"); // todo: fix route later
             exit;
         }
 
         $user_role = $_SESSION['user_role'];
-        $upload_dir = $this->project_root . 'uploads/';
+        $upload_dir = PUBLIC_PATH . 'uploads/';
         if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
 
         $msg = $_GET['msg'] ?? '';
@@ -96,8 +96,8 @@ class AdminMultimediaController extends Controller {
                 $fname = basename($row['imagen_url']);
                 $usage_map[$fname][] = [
                     'type' => 'noticia', 'label' => 'Portada de noticia', 'detail' => $row['titulo'], 'icon' => 'ri-newspaper-line', 'color' => '#3b82f6', 
-                    'edit_url' => '/piura_noticias_php/admin?action=edit&id='.$row['id'],
-                    'view_url' => '/piura_noticias_php/article.php?id='.$row['id']
+                    'edit_url' => APP_BASE . '/admin?action=edit&id='.$row['id'],
+                    'view_url' => APP_BASE . '/article.php?id='.$row['id']
                 ];
             }
             // Usuarios avatar
@@ -106,7 +106,7 @@ class AdminMultimediaController extends Controller {
                 $fname = basename($row['avatar_url']);
                 $usage_map[$fname][] = [
                     'type' => 'avatar', 'label' => 'Foto de perfil', 'detail' => $row['nombre_completo'], 'icon' => 'ri-user-line', 'color' => '#8b5cf6', 
-                    'edit_url' => '/piura_noticias_php/admin/usuarios'
+                    'edit_url' => APP_BASE . '/admin/usuarios'
                 ];
             }
             // Publicidad
@@ -115,7 +115,7 @@ class AdminMultimediaController extends Controller {
                 $fname = basename($row['imagen_url']);
                 $usage_map[$fname][] = [
                     'type' => 'publicidad', 'label' => 'Anuncio publicitario', 'detail' => $row['titulo'], 'icon' => 'ri-advertisement-line', 'color' => '#f59e0b', 
-                    'edit_url' => '/piura_noticias_php/admin/publicidad',
+                    'edit_url' => APP_BASE . '/admin/publicidad',
                     'view_url' => !empty($row['enlace_url']) ? $row['enlace_url'] : ''
                 ];
             }
@@ -125,8 +125,8 @@ class AdminMultimediaController extends Controller {
                 $fname = basename($row['imagen_fondo']);
                 $usage_map[$fname][] = [
                     'type' => 'categoria', 'label' => 'Fondo de categoría', 'detail' => $row['nombre'], 'icon' => 'ri-folder-image-line', 'color' => '#10b981', 
-                    'edit_url' => '/piura_noticias_php/admin/categorias',
-                    'view_url' => '/piura_noticias_php/category.php?id='.$row['id']
+                    'edit_url' => APP_BASE . '/admin/categorias',
+                    'view_url' => APP_BASE . '/category.php?id='.$row['id']
                 ];
             }
         } catch (\Exception $e) { /* silently fail */ }
@@ -145,7 +145,7 @@ class AdminMultimediaController extends Controller {
         
         $user_role = $_SESSION['user_role'];
         if ($user_role === 'gerente') {
-            header("Location: /piura_noticias_php/admin/reportes");
+            header("Location: " . APP_BASE . "admin/reportes");
             exit;
         }
 
@@ -165,7 +165,7 @@ class AdminMultimediaController extends Controller {
             }
             
             $msg = $result['msg'];
-            header('Location: /piura_noticias_php/admin/multimedia?msg=' . urlencode($msg));
+            header('Location: " . APP_BASE . "admin/multimedia?msg=' . urlencode($msg));
             exit;
         }
 
@@ -208,7 +208,7 @@ class AdminMultimediaController extends Controller {
                     $stmt_log = $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
                     $stmt_log->execute([$_SESSION['user_id'], 'Papelera', "Movió $success archivo(s) multimedia a la papelera simultáneamente en lote."]);
                     $msg = "$success archivo(s) movidos a la papelera." . ($failed > 0 ? " ($failed fallaron)" : "");
-                    header('Location: /piura_noticias_php/admin/multimedia?msg=' . urlencode($msg));
+                    header('Location: " . APP_BASE . "admin/multimedia?msg=' . urlencode($msg));
                     exit;
                 } else {
                     $redirect_msg = 'ok_1';
@@ -216,7 +216,7 @@ class AdminMultimediaController extends Controller {
             } else {
                 $redirect_msg = 'ok_2';
             }
-            header('Location: /piura_noticias_php/admin/multimedia?msg=' . urlencode($redirect_msg ?? 'ok_1'));
+            header('Location: " . APP_BASE . "admin/multimedia?msg=' . urlencode($redirect_msg ?? 'ok_1'));
             exit;
         }
 
@@ -237,7 +237,7 @@ class AdminMultimediaController extends Controller {
                     $stmt_log = $this->pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)");
                     $stmt_log->execute([$_SESSION['user_id'], 'Papelera', "Envió archivo multimedia a la papelera: $file_name"]);
                     
-                    header("Location: /piura_noticias_php/admin/multimedia?msg=eliminado");
+                    header("Location: " . APP_BASE . "admin/multimedia?msg=eliminado");
                     exit;
                 } else {
                     $msg = "Error: No se pudo enviar el archivo a la papelera.";
@@ -245,12 +245,12 @@ class AdminMultimediaController extends Controller {
             } else {
                 $msg = "Error: El archivo no existe o no se puede eliminar.";
             }
-            header("Location: /piura_noticias_php/admin/multimedia?msg=" . urlencode($msg));
+            header("Location: " . APP_BASE . "admin/multimedia?msg=" . urlencode($msg));
             exit;
         }
         
         // Redirección por defecto si no hay acción válida
-        header('Location: /piura_noticias_php/admin/multimedia');
+        header('Location: " . APP_BASE . "admin/multimedia');
         exit;
     }
 }

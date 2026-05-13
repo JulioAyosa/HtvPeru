@@ -78,11 +78,11 @@ class AdminNewsletterController extends Controller {
                 $redirect_msg = 'eliminado';
             }
             
-            header('Location: /piura_noticias_php/admin/boletines?msg=' . urlencode($redirect_msg));
+            header('Location: " . APP_BASE . "admin/boletines?msg=' . urlencode($redirect_msg));
             exit;
         }
 
-        header('Location: /piura_noticias_php/admin/boletines');
+        header('Location: " . APP_BASE . "admin/boletines');
         exit;
     }
 }

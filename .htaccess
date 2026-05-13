@@ -2,8 +2,7 @@
 AddDefaultCharset UTF-8
 
 # Página de error 404 personalizada (MEJ-03-03)
-# NOTA: En producción (raíz), cambiar a /404.php
-ErrorDocument 404 /piura_noticias_php/404.php
+ErrorDocument 404 /404.php
 
 # Activar compresión GZIP/DEFLATE (MEJ-03-04)
 <IfModule mod_deflate.c>
@@ -44,7 +43,7 @@ Header set X-Content-Type-Options "nosniff"
 Header set X-XSS-Protection "1; mode=block"
 
 # MEJ-07 FIX: Content Security Policy
-Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdn.tiny.cloud; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src https://www.youtube.com https://www.google.com; connect-src 'self' https://cdn.tiny.cloud https://get.geojs.io https://api.open-meteo.com;"
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdn.tiny.cloud; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src https://www.youtube.com https://www.google.com; connect-src 'self' https://cdn.tiny.cloud https://get.geojs.io https://api.open-meteo.com https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com;"
 
 # Referrer Policy
 Header set Referrer-Policy "strict-origin-when-cross-origin"
@@ -122,11 +121,16 @@ ServerSignature Off
     # En PRODUCCION (raíz):  quitar o dejar vacío estas líneas
     
     # Evitar bucles redirigiendo peticiones ya apuntando a public/
-    RewriteCond %{REQUEST_URI} !^/piura_noticias_php/public/
+    RewriteCond %{REQUEST_URI} !^/public/
     
-    # Excluir recursos estáticos de ser pasados por PHP por velocidad
-    RewriteCond %{REQUEST_URI} !^/piura_noticias_php/(css|js|img|uploads|dist) [NC]
+    # Excluir archivos y carpetas reales de ser pasados por PHP (CSS, JS, IMAGENES, MANIFEST)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     
+    # Redirigir Sitemaps al directorio public/
+    RewriteRule ^sitemap-static\.xml$ public/sitemap-static.xml [L]
+    RewriteRule ^sitemap-news-static\.xml$ public/sitemap-news-static.xml [L]
+
     # Enviar todo el resto a public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
 

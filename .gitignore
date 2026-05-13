@@ -47,5 +47,11 @@ database_full.sql
 # === IDE / EDITOR ===
 .vscode/
 .idea/
+.gemini/
 *.sublime-project
 *.sublime-workspace
+
+# === PROJECT STORAGE / UPLOADS (OPTIONAL) ===
+# Note: If you want to keep your repo light, consider ignoring these
+# public/uploads/
+# uploads/

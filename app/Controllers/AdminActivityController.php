@@ -6,7 +6,7 @@ use Config\Database;
 class AdminActivityController {
     
     public function __construct() {
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         
         
         

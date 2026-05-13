@@ -26,7 +26,7 @@ if (!$is_cli && !$valid_token) {
     die('Access Denied. Use CLI or provide a valid auth token.'); 
 }
 
-require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/../../config/bootstrap.php';
 require_once __DIR__ . '/app/Services/SocialPublisherService.php';
 require_once __DIR__ . '/core/cache_helper.php';
 

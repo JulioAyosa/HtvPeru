@@ -154,18 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             searchTimeout = setTimeout(async () => {
                 try {
-                    const res = await fetch(`/piura_noticias_php/api/search?q=${encodeURIComponent(q)}`);
+                    const res = await fetch(`${APP_BASE}/api/search?q=${encodeURIComponent(q)}`);
                     if(res.ok) {
                         const data = await res.json();
                         if(data.length > 0) {
                             let html = '';
                             data.forEach(item => {
-                                html += `<a href="/piura_noticias_php/${item.slug}" style="display:flex; gap:10px; padding:10px; border-bottom:1px solid var(--border-color); text-decoration:none; align-items:flex-start;" class="hover-title-primary">
+                                html += `<a href="${APP_BASE}/${item.slug}" style="display:flex; gap:10px; padding:10px; border-bottom:1px solid var(--border-color); text-decoration:none; align-items:flex-start;" class="hover-title-primary">
                                             <img src="${item.imagen_url ? item.imagen_url : 'img/logo.webp'}" style="width:50px; height:50px; min-width:50px; flex-shrink:0; object-fit:cover; border-radius:4px;" onerror="this.src='img/logo.webp'">
                                             <span style="font-size:0.85rem; color:var(--text-main); font-weight:600; line-height:1.3; overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3;">${item.titulo}</span>
                                          </a>`;
                             });
-                            html += `<a href="/piura_noticias_php/buscar?q=${encodeURIComponent(q)}" style="display:block; text-align:center; padding:10px; font-size:0.8rem; color:var(--primary-color); font-weight:800; background:rgba(0,0,0,0.02);">VER TODOS LOS RESULTADOS</a>`;
+                            html += `<a href="${APP_BASE}/buscar?q=${encodeURIComponent(q)}" style="display:block; text-align:center; padding:10px; font-size:0.8rem; color:var(--primary-color); font-weight:800; background:rgba(0,0,0,0.02);">VER TODOS LOS RESULTADOS</a>`;
                             liveSearchResults.innerHTML = html;
                             liveSearchResults.style.display = 'block';
                         } else {

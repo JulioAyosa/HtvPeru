@@ -38,8 +38,8 @@ function cargar_permisos_usuario() {
     global $pdo;
     if (!$pdo) {
         // En caso de que se llame y no haya conexión, intentamos incluirla
-        if (file_exists(__DIR__ . '/conexion.php')) {
-            require_once __DIR__ . '/conexion.php';
+        if (file_exists(__DIR__ . '/../../config/bootstrap.php')) {
+            require_once __DIR__ . '/../../config/bootstrap.php';
         } else {
             return;
         }

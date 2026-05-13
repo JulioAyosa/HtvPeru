@@ -7,7 +7,7 @@ class AdminPollController {
     
     public function __construct() {
         // Enforce dependencies and session
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         
         
         
@@ -68,15 +68,15 @@ class AdminPollController {
                     $stmt_op->execute([$encuesta_id, trim($opText)]);
                 }
                 $pdo->commit();
-                header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("Nueva encuesta creada correctamente"));
+                header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode("Nueva encuesta creada correctamente"));
                 exit;
             } catch(\Exception $e) {
                 $pdo->rollBack();
-                header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("Error al crear encuesta"));
+                header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode("Error al crear encuesta"));
                 exit;
             }
         } else {
-            header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("Debe incluir una pregunta y al menos 2 opciones"));
+            header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode("Debe incluir una pregunta y al menos 2 opciones"));
             exit;
         }
     }
@@ -90,7 +90,7 @@ class AdminPollController {
         $id = (int)($_POST['id'] ?? 0);
 
         if (!$id) {
-            header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("ID de encuesta no válido"));
+            header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode("ID de encuesta no válido"));
             exit;
         }
 
@@ -98,7 +98,7 @@ class AdminPollController {
             $pdo->query("UPDATE encuestas SET estado = 'inactivo'");
             $stmt = $pdo->prepare("UPDATE encuestas SET estado = 'activo' WHERE id = ?");
             $stmt->execute([$id]);
-            header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("Encuesta activada en portada"));
+            header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode("Encuesta activada en portada"));
             exit;
         }
 
@@ -108,14 +108,14 @@ class AdminPollController {
             $stmt->execute([$id]);
             $stmt_op = $pdo->prepare("UPDATE encuestas_opciones SET votos = 0 WHERE encuesta_id = ?");
             $stmt_op->execute([$id]);
-            header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("Encuesta reiniciada y devuelta a la portada"));
+            header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode("Encuesta reiniciada y devuelta a la portada"));
             exit;
         }
 
         if ($action === 'pause') {
             $stmt = $pdo->prepare("UPDATE encuestas SET estado = 'inactivo' WHERE id = ?");
             $stmt->execute([$id]);
-            header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode("Encuesta pausada/retirada de la portada"));
+            header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode("Encuesta pausada/retirada de la portada"));
             exit;
         }
 
@@ -126,11 +126,11 @@ class AdminPollController {
             } else {
                 $msg = "No tienes permiso para eliminar recursos.";
             }
-            header("Location: /piura_noticias_php/admin/encuestas?msg=" . urlencode($msg));
+            header("Location: " . APP_BASE . "admin/encuestas?msg=" . urlencode($msg));
             exit;
         }
 
-        header("Location: /piura_noticias_php/admin/encuestas");
+        header("Location: " . APP_BASE . "admin/encuestas");
         exit;
     }
 }

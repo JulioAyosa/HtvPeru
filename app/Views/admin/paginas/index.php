@@ -46,7 +46,7 @@
                     </div>
                 </td>
                 <td style="padding: 1rem 1.5rem; border: none;">
-                    <a href="/piura_noticias_php/pagina/<?php echo $p['slug']; ?>" target="_blank" style="color:var(--primary-color); text-decoration: none; font-family: monospace; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.25rem; background: #eff6ff; padding: 4px 8px; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+                    <a href="<?= APP_BASE ?>/pagina/<?php echo $p['slug']; ?>" target="_blank" style="color:var(--primary-color); text-decoration: none; font-family: monospace; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.25rem; background: #eff6ff; padding: 4px 8px; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
                         <i class="ri-external-link-line"></i> /pagina/<?php echo htmlspecialchars($p['slug']); ?>
                     </a>
                 </td>
@@ -64,7 +64,7 @@
                 <td style="padding: 1rem 1.5rem; border: none; text-align: right;">
                     <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
                         <button onclick='editPagina(<?php echo $p['id']; ?>)' style="background:white; color:var(--primary-color); border:1px solid #bfdbfe; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='white'" title="Editar"><i class="ri-edit-2-line"></i></button>
-                        <a href="/piura_noticias_php/admin/paginas/action?action=delete&delete=<?php echo $p['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar definitivamente la página? Esta acción no se puede deshacer.')" style="background:white; color:#ef4444; border:1px solid #fecaca; padding:6px; border-radius:6px; cursor:pointer; text-decoration:none; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='white'"><i class="ri-delete-bin-fill"></i></a>
+                        <a href="<?= APP_BASE ?>/admin/paginas/action?action=delete&delete=<?php echo $p['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" onclick="return confirm('¿Borrar definitivamente la página? Esta acción no se puede deshacer.')" style="background:white; color:#ef4444; border:1px solid #fecaca; padding:6px; border-radius:6px; cursor:pointer; text-decoration:none; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='white'"><i class="ri-delete-bin-fill"></i></a>
                     </div>
                 </td>
             </tr>
@@ -89,7 +89,7 @@
             <i class="ri-close-line" style="cursor:pointer; font-size:1.5rem; background:#f1f5f9; border-radius:50%; padding:0.25rem;" onclick="document.getElementById('modal').style.display='none'"></i>
         </div>
         
-        <form method="POST" action="/piura_noticias_php/admin/paginas/store">
+        <form method="POST" action="<?= APP_BASE ?>/admin/paginas/store">
             <input type="hidden" name="action" id="form-action" value="create">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="id" id="form-id" value="">
@@ -154,7 +154,7 @@
 
     function editPagina(id) {
         // Obtener datos vía fetch MVC route
-        fetch('/piura_noticias_php/admin/paginas/get?id=' + id)
+        fetch('<?= APP_BASE ?>/admin/paginas/get?id=' + id)
             .then(res => res.json())
             .then(data => {
                 if (data.error) {

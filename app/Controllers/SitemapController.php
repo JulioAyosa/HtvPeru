@@ -8,7 +8,7 @@ use Exception;
 class SitemapController {
 
     public function index() {
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
         
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
@@ -64,11 +64,11 @@ class SitemapController {
     }
 
     public function generate() {
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         $pdo = \Config\Database::getInstance();
 
         if (php_sapi_name() !== 'cli') {
-            require_once __DIR__ . '/../../session_config.php';
+            require_once __DIR__ . '/../../config/session.php';
             @session_start();
             if (function_exists('cargar_permisos_usuario')) {
                 cargar_permisos_usuario();

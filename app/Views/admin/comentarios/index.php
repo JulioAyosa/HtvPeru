@@ -33,7 +33,7 @@
 <?php endif; ?>
 
 <div class="table-container">
-    <form method="POST" action="/piura_noticias_php/admin/comentarios/bulk" id="bulk-form">
+    <form method="POST" action="<?= APP_BASE ?>/admin/comentarios/bulk" id="bulk-form">
         <?php echo csrf_field(); ?>
         
         <div style="padding: 1rem 1.5rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -95,7 +95,7 @@
                             </div>
                         </td>
                         <td style="max-width: 200px;">
-                            <a href="/piura_noticias_php/<?php echo urlencode($c['noticia_slug'] ?? ''); ?>" target="_blank" style="font-size:0.85rem; color:var(--primary-color); text-decoration:none; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-weight:600;" title="<?php echo htmlspecialchars($c['noticia_titulo'] ?? '', ENT_QUOTES); ?>">
+                            <a href="<?= APP_BASE ?>/<?php echo urlencode($c['noticia_slug'] ?? ''); ?>" target="_blank" style="font-size:0.85rem; color:var(--primary-color); text-decoration:none; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-weight:600;" title="<?php echo htmlspecialchars($c['noticia_titulo'] ?? '', ENT_QUOTES); ?>">
                                 <?php echo htmlspecialchars($c['noticia_titulo'] ?? 'Noticia Eliminada', ENT_QUOTES | ENT_HTML5, 'UTF-8'); ?>
                             </a>
                         </td>
@@ -111,15 +111,15 @@
                         <td style="text-align: right; white-space: nowrap;">
                             <div style="display: flex; gap: 0.25rem; justify-content: flex-end;">
                                 <?php if($c['estado'] !== 'Aprobado'): ?>
-                                    <a href="/piura_noticias_php/admin/comentarios/action?action=aprobar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" style="background:white; color:#10b981; border:1px solid #a7f3d0; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.background='#ecfdf5'" onmouseout="this.style.background='white'" title="Aprobar"><i class="ri-check-line"></i></a>
+                                    <a href="<?= APP_BASE ?>/admin/comentarios/action?action=aprobar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" style="background:white; color:#10b981; border:1px solid #a7f3d0; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.background='#ecfdf5'" onmouseout="this.style.background='white'" title="Aprobar"><i class="ri-check-line"></i></a>
                                 <?php endif; ?>
                                 
                                 <?php if($c['estado'] !== 'Rechazado'): ?>
-                                    <a href="/piura_noticias_php/admin/comentarios/action?action=rechazar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" style="background:white; color:#f59e0b; border:1px solid #fde68a; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.background='#fffbeb'" onmouseout="this.style.background='white'" title="Rechazar"><i class="ri-close-line"></i></a>
+                                    <a href="<?= APP_BASE ?>/admin/comentarios/action?action=rechazar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" style="background:white; color:#f59e0b; border:1px solid #fde68a; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.background='#fffbeb'" onmouseout="this.style.background='white'" title="Rechazar"><i class="ri-close-line"></i></a>
                                 <?php endif; ?>
                                 
                                 <?php if($user_role === 'admin'): ?>
-                                    <a href="/piura_noticias_php/admin/comentarios/action?action=eliminar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" style="background:white; color:#ef4444; border:1px solid #fecaca; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='white'" title="Eliminar" onclick="return confirm('¿Borrar permanentemente este comentario?');"><i class="ri-delete-bin-fill"></i></a>
+                                    <a href="<?= APP_BASE ?>/admin/comentarios/action?action=eliminar&id=<?php echo $c['id']; ?>&csrf_token=<?php echo csrf_token(); ?>" style="background:white; color:#ef4444; border:1px solid #fecaca; padding:6px; border-radius:6px; cursor:pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='white'" title="Eliminar" onclick="return confirm('¿Borrar permanentemente este comentario?');"><i class="ri-delete-bin-fill"></i></a>
                                 <?php endif; ?>
                             </div>
                         </td>

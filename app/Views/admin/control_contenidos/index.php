@@ -37,7 +37,7 @@
 
 <!-- Filtros Superiores -->
 <div style="background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-    <form method="GET" action="/piura_noticias_php/admin/contenidos">
+    <form method="GET" action="<?= APP_BASE ?>/admin/contenidos">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
             <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow:hidden;">
                 <div style="padding: 0.6rem 0.85rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid #e2e8f0;">
@@ -102,7 +102,7 @@
         <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
             <div style="display: flex; gap: 0.5rem;">
                 <button type="submit" style="background: linear-gradient(135deg, var(--primary-color), #1d4ed8); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(37,99,235,0.3);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'"><i class="ri-filter-3-line"></i> Filtrar</button>
-                <a href="/piura_noticias_php/admin/contenidos" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 0.6rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.9rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'" title="Limpiar"><i class="ri-refresh-line"></i></a>
+                <a href="<?= APP_BASE ?>/admin/contenidos" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 0.6rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.9rem; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'" title="Limpiar"><i class="ri-refresh-line"></i></a>
             </div>
             <div>
                 <?php 
@@ -172,7 +172,7 @@
             <p style="margin:0; font-size: 0.75rem; color: #94a3b8;">Registra una nueva entrada en el planificador</p>
         </div>
     </div>
-    <form method="POST" action="/piura_noticias_php/admin/contenidos/store">
+    <form method="POST" action="<?= APP_BASE ?>/admin/contenidos/store">
         <input type="hidden" name="action" value="add">
         <?php echo csrf_field(); ?>
         
@@ -513,7 +513,7 @@
                                                         <i class="ri-eye-line" style="margin-right:2px;"></i> <?php echo number_format(intval($r['vistas'] ?? 0)); ?>
                                                     </td>
                                                     <td style="text-align:center;">
-                                                        <form method="POST" action="/piura_noticias_php/admin/contenidos/action" style="display:inline;">
+                                                        <form method="POST" action="<?= APP_BASE ?>/admin/contenidos/action" style="display:inline;">
                                                             <input type="hidden" name="toggle_id" value="<?php echo $r['id']; ?>">
                                                             <input type="hidden" name="val" value="<?php echo $r['completado'] ? 0 : 1; ?>">
                                                             <?php echo csrf_field(); ?>
@@ -527,7 +527,7 @@
                                                             <a href="javascript:void(0)" onclick='openEditModal(<?php echo json_encode($r, JSON_HEX_APOS|JSON_HEX_QUOT); ?>)' style="color:#3b82f6; font-size:1.1rem;" title="Editar"><i class="ri-edit-line"></i></a>
                                                             <a href="javascript:void(0)" onclick="openDupMenu(this, <?php echo $r['id']; ?>)" style="color:#8b5cf6; font-size:1.1rem;" title="Duplicar"><i class="ri-file-copy-line"></i></a>
                                                             <?php if($is_admin): ?>
-                                                            <form method="POST" action="/piura_noticias_php/admin/contenidos/action" style="display:inline;" onsubmit="return confirm('¿Eliminar esta publicación?');">
+                                                            <form method="POST" action="<?= APP_BASE ?>/admin/contenidos/action" style="display:inline;" onsubmit="return confirm('¿Eliminar esta publicación?');">
                                                                 <input type="hidden" name="delete_id" value="<?php echo $r['id']; ?>">
                                                                 <?php echo csrf_field(); ?>
                                                                 <button type="submit" style="background:none; border:none; cursor:pointer; color:#ef4444; font-size:1.1rem; padding:0;" title="Eliminar"><i class="ri-delete-bin-line"></i></button>
@@ -564,7 +564,7 @@
             <h3 style="margin:0; color:var(--primary-color);"><i class="ri-edit-line"></i> Editar Publicación</h3>
             <button onclick="closeEditModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#94a3b8;">&times;</button>
         </div>
-        <form method="POST" action="/piura_noticias_php/admin/contenidos/store">
+        <form method="POST" action="<?= APP_BASE ?>/admin/contenidos/store">
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="edit_id" id="edit_id">
             <?php echo csrf_field(); ?>
@@ -598,7 +598,7 @@
 
 <!-- Menu Duplicar -->
 <div id="dupMenu" style="display:none; position:absolute; background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:0.5rem; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:9998; min-width:140px;">
-    <form method="POST" action="/piura_noticias_php/admin/contenidos/store" id="dupForm">
+    <form method="POST" action="<?= APP_BASE ?>/admin/contenidos/store" id="dupForm">
         <input type="hidden" name="action" value="duplicate">
         <input type="hidden" name="source_id" id="dup_source_id">
         <?php echo csrf_field(); ?>

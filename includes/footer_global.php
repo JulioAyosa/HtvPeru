@@ -17,7 +17,7 @@
             <h4>Secciones</h4>
             <ul style="list-style:none; padding:0; margin:0;">
                 <?php foreach($menu_cats_dynamic as $c): ?>
-                <li style="margin-bottom:0.5rem;"><a href="/piura_noticias_php/categoria/<?php echo urlencode($c['slug']); ?>"><?php echo htmlspecialchars($c['nombre']); ?></a></li>
+                <li style="margin-bottom:0.5rem;"><a href="<?= APP_BASE ?>/categoria/<?php echo urlencode($c['slug']); ?>"><?php echo htmlspecialchars($c['nombre']); ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -26,12 +26,12 @@
             <ul style="list-style:none; padding:0; margin:0;">
                 <?php
                 if (!isset($pdo)) {
-                    require_once 'conexion.php';
+                    require_once 'config/bootstrap.php';
                 }
                 $pag_stmt = $pdo->query("SELECT titulo, slug FROM paginas WHERE estado='activo' ORDER BY titulo ASC");
                 while($p = $pag_stmt->fetch()):
                 ?>
-                <li style="margin-bottom:0.5rem;"><a href="/piura_noticias_php/pagina/<?php echo $p['slug']; ?>"><?php echo htmlspecialchars($p['titulo']); ?></a></li>
+                <li style="margin-bottom:0.5rem;"><a href="<?= APP_BASE ?>/pagina/<?php echo $p['slug']; ?>"><?php echo htmlspecialchars($p['titulo']); ?></a></li>
                 <?php endwhile; ?>
                 <?php if(!empty($global_configs['privacy_policy_url'])): ?>
                 <li style="margin-bottom:0.5rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.5rem;">
@@ -75,7 +75,7 @@ if ('serviceWorker' in navigator) {
 <!-- Banner de Cookies -->
 <div id="cookies-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--bg-card); border-top:1px solid var(--border-color); padding:1rem; z-index:9999; box-shadow:0 -4px 10px rgba(0,0,0,0.1); justify-content:center; align-items:center; gap:1.5rem; flex-wrap:wrap; text-align:center;">
     <p style="margin:0; font-size:0.9rem; color:var(--text-main); max-width:800px;">
-        Utilizamos cookies propias y de terceros para mejorar nuestros servicios y mostrarle publicidad relacionada con sus preferencias mediante el análisis de sus hábitos de navegación. Si continúa navegando, consideramos que acepta su uso. Puede obtener más información en nuestra <a href="/piura_noticias_php/pagina/politica-de-privacidad" style="color:var(--primary-color); text-decoration:underline;">Política de Privacidad</a>.
+        Utilizamos cookies propias y de terceros para mejorar nuestros servicios y mostrarle publicidad relacionada con sus preferencias mediante el análisis de sus hábitos de navegación. Si continúa navegando, consideramos que acepta su uso. Puede obtener más información en nuestra <a href="<?= APP_BASE ?>/pagina/politica-de-privacidad" style="color:var(--primary-color); text-decoration:underline;">Política de Privacidad</a>.
     </p>
     <button id="btn-accept-cookies" style="background:var(--primary-color); color:white; border:none; padding:0.5rem 1.5rem; border-radius:var(--radius-md); font-weight:bold; cursor:pointer; font-family:var(--font-sans);">Aceptar Cookies</button>
 </div>

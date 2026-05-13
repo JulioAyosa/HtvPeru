@@ -72,11 +72,11 @@ class AdminCommentController extends Controller {
                 $this->pdo->prepare("UPDATE comentarios SET deleted_at = NOW() WHERE id = ?")->execute([$id]);
                 $msg = "Comentario enviado a la Papelera.";
             }
-            header("Location: /piura_noticias_php/admin/comentarios?msg=" . urlencode($msg));
+            header("Location: " . APP_BASE . "admin/comentarios?msg=" . urlencode($msg));
             exit;
         }
 
-        header("Location: /piura_noticias_php/admin/comentarios");
+        header("Location: " . APP_BASE . "admin/comentarios");
         exit;
     }
 
@@ -109,7 +109,7 @@ class AdminCommentController extends Controller {
             }
         }
         
-        header("Location: /piura_noticias_php/admin/comentarios?msg=" . urlencode($msg));
+        header("Location: " . APP_BASE . "admin/comentarios?msg=" . urlencode($msg));
         exit;
     }
 }

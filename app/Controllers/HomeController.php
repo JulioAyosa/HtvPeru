@@ -5,7 +5,7 @@ use Config\Database;
 
 class HomeController {
     public function index() {
-        require_once __DIR__ . '/../../conexion.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         global $pdo;
 
 date_default_timezone_set('America/Lima');

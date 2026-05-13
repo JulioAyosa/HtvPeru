@@ -6,8 +6,7 @@ use Config\Database;
 class AdminCategoryController {
     
     public function __construct() {
-        require_once __DIR__ . '/../../conexion.php';
-        require_once __DIR__ . '/../../media_firewall.php';
+        require_once __DIR__ . '/../../config/bootstrap.php';
         
         
         
@@ -75,7 +74,7 @@ class AdminCategoryController {
             
             $pdo->prepare("UPDATE categorias SET deleted_at = NOW() WHERE id = ?")->execute([$id]);
             $pdo->prepare("INSERT INTO registro_actividad (user_id, accion, detalles) VALUES (?, ?, ?)")->execute([$_SESSION['user_id'], 'Eliminación', 'Borró la categoría ID #' . $id . ' (' . $cat_name . ') del menú y sistema principal']);
-            header("Location: /piura_noticias_php/admin/categorias?msg=eliminado");
+            header("Location: " . APP_BASE . "admin/categorias?msg=eliminado");
             exit;
         }
 
@@ -102,14 +101,14 @@ class AdminCategoryController {
                 if ($firewall['ok']) {
                     $ext = pathinfo($_FILES['cat_bg_image']['name'], PATHINFO_EXTENSION);
                     $filename = 'cat_bg_' . $cat_id . '_' . time() . '.' . strtolower($ext);
-                    $upload_dir = __DIR__ . '/../../uploads/categorias/';
+                    $upload_dir = PUBLIC_PATH . 'uploads/categorias/';
                     if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
                     
                     $old_stmt = $pdo->prepare("SELECT imagen_fondo FROM categorias WHERE id = ?");
                     $old_stmt->execute([$cat_id]);
                     $old_img = $old_stmt->fetchColumn();
-                    if ($old_img && file_exists(__DIR__ . '/../../' . $old_img)) {
-                        @unlink(__DIR__ . '/../../' . $old_img);
+                    if ($old_img && file_exists(PUBLIC_PATH . $old_img)) {
+                        @unlink(PUBLIC_PATH . $old_img);
                     }
                     
                     require_once __DIR__ . '/../../app/services/MediaUploaderService.php';
@@ -136,8 +135,8 @@ class AdminCategoryController {
                 $old_stmt = $pdo->prepare("SELECT imagen_fondo FROM categorias WHERE id = ?");
                 $old_stmt->execute([$cat_id]);
                 $old_img = $old_stmt->fetchColumn();
-                if ($old_img && file_exists(__DIR__ . '/../../' . $old_img)) {
-                    @unlink(__DIR__ . '/../../' . $old_img);
+                if ($old_img && file_exists(PUBLIC_PATH . $old_img)) {
+                    @unlink(PUBLIC_PATH . $old_img);
                 }
                 $pdo->prepare("UPDATE categorias SET imagen_fondo = NULL WHERE id = ?")->execute([$cat_id]);
                 $redirect_msg = 'img_removed';
@@ -159,7 +158,7 @@ class AdminCategoryController {
             $redirect_msg = 'created';
         }
 
-        header("Location: /piura_noticias_php/admin/categorias?msg=" . urlencode($redirect_msg));
+        header("Location: " . APP_BASE . "admin/categorias?msg=" . urlencode($redirect_msg));
         exit;
     }
 }

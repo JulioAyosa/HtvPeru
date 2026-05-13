@@ -11,11 +11,11 @@
 
 <!-- Buscador -->
 <div style="background: white; padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem;">
-    <form method="GET" action="/piura_noticias_php/admin/usuarios-publicos" style="display: flex; gap: 1rem; max-width: 500px;">
+    <form method="GET" action="<?= APP_BASE ?>/admin/usuarios-publicos" style="display: flex; gap: 1rem; max-width: 500px;">
         <input type="text" name="search" placeholder="Buscar por nombre o correo..." value="<?php echo htmlspecialchars($search); ?>" style="flex: 1; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-family: var(--font-sans);">
         <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;"><i class="ri-search-line"></i> Buscar</button>
         <?php if ($search): ?>
-            <a href="/piura_noticias_php/admin/usuarios-publicos" class="btn btn-secondary" style="padding: 0.75rem 1rem;"><i class="ri-close-line"></i> Limpiar</a>
+            <a href="<?= APP_BASE ?>/admin/usuarios-publicos" class="btn btn-secondary" style="padding: 0.75rem 1rem;"><i class="ri-close-line"></i> Limpiar</a>
         <?php endif; ?>
     </form>
 </div>
@@ -150,7 +150,7 @@ function confirmToggle(id, accion, nombre) {
         icon.style.color = '#10b981';
     }
     
-    btn.href = `/piura_noticias_php/admin/usuarios-publicos/toggle?id=${id}`;
+    btn.href = `<?= APP_BASE ?>/admin/usuarios-publicos/toggle?id=${id}`;
     modal.style.display = 'flex';
 }
 

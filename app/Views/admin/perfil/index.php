@@ -25,7 +25,7 @@
         <p style="color: var(--text-muted); font-size:0.875rem; margin-top:0.5rem;">Miembro desde: <?php echo date('d M Y', strtotime($info['fecha_creacion'])); ?></p>
     </div>
 
-    <form method="POST" action="/piura_noticias_php/admin/perfil/action" enctype="multipart/form-data">
+    <form method="POST" action="<?= APP_BASE ?>/admin/perfil/action" enctype="multipart/form-data">
         <?php echo csrf_field(); ?>
         <div class="form-row">
             <label><i class="ri-image-edit-line"></i> Cambiar Foto de Perfil (Avatar)</label>

@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # 1. Redirección Forzada a HTTPS (Producción)
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^localhost$
+    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1$
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # 2. Excluir archivos y carpetas reales
+    # Si el archivo o carpeta existe, Apache lo sirve directamente (CSS, JS, IMAGES)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # 3. Enviar todo el resto al Front Controller (index.php)
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
+
+# Forzar codificación UTF-8
+AddDefaultCharset UTF-8
+
+# Seguridad básica
+Options -Indexes
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
